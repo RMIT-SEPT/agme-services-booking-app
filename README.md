@@ -3,11 +3,11 @@
 # Group 00
 
 ## Members
-* SURNAME, GivenName (sXXXX)
-* SURNAME, GivenName (sXXXX)
-* SURNAME, GivenName (sXXXX)
-* SURNAME, GivenName (sXXXX)
-* SURNAME, GivenName (sXXXX)
+* FLOECK, Oskar (s3725028)
+* BARROS, Marco (s3379774)
+* HA, Minh (s3719678)
+* HOOGWERF, Adam (s3719724)
+* WANG, Ke (s3750989)
 
 ## Records
 
