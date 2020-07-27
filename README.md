@@ -11,8 +11,8 @@
 
 ## Records
 
-* Github repository : https://github.com/RMIT-SEPT/MajorProject/Groupx
-* ClickUp Workspace : https://app.clickup.com/xxxx/yyyy
+* Github repository : https://github.com/RMIT-SEPT/majorproject-8-mon-17-30-4-lemonfruits
+* ClickUp Workspace : https://app.clickup.com/6915659/v/l/6k1jb-149
 
 
 ## Code documentation
