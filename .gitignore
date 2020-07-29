@@ -1,3 +1,4 @@
+.DS_Store
 creds.sh
 creds2.sh
 .terraform*
