@@ -17,8 +17,9 @@ const Login = () => {
     const handleSubmit = async (loginInfo) => {
         alert(`Submittedddd: ${email} and ${password}`);
 
-        var data = {
-
+        const data = {
+            email: email,
+            password: password
         };
 
         // use whatever the springboot url is
