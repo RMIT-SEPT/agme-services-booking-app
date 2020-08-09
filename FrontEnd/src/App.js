@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
-import Banner from './components/banner.js'
-import Login from './pages/login.js';
+import Banner from './components/banner.js';
+import Main from './Main';
 
 /*
 The root class of the webpage, 'App'.
@@ -14,7 +14,7 @@ const App = () => {
 		// The login is kind of like a component, but is also the page they goto when they goto the root url of the website.
 		<div className="App">
 			<Banner/>
-            <Login/>
+            <Main/>
 		</div>
 	);
 }
