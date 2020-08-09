@@ -26,9 +26,9 @@
     border-radius: 3px;
 }
 
-#submitBtn {
-    margin-top: 60px;
-    margin-bottom: 300px;
+.submitBtn {
+    margin-top: 20% !important;
+    margin-bottom: 182px;
     padding: 10px 20px;
     
     background-color: blue;
