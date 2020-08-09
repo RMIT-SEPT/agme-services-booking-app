@@ -1,3 +1,8 @@
+p, a {
+    font-size: x-small;
+    text-decoration: none;
+}
+
 #signupContainer {
     margin-top: 5%;
     margin-left: auto;
