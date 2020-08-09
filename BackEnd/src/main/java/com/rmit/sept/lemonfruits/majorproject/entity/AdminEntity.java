@@ -1,6 +1,9 @@
 package com.rmit.sept.lemonfruits.majorproject.entity;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -10,7 +13,6 @@ import javax.persistence.Table;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @ToString(callSuper = true)
 @Table(name = "admins")
 @Entity

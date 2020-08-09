@@ -1,6 +1,9 @@
 package com.rmit.sept.lemonfruits.majorproject.entity;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -11,11 +14,11 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @ToString(callSuper = true)
 @Table(name = "customers")
 @Entity
 public class CustomerEntity extends UserEntity {
+
     private String address;
 
     private String phoneNumber;

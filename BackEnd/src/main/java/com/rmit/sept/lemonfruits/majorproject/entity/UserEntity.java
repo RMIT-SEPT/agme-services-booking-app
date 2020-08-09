@@ -1,12 +1,19 @@
 package com.rmit.sept.lemonfruits.majorproject.entity;
 
-import com.rmit.sept.lemonfruits.majorproject.converter.PasswordEncypher;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * Main user class.
@@ -17,7 +24,7 @@ import javax.validation.constraints.NotNull;
 @Table(name = "users")
 @Inheritance(strategy = InheritanceType.JOINED)
 @Entity
-public abstract class UserEntity {
+public abstract class UserEntity implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,7 +34,6 @@ public abstract class UserEntity {
     private String username;
 
     @NotNull
-    @Convert(converter = PasswordEncypher.class)
     private String password;
 
     @NotNull
@@ -35,5 +41,43 @@ public abstract class UserEntity {
 
     @NotNull
     private String lastName;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    private List<String> roles = new ArrayList<>();
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return this.roles.stream().map(SimpleGrantedAuthority::new).collect(toList());
+    }
+
+    @Override
+    public String getPassword() {
+        return this.password;
+    }
+
+    @Override
+    public String getUsername() {
+        return this.username;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 
 }

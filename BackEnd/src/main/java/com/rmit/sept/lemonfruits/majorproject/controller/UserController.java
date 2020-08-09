@@ -1,14 +1,24 @@
 package com.rmit.sept.lemonfruits.majorproject.controller;
 
-import com.rmit.sept.lemonfruits.majorproject.entity.UserEntity;
+import com.rmit.sept.lemonfruits.majorproject.model.AuthenticationRequest;
+import com.rmit.sept.lemonfruits.majorproject.provider.JwtTokenProvider;
 import com.rmit.sept.lemonfruits.majorproject.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.constraints.NotNull;
-import java.util.Optional;
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.springframework.http.ResponseEntity.ok;
 
 
 @RestController
@@ -17,10 +27,23 @@ public class UserController {
 
     private UserRepository userRepository;
 
+    AuthenticationManager authenticationManager;
+
+    JwtTokenProvider jwtTokenProvider;
+
     @PostMapping("/login")
-    public UserEntity login(@NotNull @RequestParam String username, @NotNull @RequestParam String password) {
-        return Optional.ofNullable(userRepository.getByUsernameAndPassword(username, password))
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User details incorrect"));
+    public ResponseEntity signin(@RequestBody AuthenticationRequest data) {
+        try {
+            String username = data.getUsername();
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, data.getPassword()));
+            String token = jwtTokenProvider.createToken(username, userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("Username " + username + "not found")).getRoles());
+            Map<Object, Object> model = new HashMap<>();
+            model.put("username", username);
+            model.put("token", token);
+            return ok(model);
+        } catch (AuthenticationException e) {
+            throw new BadCredentialsException("Invalid username/password supplied");
+        }
     }
 
     @PostMapping
@@ -31,5 +54,15 @@ public class UserController {
     @Autowired
     public void setUserRepository(UserRepository userRepository) {
         this.userRepository = userRepository;
+    }
+
+    @Autowired
+    public void setAuthenticationManager(AuthenticationManager authenticationManager) {
+        this.authenticationManager = authenticationManager;
+    }
+
+    @Autowired
+    public void setJwtTokenProvider(JwtTokenProvider jwtTokenProvider) {
+        this.jwtTokenProvider = jwtTokenProvider;
     }
 }
