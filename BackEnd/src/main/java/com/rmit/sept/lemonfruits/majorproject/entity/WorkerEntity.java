@@ -12,9 +12,10 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@ToString(callSuper = true)
 @Table(name = "workers")
 @Entity
-public class WorkerEntity extends UserEntity{
+public class WorkerEntity extends UserEntity {
 
     private String role;
 

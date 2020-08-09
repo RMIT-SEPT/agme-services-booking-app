@@ -12,10 +12,10 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@ToString(callSuper = true)
 @Table(name = "customers")
 @Entity
 public class CustomerEntity extends UserEntity {
-
     private String address;
 
     private String phoneNumber;

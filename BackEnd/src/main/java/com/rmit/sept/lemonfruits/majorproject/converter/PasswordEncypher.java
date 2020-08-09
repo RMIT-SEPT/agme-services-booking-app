@@ -6,11 +6,11 @@ public class PasswordEncypher implements AttributeConverter<String, String> {
 
     @Override
     public String convertToDatabaseColumn(String s) {
-        return null;
+        return s;
     }
 
     @Override
     public String convertToEntityAttribute(String s) {
-        return null;
+        return s;
     }
 }
