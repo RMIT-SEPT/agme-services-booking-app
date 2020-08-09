@@ -36,7 +36,7 @@ const Login = () => {
         <div id="loginContainer">
             <h1 id="header">Login</h1>
             <div id="formArea">
-                <form id="loginForm" onSubmit={handleSubmit}>
+                <form id="loginForm">
                     <input className="loginInputField" name="email" type="email" placeholder=" Email" onChange={setEmailState}/>
                     <input className="loginInputField" name="password" type="password" placeholder=" Password" onChange={setPasswordState}/>
                     <input className="submitBtn" type="button" value="Login" onClick={handleSubmit}/>
