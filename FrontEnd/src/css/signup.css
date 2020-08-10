@@ -1,0 +1,43 @@
+p, a {
+    font-size: x-small;
+    text-decoration: none;
+}
+
+#signupContainer {
+    margin-top: 5%;
+    margin-left: auto;
+    margin-right: auto;
+    border: 2px solid blue;
+    height: 40%;
+    width: 16%;
+}
+
+#header {
+    text-align: center;
+}
+
+#formArea {
+    text-align: center;
+}
+
+#formArea input {
+    display: block;
+    margin-top: 10px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 70%;
+
+    border: 2px solid blue;
+    border-radius: 3px;
+}
+
+#submitBtn {
+    margin-top: 60px;
+    margin-bottom: 60px;
+    padding: 10px 20px;
+    
+    background-color: blue;
+    color: white;
+
+    cursor: pointer;
+}
