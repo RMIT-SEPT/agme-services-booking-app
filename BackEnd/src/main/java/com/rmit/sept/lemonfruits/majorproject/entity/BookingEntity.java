@@ -23,11 +23,11 @@ public class BookingEntity {
 
     private LocalDateTime endTime;
 
-    @ManyToOne
-    @JoinColumn
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "worker_id")
     private WorkerEntity workerEntity;
 
-    @ManyToOne
-    @JoinColumn
-    private UserEntity userEntity;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
+    private CustomerEntity customerEntity;
 }

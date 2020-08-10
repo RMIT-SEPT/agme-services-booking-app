@@ -1,15 +1,13 @@
 package com.rmit.sept.lemonfruits.majorproject.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import java.util.List;
+import javax.persistence.*;
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -23,7 +21,7 @@ public class CustomerEntity extends UserEntity {
 
     private String phoneNumber;
 
-    @OneToMany
-    @JoinColumn
-    private List<BookingEntity> bookings;
+    @JsonIgnore
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "customerEntity")
+    private Set<BookingEntity> bookings;
 }

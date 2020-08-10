@@ -19,8 +19,8 @@ public class WorkingHoursEntity {
     @Id
     private Integer entryId;
 
-    @ManyToOne
-    @JoinColumn
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "worker_id")
     private WorkerEntity workerEntity;
 
     private LocalDateTime startTime;
