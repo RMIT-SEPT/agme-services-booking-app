@@ -3,11 +3,11 @@ import { Link } from 'react-router-dom';
 import '../css/login.css';
 
 const Login = () => {
-    const [email, setEmail] = useState('');
+    const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
-    const setEmailState = (newValue) => {
-        setEmail(newValue.target.value);
+    const setUsernameState = (newValue) => {
+        setUsername(newValue.target.value);
     }
 
     const setPasswordState = (newValue) => {
@@ -15,21 +15,22 @@ const Login = () => {
     }
 
     const handleSubmit = async (loginInfo) => {
-        alert(`Submittedddd: ${email} and ${password}`);
+        alert(`Submittedddd: ${username} and ${password}`);
 
         const data = {
-            email: email,
+            username: username,
             password: password
         };
 
         // use whatever the springboot url is
-        const response = await fetch('localhost:3001/authenticate', {
+        const response = await fetch('localhost:8080/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(data)
         });
+        alert(`Response: ${response}`);
     }
 
     return(
@@ -37,7 +38,7 @@ const Login = () => {
             <h1 id="header">Login</h1>
             <div id="formArea">
                 <form id="loginForm">
-                    <input className="loginInputField" name="email" type="email" placeholder=" Email" onChange={setEmailState}/>
+                    <input className="loginInputField" name="username" type="text" placeholder=" Username" onChange={setUsernameState}/>
                     <input className="loginInputField" name="password" type="password" placeholder=" Password" onChange={setPasswordState}/>
                     <input className="submitBtn" type="button" value="Login" onClick={handleSubmit}/>
                     <p>Don't have an account? <Link to="/signup">Register here</Link></p>
