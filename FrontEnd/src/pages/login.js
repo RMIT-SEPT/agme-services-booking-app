@@ -23,7 +23,7 @@ const Login = () => {
         };
 
         // use whatever the springboot url is
-        const response = await fetch('localhost:8080/login', {
+        const response = await fetch('http://localhost:8080/api/v1/user/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
