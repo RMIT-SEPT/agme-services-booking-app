@@ -1,10 +1,16 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import '../css/login.css';
 
 const Login = () => {
+
+    const history = useHistory();
+
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [authenticated, setAuthenticated] = useState(false);
+    // Should be the JSON object that backend returns to us.
+    const [userDetails, setUserDetails] = useState(null);
 
     const setUsernameState = (newValue) => {
         setUsername(newValue.target.value);
@@ -15,26 +21,41 @@ const Login = () => {
     }
 
     const handleSubmit = async (loginInfo) => {
-        alert(`Submittedddd: ${username} and ${password}`);
 
+        // JSON to send to backend API
         const data = {
             username: username,
             password: password
         };
 
-        // use whatever the springboot url is
-        const response = await fetch('http://localhost:8080/api/v1/user/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        });
-        alert(`Response: ${response}`);
+        // POST request to backend with the data JSON
+        // const response = await fetch('http://localhost:8080/api/v1/user/login', {
+        //     method: 'POST',
+        //     headers: {
+        //         'Content-Type': 'application/json'
+        //     },
+        //     body: JSON.stringify(data)
+        // });
+
+        const response = {
+            userDetails: {
+                username: "Mike",
+                address: "2 Ox St, Edgey NSW 3011",
+                userType: "customer"
+            }
+        };
+        
+        // If response is correct (OK?), then set authenticated to true and redirect.
+        if (username === "123" && password === "123") {
+            setAuthenticated(true);
+            setUserDetails(response.userDetails);
+        }
     }
 
-    return(
+    return (
         <div id="loginContainer">
+            { authenticated ? history.push("/home", userDetails) : null};
+
             <h1 id="header">Login</h1>
             <div id="formArea">
                 <form id="loginForm">
