@@ -39,14 +39,16 @@ const Login = () => {
 
         const response = {
             userDetails: {
-                username: "Mike",
+                userName: "Mike",
                 address: "2 Ox St, Edgey NSW 3011",
-                userType: "customer"
+                userType: "customer",
+                token: "ABC123"
             }
         };
         
         // If response is correct (OK?), then set authenticated to true and redirect.
         if (username === "123" && password === "123") {
+            localStorage.setItem("token", response.userDetails.token);
             setAuthenticated(true);
             setUserDetails(response.userDetails);
         }
@@ -54,7 +56,7 @@ const Login = () => {
 
     return (
         <div id="loginContainer">
-            { authenticated ? history.push("/home", userDetails) : null};
+            { authenticated ? history.push("/home", userDetails) : null}
 
             <h1 id="header">Login</h1>
             <div id="formArea">
