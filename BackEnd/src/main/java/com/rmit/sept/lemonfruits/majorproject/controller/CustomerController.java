@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 
 import static org.springframework.http.ResponseEntity.ok;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/api/v1/customer")
 public class CustomerController {
