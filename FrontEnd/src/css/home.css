@@ -1,0 +1,11 @@
+.homeContainer {
+    display: flex;
+    flex-direction: row;
+}
+
+.homeMainArea {
+    display: flex;
+    flex-direction: column;
+
+    width: 64.7%;
+}
