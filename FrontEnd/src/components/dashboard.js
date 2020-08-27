@@ -25,19 +25,19 @@ const Dashboard = ({userDetails, onTabClick}) => {
             case 'worker':
                 return (
                     <React.Fragment>
-                        <input className="dashboardButton" type="button" value="Home"/>
-                        <input className="dashboardButton" type="button" value="Personal Details"/>
-                        <input className="dashboardButton" type="button" value="Weekly Availability"/>
+                        <input className="dashboardButton" type="button" value="Home" onClick={handleTabClick}/>
+                        <input className="dashboardButton" type="button" value="Personal Details" onClick={handleTabClick}/>
+                        <input className="dashboardButton" type="button" value="Weekly Availability" onClick={handleTabClick}/>
                     </React.Fragment>
                 );
 
             case 'admin':
                 return (
                     <React.Fragment>
-                        <input className="dashboardButton" type="button" value="Home"/>
-                        <input className="dashboardButton" type="button" value="Worker List"/>
-                        <input className="dashboardButton" type="button" value="Past Bookings"/>
-                        <input className="dashboardButton" type="button" value="New Bookings"/>
+                        <input className="dashboardButton" type="button" value="Home" onClick={handleTabClick}/>
+                        <input className="dashboardButton" type="button" value="Worker List" onClick={handleTabClick}/>
+                        <input className="dashboardButton" type="button" value="Past Bookings" onClick={handleTabClick}/>
+                        <input className="dashboardButton" type="button" value="New Bookings" onClick={handleTabClick}/>
                     </React.Fragment>
                 );
         }

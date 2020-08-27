@@ -6,7 +6,7 @@ import Dashboard from '../components/dashboard.js';
 import SupportLinks from '../components/supportLinks.js';
 import HomeAppointments from '../components/homeAppointments.js';
 import PastAppointments from '../components/pastAppointments.js';
-
+import BookingPage from '../components/bookingPage';
 
 const Home = (response) => {
     // Probably doesn't need to use state, since the user details don't change on this page.
@@ -17,9 +17,7 @@ const Home = (response) => {
     const token = userDetails.token;
 
     const [toggleView, setToggleView] = useState("Home")
-
     const loadHomeMainView = () => {
-
         switch (userType) {
             case ("customer"):
                 switch (toggleView) {
@@ -33,7 +31,7 @@ const Home = (response) => {
                     case "Home":
                         return <HomeAppointments userDetails={userDetails}/>
                     case "Book Appointment":
-                        return <></>
+                        return <BookingPage/>
                 }
             case ("admin"):
                 return "some admin calendar or something";
