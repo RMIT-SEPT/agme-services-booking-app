@@ -1,5 +1,4 @@
 import React from 'react';
-import '../css/homeAppointments.css';
 
 const Appointment = (appointmentJSON) => {
     const service = appointmentJSON.details.service;

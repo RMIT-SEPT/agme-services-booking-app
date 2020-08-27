@@ -3,27 +3,27 @@ import '../css/appointment.css';
 
 import Appointment from './appointment.js';
 
-const HomeAppointments = (userJSON) => {
+const PastAppointments = (userJSON) => {
     const userType = userJSON.userDetails.userType;
     const userName = userJSON.userDetails.userName;
     const sampleAppointments = {
         appointment1: {
             time: "9AM - 10AM",
-            service: "Dentist",
-            worker: "John Smith",
+            service: "Fridge",
+            worker: "Dane Swan",
             description: "AAAAAAAAAAAA"
         },
         appointment2: {
             time: "11AM - 1PM",
-            service: "Nails",
-            worker: "Serena Gomez",
+            service: "Lemon",
+            worker: "Mylie Cyrus",
             description: "b"
         }
     }
 
     return(
         <div id="appointmentsContainer">
-            <h1> Your Appointments </h1>
+            <h1> Past Appointments </h1>
             {Object.entries(sampleAppointments).map(([key, value]) => {
                 return <Appointment details={sampleAppointments[key]}/>
             })}
@@ -31,4 +31,4 @@ const HomeAppointments = (userJSON) => {
     )
 }
 
-export default HomeAppointments;
+export default PastAppointments;

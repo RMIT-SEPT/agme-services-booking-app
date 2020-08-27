@@ -4,11 +4,11 @@ import '../css/dashboard.css';
 
 const Dashboard = ({userDetails, onTabClick}) => {
     const userType = userDetails.userType
-    
+
     const handleTabClick = useCallback(e => {
         onTabClick(e.target.value)
     }, [onTabClick])
-    
+
     // Tried to break the returns into separate methods like customerButtons, workerButtons, but didn't work
     const renderButtons = () => {
         switch(userType) {
