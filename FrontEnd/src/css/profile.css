@@ -1,0 +1,36 @@
+.profileContainer {
+    display: flex;
+    flex-direction: row;
+}
+
+#avatarContainer {
+    margin: 10% 10%;
+    text-align: center;
+}
+
+#avatarContainer p {
+    font-size: 40px;
+}
+
+#avatarContainer img {
+    display: block;
+    margin: auto auto 30px auto;
+
+    border: 5px solid red;
+    border-radius: 100%;
+}
+
+#profileDetailsContainer {
+    margin: 5% 1%;
+
+    width: 50%;
+}
+
+#profileDetailsContainer span {
+    font-size: 30px;
+}
+
+#profileDetailsContainer input {
+    margin: 30px 0px;
+    width: 100%;
+}

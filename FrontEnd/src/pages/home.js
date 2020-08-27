@@ -7,6 +7,7 @@ import SupportLinks from '../components/supportLinks.js';
 import HomeAppointments from '../components/homeAppointments.js';
 import PastAppointments from '../components/pastAppointments.js';
 import BookingPage from '../components/bookingPage';
+import ProfilePage from './profile';
 
 const Home = (response) => {
     // Probably doesn't need to use state, since the user details don't change on this page.
@@ -23,9 +24,13 @@ const Home = (response) => {
                 switch (toggleView) {
                     case "Home":
                         return <HomeAppointments userDetails={userDetails}/>
+                    case "Personal Details":
+                        return <ProfilePage/>
                     case "Booking History":
                         return <PastAppointments userDetails={userDetails}/>
                 }
+            break;
+
             case ("worker"):
                 switch (toggleView) {
                     case "Home":
@@ -33,6 +38,8 @@ const Home = (response) => {
                     case "Book Appointment":
                         return <BookingPage/>
                 }
+            break;
+
             case ("admin"):
                 return "some admin calendar or something";
 
