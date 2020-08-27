@@ -10,3 +10,5 @@ services:
       POSTGRES_USER: lemongrab
       POSTGRES_PASSWORD: adom
       POSTGRES_DB: sept-main
+    volumes:
+      - ./scripts/create_structure.sql:/docker-entrypoint-initdb.d/create_structure.sql
