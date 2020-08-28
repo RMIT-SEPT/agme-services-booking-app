@@ -1,13 +1,15 @@
-import React, { useState, useCallback } from 'react';
+import React from 'react';
 
 import '../css/dashboard.css';
+import { useHistory } from 'react-router-dom';
 
-const Dashboard = ({userDetails, onTabClick}) => {
+const Dashboard = ({userDetails}) => {
     const userType = userDetails.userType
+    let history = useHistory()
 
-    const handleTabClick = useCallback(e => {
-        onTabClick(e.target.value)
-    }, [onTabClick])
+    const handleTabClick = (e => {
+        history.push("/" + e.target.id, userDetails)
+    })
 
     // Tried to break the returns into separate methods like customerButtons, workerButtons, but didn't work
     const renderButtons = () => {
@@ -15,29 +17,30 @@ const Dashboard = ({userDetails, onTabClick}) => {
             case 'customer':
                 return (
                     <React.Fragment>
-                        <input className="dashboardButton" type="button" value="Home" onClick={handleTabClick}/>
-                        <input className="dashboardButton" type="button" value="Personal Details" onClick={handleTabClick}/>
-                        <input className="dashboardButton" type="button" value="Book Appointment" onClick={handleTabClick}/>
-                        <input className="dashboardButton" type="button" value="Booking History" onClick={handleTabClick}/>
+                        <input className="dashboardButton" type="button" id="home" value="Home" onClick={handleTabClick}/>
+                        <input className="dashboardButton" type="button" id="profile" value="Profile" onClick={handleTabClick}/>
+                        <input className="dashboardButton" type="button" id="booking" value="Book Appointment" onClick={handleTabClick}/>
+                        <input className="dashboardButton" type="button" id="history" value="Booking History" onClick={handleTabClick}/>
                     </React.Fragment>
                 );
             
             case 'worker':
                 return (
                     <React.Fragment>
-                        <input className="dashboardButton" type="button" value="Home" onClick={handleTabClick}/>
-                        <input className="dashboardButton" type="button" value="Personal Details" onClick={handleTabClick}/>
-                        <input className="dashboardButton" type="button" value="Weekly Availability" onClick={handleTabClick}/>
+                        <input className="dashboardButton" type="button" id="home" value="Home" onClick={handleTabClick}/>
+                        <input className="dashboardButton" type="button" id="profile" value="Profile" onClick={handleTabClick}/>
+                        <input className="dashboardButton" type="button" id="availability" value="Weekly Availability" onClick={handleTabClick}/>
+                        <input className="dashboardButton" type="button" id="history" value="Booking History" onClick={handleTabClick}/>
                     </React.Fragment>
                 );
 
             case 'admin':
                 return (
                     <React.Fragment>
-                        <input className="dashboardButton" type="button" value="Home" onClick={handleTabClick}/>
-                        <input className="dashboardButton" type="button" value="Worker List" onClick={handleTabClick}/>
-                        <input className="dashboardButton" type="button" value="Past Bookings" onClick={handleTabClick}/>
-                        <input className="dashboardButton" type="button" value="New Bookings" onClick={handleTabClick}/>
+                        <input className="dashboardButton" type="button" id="home" value="Home" onClick={handleTabClick}/>
+                        <input className="dashboardButton" type="button" id="profile" value="Profile" onClick={handleTabClick}/>
+                        <input className="dashboardButton" type="button" id="employees" value="Employees" onClick={handleTabClick}/>
+                        <input className="dashboardButton" type="button" id="history" value="Booking History" onClick={handleTabClick}/>
                     </React.Fragment>
                 );
         }
