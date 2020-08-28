@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { Link, useHistory } from 'react-router-dom';
 import '../css/home.css';
 
-import Dashboard from '../components/dashboard.js';
+import Dashboard from '../components/dashboard';
 import SupportLinks from '../components/supportLinks.js';
 import HomeAppointments from '../components/homeAppointments.js';
 import PastAppointments from '../components/pastAppointments.js';
-import BookingPage from '../components/bookingPage';
+import BookingPage from './customer/bookingPage';
+import Availability from './worker/availabilityPage';
 
 const Home = (response) => {
     // Probably doesn't need to use state, since the user details don't change on this page.
@@ -16,23 +16,34 @@ const Home = (response) => {
     const userType = userDetails.userType;
     const token = userDetails.token;
 
-    const [toggleView, setToggleView] = useState("Home")
+    const pathname = response.location.pathname;
+
     const loadHomeMainView = () => {
         switch (userType) {
             case ("customer"):
-                switch (toggleView) {
-                    case "Home":
+                switch (pathname) {
+                    case "/home":
                         return <HomeAppointments userDetails={userDetails}/>
-                    case "Booking History":
+                    case "/profile":
+                        return <HomeAppointments userDetails={userDetails}/>
+                    case "/booking":
+                        return <BookingPage userDetails={userDetails}/>
+                    case "/history":
                         return <PastAppointments userDetails={userDetails}/>
                 }
+                break;
             case ("worker"):
-                switch (toggleView) {
-                    case "Home":
+                switch (pathname) {
+                    case "/home":
                         return <HomeAppointments userDetails={userDetails}/>
-                    case "Book Appointment":
-                        return <BookingPage/>
+                    case "/profile":
+                        return <HomeAppointments userDetails={userDetails}/>
+                    case "/availability":
+                        return <Availability userDetails={userDetails}/>
+                    case "/history":
+                        return <PastAppointments userDetails={userDetails}/>
                 }
+                break;
             case ("admin"):
                 return "some admin calendar or something";
 
@@ -51,7 +62,7 @@ const Home = (response) => {
     // });
     return (
         <div className="homeContainer">
-            <Dashboard userDetails={userDetails} onTabClick={setToggleView}/>
+            <Dashboard userDetails={userDetails}/>
             <div className="homeMainArea">
                 <SupportLinks userDetails={userDetails}/>
                 {loadHomeMainView()}
