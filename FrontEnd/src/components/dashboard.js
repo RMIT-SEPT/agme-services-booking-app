@@ -9,6 +9,11 @@ const Dashboard = ({userDetails, onTabClick}) => {
         onTabClick(e.target.value)
     }, [onTabClick])
 
+    function redirectBooking()
+    {
+        history.push('/booking', userDetails);
+    }
+
     // Tried to break the returns into separate methods like customerButtons, workerButtons, but didn't work
     const renderButtons = () => {
         switch(userType) {
@@ -16,9 +21,9 @@ const Dashboard = ({userDetails, onTabClick}) => {
                 return (
                     <React.Fragment>
                         <input className="dashboardButton" type="button" value="Home" onClick={handleTabClick}/>
-                        <input className="dashboardButton" type="button" value="Personal Details" onClick={handleTabClick}/>
-                        <input className="dashboardButton" type="button" value="Book Appointment" onClick={handleTabClick}/>
-                        <input className="dashboardButton" type="button" value="Booking History" onClick={handleTabClick}/>
+                        <input className="dashboardButton" type="button" value="Profile" onClick={handleTabClick}/>
+                        <input className="dashboardButton" type="button" value="Book Appointment" onClick={handleClick}/>
+                        <input className="dashboardButton" type="button" value="Booking History" onClick={redirectBook}/>
                     </React.Fragment>
                 );
             
@@ -26,8 +31,9 @@ const Dashboard = ({userDetails, onTabClick}) => {
                 return (
                     <React.Fragment>
                         <input className="dashboardButton" type="button" value="Home" onClick={handleTabClick}/>
-                        <input className="dashboardButton" type="button" value="Personal Details" onClick={handleTabClick}/>
+                        <input className="dashboardButton" type="button" value="Profile" onClick={handleTabClick}/>
                         <input className="dashboardButton" type="button" value="Weekly Availability" onClick={handleTabClick}/>
+                        <input className="dashboardButton" type="button" value="Booking History" onClick={handleTabClick}/>
                     </React.Fragment>
                 );
 
@@ -35,9 +41,9 @@ const Dashboard = ({userDetails, onTabClick}) => {
                 return (
                     <React.Fragment>
                         <input className="dashboardButton" type="button" value="Home" onClick={handleTabClick}/>
-                        <input className="dashboardButton" type="button" value="Worker List" onClick={handleTabClick}/>
-                        <input className="dashboardButton" type="button" value="Past Bookings" onClick={handleTabClick}/>
-                        <input className="dashboardButton" type="button" value="New Bookings" onClick={handleTabClick}/>
+                        <input className="dashboardButton" type="button" value="Profile" onClick={handleTabClick}/>
+                        <input className="dashboardButton" type="button" value="Employees" onClick={handleTabClick}/>
+                        <input className="dashboardButton" type="button" value="Booking History" onClick={handleTabClick}/>
                     </React.Fragment>
                 );
         }
