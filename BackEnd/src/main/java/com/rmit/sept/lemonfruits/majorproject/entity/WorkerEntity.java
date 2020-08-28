@@ -1,5 +1,6 @@
 package com.rmit.sept.lemonfruits.majorproject.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,9 +22,11 @@ public class WorkerEntity extends UserEntity {
 
     private String role;
 
+    @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "workerEntity")
     private Set<WorkingHoursEntity> workingHours;
 
+    @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "workerEntity")
     private Set<BookingEntity> bookings;
 
