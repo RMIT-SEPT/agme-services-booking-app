@@ -7,12 +7,13 @@ import '../../css/pages/bookingPage.css';
 const BookingPage = (userDetails) => {
     const userName = userDetails.userName;
     const localizer = momentLocalizer(moment)
-    const currentDate = new Date();
-    
-    const myEventsList = [{
+
+    const date = new Date();
+
+    const [myEventsList, setEvents] = useState([{
         title: "hello",
-        start: currentDate,
-        end: currentDate,
+        start: new Date(),
+        end: new Date(),
         allDay: false,
         resource: null
     }, 
@@ -35,7 +36,20 @@ const BookingPage = (userDetails) => {
             worker: "Mylie Cyrus",
             description: "b"
         }
-    }]
+    }]);
+
+    const handleSelect = ({start, end}) => {
+        const title = window.prompt('New Event name')
+        if (title) {
+            setEvents([...myEventsList, {
+                title: title,
+                start: start,
+                end: end,
+                allDay: false,
+                resource: null
+            }]);
+        }
+    }
 
     return(
         <div id="bookings">
@@ -47,7 +61,10 @@ const BookingPage = (userDetails) => {
                 style={{ height: 400, width: 750}}
                 defaultView={'work_week'}
                 views={['work_week', 'day', 'agenda']}
-                
+                date={date}
+                selectable
+                onSelectEvent={event => alert(event.title)}
+                onSelectSlot={handleSelect}
             />
         </div>
     )
