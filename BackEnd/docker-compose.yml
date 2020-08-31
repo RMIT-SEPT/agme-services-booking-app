@@ -11,4 +11,5 @@ services:
       POSTGRES_PASSWORD: adom
       POSTGRES_DB: sept-main
     volumes:
-      - ./scripts/create_structure.sql:/docker-entrypoint-initdb.d/create_structure.sql
+      - ./scripts/schema.sql:/docker-entrypoint-initdb.d/1-schema.sql
+      - ./scripts/data.sql:/docker-entrypoint-initdb.d/2-data.sql

@@ -11,7 +11,7 @@ create table if not exists users
 
 create table if not exists admins
 (
-	admin_id integer,
+	admin_id serial,
 	id bigint not null
 		constraint admins_pkey
 			primary key
@@ -66,6 +66,8 @@ create table working_hours
 		constraint worker_hours_fkey
 			references workers
 );
+
+-- TODO: Check if this is needed or not.
 
 create table user_entity_roles
 (
