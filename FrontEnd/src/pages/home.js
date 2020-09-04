@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useHistory, Redirect, Route } from 'react-router-dom';
 import '../css/home.css';
 
 import Dashboard from '../components/dashboard';
@@ -10,35 +11,54 @@ import Availability from './worker/availabilityPage';
 import ProfilePage from './profile';
 
 const Home = () => {
+    const [authenticated, setAuthenticated] = useState(localStorage.getItem('token') === null ? false : true);
     const [userDetails, setUserDetails] = useState({});
     // Use Effect will execute upon fully rendering.
     useEffect(async() => {
-        // Successful login, get user details from backend.
-        const response = await fetch('http://localhost:8080/api/v1/customer/profile', {
-            method: 'GET',
-            headers: {
-                'Accept': '*/*',
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            }}).then(response => {
-            if (response.ok) {
+            // Successful login, get user details from backend.
+            const response = await fetch('http://localhost:8080/api/v1/customer/profile', {
+                method: 'GET',
+                headers: {
+                    'Accept': '*/*',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            }).then(response => {
                 response.json().then(json => {
-                    userDetails['username'] = json.username;
-                    userDetails['firstName'] = json.firstName;
-                    userDetails['lastName'] = json.lastName;
-                    userDetails['address'] = json.address;
-                    userDetails['phoneNumber'] = json.phoneNumber;
-                    userDetails['userType'] = 'customer';
-                    console.log(userDetails);
-
                     const details = {
+                        userType: 'customer',
                         username: json.username,
-                        userType: 'customer'
+                        firstName: json.firstName,
+                        lastName: json.lastName,
+                        address: json.address,
+                        phoneNumber: json.phoneNumber
                     }
                     setUserDetails(details);
                 })
-            }
-        });
+            });
     }, []);
+
+    // const getUserDetails = async() => {
+    //     // Successful login, get user details from backend.
+    //     const response = await fetch('http://localhost:8080/api/v1/customer/profile', {
+    //         method: 'GET',
+    //         headers: {
+    //             'Accept': '*/*',
+    //             'Authorization': `Bearer ${localStorage.getItem('token')}`
+    //         }
+    //     }).then(response => {
+    //         response.json().then(json => {
+    //             const details = {
+    //                 userType: 'customer',
+    //                 username: json.username,
+    //                 firstName: json.firstName,
+    //                 lastName: json.lastName,
+    //                 address: json.address,
+    //                 phoneNumber: json.phoneNumber
+    //             }
+    //             setUserDetails(details);
+    //         })
+    //     });
+    // }
 
     const pathname = window.location.pathname;
 
@@ -49,7 +69,7 @@ const Home = () => {
                     case "/home":
                         return <HomeAppointments userDetails={userDetails}/>
                     case "/profile":
-                        return <ProfilePage/>
+                        return <ProfilePage userDetails={userDetails}/>
                     case "/booking":
                         return <BookingPage userDetails={userDetails}/>
                     case "/history":
@@ -77,15 +97,7 @@ const Home = () => {
                 return "ERROR: UserType not found, reload or somethin lmao";
         }
     }
-    /* Make a fetch everytime this page is loaded to get appointments for a customer. MAYBE better way to not just do this tho */
 
-    // const appointments = await fetch('http://localhost:8080/api/v1/user/login', {
-    //     method: 'POST',
-    //     headers: {
-    //         'Content-Type': 'application/json'
-    //     },
-    //     body: JSON.stringify(data)
-    // });
     return (
         <div className="homeContainer">
             <Dashboard userDetails={userDetails}/>

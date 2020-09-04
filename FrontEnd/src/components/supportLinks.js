@@ -1,10 +1,9 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import '../css/supportLinks.css';
 
-const SupportLinks = (userJSON) => {
-    const userType = userJSON.userDetails.userType;
-    const userName = userJSON.userDetails.userName;
+const SupportLinks = ({userDetails}) => {
+    const userName = userDetails.username;
 
     return(
         <div id="supportLinks">

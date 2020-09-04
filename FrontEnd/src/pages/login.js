@@ -8,7 +8,7 @@ const Login = () => {
 
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [authenticated, setAuthenticated] = useState(false);
+    const [authenticated, setAuthenticated] = useState(localStorage.getItem('token') === null ? false : true);
     // Should be the JSON object that backend returns to us.
     const [userDetails, setUserDetails] = useState(null);
 
@@ -39,7 +39,8 @@ const Login = () => {
         }).then(response => {
             if (response.ok) {
                 response.json().then(json => {
-                    localStorage.setItem("token", json.token);
+                    localStorage.setItem('token', json.token);
+                    localStorage.setItem('token-expiry', new Date().getTime() + 500000);
                     setAuthenticated(true);
                 })
             }

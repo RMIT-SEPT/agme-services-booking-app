@@ -4,11 +4,13 @@ import '../css/dashboard.css';
 import { useHistory } from 'react-router-dom';
 
 const Dashboard = ({userDetails}) => {
-    const userType = userDetails.userType
-    let history = useHistory()
+    const userType = userDetails.userType;
+    let history = useHistory();
 
     const handleTabClick = (e => {
-        history.push("/" + e.target.id, userDetails)
+        if (window.location.pathname != "/" + e.target.id) {
+            history.push("/" + e.target.id, userDetails);
+        }
     })
 
     // Tried to break the returns into separate methods like customerButtons, workerButtons, but didn't work
