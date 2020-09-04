@@ -7,14 +7,28 @@ import HomeAppointments from '../components/homeAppointments.js';
 import PastAppointments from '../components/pastAppointments.js';
 import BookingPage from './customer/bookingPage';
 import Availability from './worker/availabilityPage';
+import ProfilePage from './profile';
 
-const Home = (response) => {
+const Home = async () => {
+    // Successful login, get user details from backend.
+    const response = await fetch('http://localhost:8080/api/v1/customer/profile', {
+        method: 'GET',
+        headers: {
+            'Accept': '*/*',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }}).then(response => {
+        if (response.ok) {
+            response.json().then(json => {
+                alert(JSON.stringify(json));
+            })
+        }
+    });
+
     // Probably doesn't need to use state, since the user details don't change on this page.
-    const [userDetails, setUserDetails] = useState(response.location.state);
-    const userName = userDetails.userName;
-    const address = userDetails.address;
-    const userType = userDetails.userType;
-    const token = userDetails.token;
+    const [userDetails, setUserDetails] = useState();
+    // const userName = userDetails.username;
+    // const address = userDetails.address;
+    const userType = "customer";
 
     const pathname = response.location.pathname;
 
@@ -25,13 +39,14 @@ const Home = (response) => {
                     case "/home":
                         return <HomeAppointments userDetails={userDetails}/>
                     case "/profile":
-                        return <HomeAppointments userDetails={userDetails}/>
+                        return <ProfilePage/>
                     case "/booking":
                         return <BookingPage userDetails={userDetails}/>
                     case "/history":
                         return <PastAppointments userDetails={userDetails}/>
                 }
                 break;
+
             case ("worker"):
                 switch (pathname) {
                     case "/home":
@@ -44,6 +59,7 @@ const Home = (response) => {
                         return <PastAppointments userDetails={userDetails}/>
                 }
                 break;
+
             case ("admin"):
                 return "some admin calendar or something";
 

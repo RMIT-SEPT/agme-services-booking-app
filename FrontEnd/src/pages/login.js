@@ -29,29 +29,21 @@ const Login = () => {
         };
 
         // POST request to backend with the data JSON
-        // const response = await fetch('http://localhost:8080/api/v1/user/login', {
-        //     method: 'POST',
-        //     headers: {
-        //         'Content-Type': 'application/json'
-        //     },
-        //     body: JSON.stringify(data)
-        // });
-
-        const response = {
-            userDetails: {
-                userName: "Mike",
-                address: "2 Ox St, Edgey NSW 3011",
-                userType: "customer",
-                token: "ABC123"
+        const response = await fetch('http://localhost:8080/api/v1/user/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify(data)
+        }).then(response => {
+            if (response.ok) {
+                response.json().then(json => {
+                    localStorage.setItem("token", json.token);
+                    setAuthenticated(true);
+                })
             }
-        };
-        
-        // If response is correct (OK?), then set authenticated to true and redirect.
-        if (username === "123" && password === "123") {
-            localStorage.setItem("token", response.userDetails.token);
-            setAuthenticated(true);
-            setUserDetails(response.userDetails);
-        }
+        });
     }
 
     return (
