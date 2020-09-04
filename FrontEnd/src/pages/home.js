@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
-import { Link, useHistory } from 'react-router-dom';
 import '../css/home.css';
 
-import Dashboard from '../components/dashboard.js';
+import Dashboard from '../components/dashboard';
 import SupportLinks from '../components/supportLinks.js';
 import HomeAppointments from '../components/homeAppointments.js';
 import PastAppointments from '../components/pastAppointments.js';
-import BookingPage from '../components/bookingPage';
+import BookingPage from './customer/bookingPage';
+import Availability from './worker/availabilityPage';
 import ProfilePage from './profile';
 
-const Home = async (body) => {
+const Home = async () => {
     // Successful login, get user details from backend.
     const response = await fetch('http://localhost:8080/api/v1/customer/profile', {
         method: 'GET',
@@ -30,28 +30,35 @@ const Home = async (body) => {
     // const address = userDetails.address;
     const userType = "customer";
 
-    const [toggleView, setToggleView] = useState("Home")
+    const pathname = response.location.pathname;
+
     const loadHomeMainView = () => {
         switch (userType) {
             case ("customer"):
-                switch (toggleView) {
-                    case "Home":
+                switch (pathname) {
+                    case "/home":
                         return <HomeAppointments userDetails={userDetails}/>
-                    case "Personal Details":
+                    case "/profile":
                         return <ProfilePage/>
-                    case "Booking History":
+                    case "/booking":
+                        return <BookingPage userDetails={userDetails}/>
+                    case "/history":
                         return <PastAppointments userDetails={userDetails}/>
                 }
-            break;
+                break;
 
             case ("worker"):
-                switch (toggleView) {
-                    case "Home":
+                switch (pathname) {
+                    case "/home":
                         return <HomeAppointments userDetails={userDetails}/>
-                    case "Book Appointment":
-                        return <BookingPage/>
+                    case "/profile":
+                        return <HomeAppointments userDetails={userDetails}/>
+                    case "/availability":
+                        return <Availability userDetails={userDetails}/>
+                    case "/history":
+                        return <PastAppointments userDetails={userDetails}/>
                 }
-            break;
+                break;
 
             case ("admin"):
                 return "some admin calendar or something";
@@ -71,7 +78,7 @@ const Home = async (body) => {
     // });
     return (
         <div className="homeContainer">
-            <Dashboard userDetails={userDetails} onTabClick={setToggleView}/>
+            <Dashboard userDetails={userDetails}/>
             <div className="homeMainArea">
                 <SupportLinks userDetails={userDetails}/>
                 {loadHomeMainView()}
