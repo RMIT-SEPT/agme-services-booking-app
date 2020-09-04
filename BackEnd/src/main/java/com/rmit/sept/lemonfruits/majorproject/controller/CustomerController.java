@@ -2,6 +2,7 @@ package com.rmit.sept.lemonfruits.majorproject.controller;
 
 import com.rmit.sept.lemonfruits.majorproject.entity.BookingEntity;
 import com.rmit.sept.lemonfruits.majorproject.entity.CustomerEntity;
+import com.rmit.sept.lemonfruits.majorproject.repository.BookingRepository;
 import com.rmit.sept.lemonfruits.majorproject.repository.CustomerRepository;
 import com.rmit.sept.lemonfruits.majorproject.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.springframework.http.ResponseEntity.ok;
@@ -30,12 +32,25 @@ public class CustomerController {
 
     private UserRepository userRepository;
 
-    @Autowired
-    PasswordEncoder passwordEncoder;
+    private BookingRepository bookingRepository;
+
+    private PasswordEncoder passwordEncoder;
 
     @GetMapping(value = "/availabilities", produces = MediaType.APPLICATION_JSON_VALUE)
-    public void viewAvailableBookings() {
+    public ResponseEntity<List<BookingEntity>> viewAvailableBookings() {
+        return ok(
+                bookingRepository.findByCustomerEntityIsNullAndStartTimeAfter(LocalDateTime.now())
+        );
+    }
 
+    @GetMapping(value = "/booking/{bookingId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<BookingEntity> makeBooking(@AuthenticationPrincipal CustomerEntity customerEntity, @PathVariable Integer bookingId) {
+        Optional<BookingEntity> bookingEntity = bookingRepository.findById(bookingId);
+        bookingEntity.filter(b -> b != null && b.getCustomerEntity() == null).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Booking not found"));
+
+        bookingEntity.get().setCustomerEntity(customerEntity);
+        bookingRepository.save(bookingEntity.get());
+        return ok(bookingEntity.get());
     }
 
     @GetMapping(value = "/view", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -88,5 +103,15 @@ public class CustomerController {
     @Autowired
     public void setUserRepository(UserRepository userRepository) {
         this.userRepository = userRepository;
+    }
+
+    @Autowired
+    public void setBookingRepository(BookingRepository bookingRepository) {
+        this.bookingRepository = bookingRepository;
+    }
+
+    @Autowired
+    public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
     }
 }
