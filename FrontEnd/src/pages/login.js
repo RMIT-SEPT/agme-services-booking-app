@@ -20,7 +20,7 @@ const Login = () => {
         setPassword(newValue.target.value);
     }
 
-    const handleSubmit = async (loginInfo) => {
+    const handleSubmit = async () => {
 
         // JSON to send to backend API
         const data = {

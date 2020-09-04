@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import '../css/profile.css';
 
 const Profile = () => {
+    alert("HI")
     // Images are random numbers, choose a random avatar!
     const randomNumber = Math.floor(1 + Math.random() * (6 - 1));
 
