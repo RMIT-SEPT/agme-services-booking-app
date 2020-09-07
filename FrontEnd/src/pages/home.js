@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useHistory, Redirect, Route } from 'react-router-dom';
 import '../css/home.css';
 
 import Dashboard from '../components/dashboard';
@@ -9,37 +10,66 @@ import BookingPage from './customer/bookingPage';
 import Availability from './worker/availabilityPage';
 import ProfilePage from './profile';
 
-const Home = async () => {
-    // Successful login, get user details from backend.
-    const response = await fetch('http://localhost:8080/api/v1/customer/profile', {
-        method: 'GET',
-        headers: {
-            'Accept': '*/*',
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }}).then(response => {
-        if (response.ok) {
-            response.json().then(json => {
-                alert(JSON.stringify(json));
-            })
-        }
-    });
+const Home = () => {
+    const [authenticated, setAuthenticated] = useState(localStorage.getItem('token') === null ? false : true);
+    const [userDetails, setUserDetails] = useState({});
+    // Use Effect will execute upon fully rendering.
+    useEffect(async() => {
+            // Successful login, get user details from backend.
+            const response = await fetch('http://localhost:8080/api/v1/customer/profile', {
+                method: 'GET',
+                headers: {
+                    'Accept': '*/*',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            }).then(response => {
+                response.json().then(json => {
+                    const details = {
+                        userType: 'customer',
+                        username: json.username,
+                        firstName: json.firstName,
+                        lastName: json.lastName,
+                        address: json.address,
+                        phoneNumber: json.phoneNumber
+                    }
+                    setUserDetails(details);
+                })
+            });
+    }, []);
 
-    // Probably doesn't need to use state, since the user details don't change on this page.
-    const [userDetails, setUserDetails] = useState();
-    // const userName = userDetails.username;
-    // const address = userDetails.address;
-    const userType = "customer";
+    // const getUserDetails = async() => {
+    //     // Successful login, get user details from backend.
+    //     const response = await fetch('http://localhost:8080/api/v1/customer/profile', {
+    //         method: 'GET',
+    //         headers: {
+    //             'Accept': '*/*',
+    //             'Authorization': `Bearer ${localStorage.getItem('token')}`
+    //         }
+    //     }).then(response => {
+    //         response.json().then(json => {
+    //             const details = {
+    //                 userType: 'customer',
+    //                 username: json.username,
+    //                 firstName: json.firstName,
+    //                 lastName: json.lastName,
+    //                 address: json.address,
+    //                 phoneNumber: json.phoneNumber
+    //             }
+    //             setUserDetails(details);
+    //         })
+    //     });
+    // }
 
-    const pathname = response.location.pathname;
+    const pathname = window.location.pathname;
 
     const loadHomeMainView = () => {
-        switch (userType) {
+        switch (userDetails.userType) {
             case ("customer"):
                 switch (pathname) {
                     case "/home":
                         return <HomeAppointments userDetails={userDetails}/>
                     case "/profile":
-                        return <ProfilePage/>
+                        return <ProfilePage userDetails={userDetails}/>
                     case "/booking":
                         return <BookingPage userDetails={userDetails}/>
                     case "/history":
@@ -67,15 +97,7 @@ const Home = async () => {
                 return "ERROR: UserType not found, reload or somethin lmao";
         }
     }
-    /* Make a fetch everytime this page is loaded to get appointments for a customer. MAYBE better way to not just do this tho */
 
-    // const appointments = await fetch('http://localhost:8080/api/v1/user/login', {
-    //     method: 'POST',
-    //     headers: {
-    //         'Content-Type': 'application/json'
-    //     },
-    //     body: JSON.stringify(data)
-    // });
     return (
         <div className="homeContainer">
             <Dashboard userDetails={userDetails}/>

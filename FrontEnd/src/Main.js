@@ -12,7 +12,7 @@ const Main = () =>  {
             <Route exact path='/' component={Login}></Route>
             <Route exact path='/signup' component={Signup}></Route>
             <Route exact path='/home' component={Home}></Route>
-            <Route exact path='/profile' component={Profile}></Route>
+            <Route exact path='/profile' component={Home}></Route>
             <Route exact path='/employees' component={Home}></Route>
             <Route exact path='/availability' component={Home}></Route>
             <Route exact path='/booking' component={Home}></Route>
