@@ -9,9 +9,9 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,10 +33,15 @@ public class UserController {
     public ResponseEntity signin(@RequestBody AuthenticationRequest data) {
         try {
             String username = data.getUsername();
+            String role = userRepository.findByUsername(username).get().getAuthorities().iterator().next().getAuthority();
+
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, data.getPassword()));
-            String token = jwtTokenProvider.createToken(username, userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("Username " + username + "not found")).getRoles());
+            String token = jwtTokenProvider.createToken(
+                    username,
+                    Collections.singletonList(role));
             Map<Object, Object> model = new HashMap<>();
             model.put("username", username);
+            model.put("role", role);
             model.put("token", token);
             return ok(model);
         } catch (AuthenticationException e) {

@@ -66,13 +66,3 @@ create table working_hours
 		constraint worker_hours_fkey
 			references workers
 );
-
--- TODO: Check if this is needed or not.
-
-create table user_entity_roles
-(
-	user_entity_id bigint not null
-		constraint user_role_fkey
-			references users,
-	roles varchar(255)
-);
