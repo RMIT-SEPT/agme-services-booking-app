@@ -8,26 +8,6 @@ const PastAppointments = ({userDetails}) => {
 
     const [appointments, setAppointments] = useState([]);
 
-    // useEffect({
-        // if (userType === 'customer') {
-        //     // Request for customer's past bookings
-        //     const response = await fetch(`http://localhost:8080/api/v1/customer/view/past`, {
-        //         method: 'GET',
-        //         headers: {
-        //             'Accept': '*/*',
-        //             'Authorization': `Bearer ${localStorage.getItem('token')}`
-        //         }
-        //     }).then(response => {
-        //         response.json().then(array => {
-        //             setAppointments(array);
-        //         })
-        //     });
-
-        // } else if (userType === 'worker') {
-        //     // Do a request for worker's past appointments
-        //     setAppointments(null);
-        // }
-    // }, []);
     useEffect(() => {
         const fetchData = async() => {
             // Request for customer's past bookings.
