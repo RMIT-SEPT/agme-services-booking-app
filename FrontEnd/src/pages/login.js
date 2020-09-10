@@ -8,9 +8,9 @@ const Login = () => {
 
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [authenticated, setAuthenticated] = useState(localStorage.getItem('token') === null ? false : true);
+    const [authenticated, setAuthenticated] = useState(false);
     // Should be the JSON object that backend returns to us.
-    const [userDetails, setUserDetails] = useState(null);
+    const [loginDetails, setLoginDetails] = useState('');
 
     const setUsernameState = (newValue) => {
         setUsername(newValue.target.value);
@@ -41,6 +41,7 @@ const Login = () => {
                 response.json().then(json => {
                     localStorage.setItem('token', json.token);
                     localStorage.setItem('token-expiry', new Date().getTime() + 500000);
+                    setLoginDetails(json);
                     setAuthenticated(true);
                 })
             }
@@ -49,7 +50,7 @@ const Login = () => {
 
     return (
         <div id="loginContainer">
-            { authenticated ? history.push("/home", userDetails) : null}
+            { authenticated ? history.push("/home", {loginDetails: loginDetails}) : null}
 
             <h1 id="header">Login</h1>
             <div id="formArea">
