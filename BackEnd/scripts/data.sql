@@ -43,8 +43,8 @@ insert into bookings (booking_id, end_time, start_time, user_id, worker_id) valu
 
 -- Fill out availability for the two other workers (9, 10)
 
-insert into working_hours (entry_id, end_time, start_time, worker_id) values (991, '2020-08-10 08:30:00', '2020-08-10 07:30:00', 9);
-insert into working_hours (entry_id, end_time, start_time, worker_id) values (504, '2020-08-12 08:30:00', '2020-08-12 07:30:00', 9);
-insert into working_hours (entry_id, end_time, start_time, worker_id) values (864, '2020-08-14 10:45:00', '2020-08-14 09:45:00', 9);
-insert into working_hours (entry_id, end_time, start_time, worker_id) values (89, '2020-08-11 12:30:00', '2020-08-11 10:30:00', 10);
-insert into working_hours (entry_id, end_time, start_time, worker_id) values (52, '2020-08-13 15:30:00', '2020-08-13 14:30:00', 10);
+insert into working_hours (entry_id, end_time, start_time, worker_id) values (991, '2020-11-10 08:30:00', '2020-11-10 07:30:00', 9);
+insert into working_hours (entry_id, end_time, start_time, worker_id) values (504, '2020-11-12 08:30:00', '2020-11-12 07:30:00', 9);
+insert into working_hours (entry_id, end_time, start_time, worker_id) values (864, '2020-11-14 10:45:00', '2020-11-14 09:45:00', 9);
+insert into working_hours (entry_id, end_time, start_time, worker_id) values (89, '2020-11-11 12:30:00', '2020-11-11 10:30:00', 10);
+insert into working_hours (entry_id, end_time, start_time, worker_id) values (52, '2020-11-13 15:30:00', '2020-11-13 14:30:00', 10);
