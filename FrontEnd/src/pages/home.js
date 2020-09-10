@@ -43,7 +43,8 @@ const Home = (loginResponse) => {
             const details = {
                 userType: loginResponse.location.state.loginDetails.role,
                 username: "JohnnyJohnJohns",
-                firstName: "John"
+                firstName: "John",
+                lastName: "Johns"
             }
             setUserDetails(details);
 
@@ -80,7 +81,7 @@ const Home = (loginResponse) => {
                     case "/home":
                         return <HomeAppointments userDetails={userDetails}/>
                     case "/profile":
-                        return <HomeAppointments userDetails={userDetails}/>
+                        return <ProfilePage userDetails={userDetails}/>
                     case "/availability":
                         return <Availability userDetails={userDetails}/>
                     case "/history":

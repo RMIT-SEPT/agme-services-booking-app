@@ -28,7 +28,7 @@
 
 #profileDetailsContainer p {
     font-size: 25px;
-    color: green;
+    font-weight: bold;
 }
 
 #profileDetailsContainer span {
