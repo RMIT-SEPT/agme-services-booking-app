@@ -1,31 +1,61 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import '../css/appointment.css';
 
 import Appointment from './appointment.js';
 
-const PastAppointments = (userJSON) => {
-    const userType = userJSON.userDetails.userType;
-    const userName = userJSON.userDetails.userName;
-    const sampleAppointments = {
-        appointment1: {
-            time: "9AM - 10AM",
-            service: "Fridge",
-            worker: "Dane Swan",
-            description: "AAAAAAAAAAAA"
-        },
-        appointment2: {
-            time: "11AM - 1PM",
-            service: "Lemon",
-            worker: "Mylie Cyrus",
-            description: "b"
+const PastAppointments = ({userDetails}) => {
+    const userType = userDetails.userType;
+
+    const [appointments, setAppointments] = useState([]);
+
+    // useEffect({
+        // if (userType === 'customer') {
+        //     // Request for customer's past bookings
+        //     const response = await fetch(`http://localhost:8080/api/v1/customer/view/past`, {
+        //         method: 'GET',
+        //         headers: {
+        //             'Accept': '*/*',
+        //             'Authorization': `Bearer ${localStorage.getItem('token')}`
+        //         }
+        //     }).then(response => {
+        //         response.json().then(array => {
+        //             setAppointments(array);
+        //         })
+        //     });
+
+        // } else if (userType === 'worker') {
+        //     // Do a request for worker's past appointments
+        //     setAppointments(null);
+        // }
+    // }, []);
+    useEffect(() => {
+        const fetchData = async() => {
+            // Request for customer's past bookings.
+            if (userType === 'customer') {
+                await fetch('http://localhost:8080/api/v1/customer/view/past', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                }).then(response => {
+                    response.json().then(array => {
+                        setAppointments(array);
+                    })
+                })
+            } else if (userType === 'worker') {
+                //Do a request for worker's past appointments.
+                setAppointments(null);
+            }
         }
-    }
+        // Have to make the async function then call it for some reason.
+        fetchData();
+    });
 
     return(
         <div id="appointmentsContainer">
             <h1> Past Appointments </h1>
-            {Object.entries(sampleAppointments).map(([key, value]) => {
-                return <Appointment details={sampleAppointments[key]}/>
+            {Object.entries(appointments).map(([key, value]) => {
+                return <Appointment details={value}/>
             })}
         </div>
     )

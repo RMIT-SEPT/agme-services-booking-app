@@ -4,7 +4,6 @@ import { Switch, Route } from 'react-router-dom';
 import Login from './pages/login';
 import Signup from './pages/signup';
 import Home from './pages/home';
-import Profile from './pages/profile';
 
 const Main = () =>  {
     return (

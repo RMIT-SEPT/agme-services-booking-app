@@ -80,7 +80,7 @@ const Home = (loginResponse) => {
                     case "/home":
                         return <HomeAppointments userDetails={userDetails}/>
                     case "/profile":
-                        return <HomeAppointments userDetails={userDetails}/>
+                        return <ProfilePage userDetails={userDetails}/>
                     case "/availability":
                         return <Availability userDetails={userDetails}/>
                     case "/history":
