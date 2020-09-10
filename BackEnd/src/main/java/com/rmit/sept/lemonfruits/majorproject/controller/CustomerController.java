@@ -16,7 +16,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -89,7 +88,6 @@ public class CustomerController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Username already exists");
         }
 
-        userEntity.setRoles(Arrays.asList("CUSTOMER"));
         userEntity.setPassword(passwordEncoder.encode(userEntity.getPassword()));
         customerRepository.save(userEntity);
     }
