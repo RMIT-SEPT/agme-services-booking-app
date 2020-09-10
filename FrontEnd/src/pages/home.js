@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useHistory, Redirect, Route } from 'react-router-dom';
+import { useHistory, Redirect, Route, useLocation } from 'react-router-dom';
 import '../css/home.css';
 
 import Dashboard from '../components/dashboard';
@@ -10,13 +10,16 @@ import BookingPage from './customer/bookingPage';
 import Availability from './worker/availabilityPage';
 import ProfilePage from './profile';
 
-const Home = () => {
+const Home = (loginResponse) => {
+    var userRole;
     const [authenticated, setAuthenticated] = useState(localStorage.getItem('token') === null ? false : true);
     const [userDetails, setUserDetails] = useState({});
     // Use Effect will execute upon fully rendering.
     useEffect(async() => {
+        userRole = loginResponse.location.state.loginDetails.role;
+        if (userRole === 'customer') {
             // Successful login, get user details from backend.
-            const response = await fetch('http://localhost:8080/api/v1/customer/profile', {
+            const response = await fetch(`http://localhost:8080/api/v1/customer/profile`, {
                 method: 'GET',
                 headers: {
                     'Accept': '*/*',
@@ -25,7 +28,7 @@ const Home = () => {
             }).then(response => {
                 response.json().then(json => {
                     const details = {
-                        userType: 'customer',
+                        userType: loginResponse.location.state.loginDetails.role,
                         username: json.username,
                         firstName: json.firstName,
                         lastName: json.lastName,
@@ -35,30 +38,25 @@ const Home = () => {
                     setUserDetails(details);
                 })
             });
-    }, []);
+        } else if (userRole === 'worker') {
+            // Do a request for worker's profile details
+            const details = {
+                userType: loginResponse.location.state.loginDetails.role,
+                username: "JohnnyJohnJohns",
+                firstName: "John"
+            }
+            setUserDetails(details);
 
-    // const getUserDetails = async() => {
-    //     // Successful login, get user details from backend.
-    //     const response = await fetch('http://localhost:8080/api/v1/customer/profile', {
-    //         method: 'GET',
-    //         headers: {
-    //             'Accept': '*/*',
-    //             'Authorization': `Bearer ${localStorage.getItem('token')}`
-    //         }
-    //     }).then(response => {
-    //         response.json().then(json => {
-    //             const details = {
-    //                 userType: 'customer',
-    //                 username: json.username,
-    //                 firstName: json.firstName,
-    //                 lastName: json.lastName,
-    //                 address: json.address,
-    //                 phoneNumber: json.phoneNumber
-    //             }
-    //             setUserDetails(details);
-    //         })
-    //     });
-    // }
+        } else {
+            // Relevant admin details, if necessary.
+            const details = {
+                userType: loginResponse.location.state.loginDetails.role,
+                username: "JohnnyJohnJohns",
+                firstName: "John"
+            }
+            setUserDetails(details);
+        }
+    }, []);
 
     const pathname = window.location.pathname;
 
