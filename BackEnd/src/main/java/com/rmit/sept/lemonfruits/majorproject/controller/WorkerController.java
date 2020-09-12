@@ -1,37 +1,91 @@
 package com.rmit.sept.lemonfruits.majorproject.controller;
 
 import com.rmit.sept.lemonfruits.majorproject.entity.BookingEntity;
+import com.rmit.sept.lemonfruits.majorproject.entity.WorkerEntity;
 import com.rmit.sept.lemonfruits.majorproject.entity.WorkingHoursEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.rmit.sept.lemonfruits.majorproject.model.HoursRequest;
+import com.rmit.sept.lemonfruits.majorproject.repository.BookingRepository;
+import com.rmit.sept.lemonfruits.majorproject.repository.WorkingHoursRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
-import java.util.Collections;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
+
+import static org.springframework.http.ResponseEntity.ok;
 
 @RestController
 @RequestMapping("/api/v1/worker")
 public class WorkerController {
 
-    @PostMapping("/availability")
-    public void createAvailability() {
+    private WorkingHoursRepository workingHoursRepository;
 
+    private BookingRepository bookingRepository;
+
+    @GetMapping(value = "/profile", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<WorkerEntity> viewProfile(@AuthenticationPrincipal WorkerEntity workerEntity) {
+        return ok(workerEntity);
     }
 
-    @GetMapping
-    public List<WorkingHoursEntity> getAvailability() {
-        return Collections.emptyList();
+    @PostMapping(value = "/availability")
+    public void createAvailability(@AuthenticationPrincipal WorkerEntity workerEntity, @RequestBody HoursRequest hoursRequest) {
+        if (!workingHoursRepository.isThereOverlapingEntry(hoursRequest.getStartTime(), hoursRequest.getEndTime()).isEmpty())
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Overlapping entry already made");
+
+        if (hoursRequest.getEndTime().isBefore(hoursRequest.getStartTime()))
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "End time must be after start time");
+
+        WorkingHoursEntity newEntry = WorkingHoursEntity
+                .builder()
+                .workerEntity(workerEntity)
+                .endTime(hoursRequest.getEndTime())
+                .startTime(hoursRequest.getStartTime())
+                .build();
+
+        workingHoursRepository.save(newEntry);
     }
 
-    @PostMapping("/bookings")
-    public List<BookingEntity> viewBookings() {
-        return Collections.emptyList();
+    @DeleteMapping(value = "/availability/{entryId}")
+    public void removeAvailability(@AuthenticationPrincipal WorkerEntity workerEntity, @PathVariable Long entryId) {
+        Optional<WorkingHoursEntity> workingHoursEntity = workingHoursRepository.findById(entryId);
+
+        if (!workingHoursEntity.isPresent())
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Entry not found");
+
+        if (workingHoursEntity.get().getWorkerEntity().getId() != workerEntity.getId())
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Do not have access to entry");
+
+        workingHoursRepository.delete(workingHoursEntity.get());
     }
 
-    @PostMapping("/booking/history")
-    public List<BookingEntity> viewBookingHistory() {
-        return Collections.emptyList();
+    @GetMapping(value = "/availability", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<WorkingHoursEntity> getAvailability(@AuthenticationPrincipal WorkerEntity workerEntity) {
+        return workingHoursRepository.findByWorkerEntityAndStartTimeAfter(workerEntity, LocalDateTime.now());
     }
 
+    @GetMapping(value = "/bookings", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<BookingEntity> viewBookings(@AuthenticationPrincipal WorkerEntity workerEntity) {
+        return bookingRepository.findByWorkerEntityAndStartTimeAfter(workerEntity, LocalDateTime.now());
+    }
+
+    @GetMapping("/bookings/history")
+    public List<BookingEntity> viewBookingHistory(@AuthenticationPrincipal WorkerEntity workerEntity) {
+        return bookingRepository.findByWorkerEntity(workerEntity);
+    }
+
+    @Autowired
+    public void setWorkingHoursRepository(WorkingHoursRepository workingHoursRepository) {
+        this.workingHoursRepository = workingHoursRepository;
+    }
+
+    @Autowired
+    public void setBookingRepository(BookingRepository bookingRepository) {
+        this.bookingRepository = bookingRepository;
+    }
 }

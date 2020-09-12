@@ -15,7 +15,8 @@ import java.time.LocalDateTime;
 public class WorkingHoursEntity {
 
     @Id
-    private Integer entryId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long entryId;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "worker_id")
