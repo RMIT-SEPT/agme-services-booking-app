@@ -2,6 +2,7 @@ package com.rmit.sept.lemonfruits.majorproject.controller;
 
 import com.rmit.sept.lemonfruits.majorproject.entity.BookingEntity;
 import com.rmit.sept.lemonfruits.majorproject.entity.CustomerEntity;
+import com.rmit.sept.lemonfruits.majorproject.model.ProfileChangeRequest;
 import com.rmit.sept.lemonfruits.majorproject.repository.BookingRepository;
 import com.rmit.sept.lemonfruits.majorproject.repository.CustomerRepository;
 import com.rmit.sept.lemonfruits.majorproject.repository.UserRepository;
@@ -78,8 +79,34 @@ public class CustomerController {
     }
 
     @PostMapping(value = "/profile/edit")
-    public void editProfile() {
+    public void editProfile(@AuthenticationPrincipal CustomerEntity customerEntity, @RequestBody ProfileChangeRequest request) {
 
+        if (request.getUsername() != null) {
+            if (userRepository.findByUsername(request.getUsername()).isPresent()) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Username already in use");
+            } else {
+                customerEntity.setUsername(request.getUsername());
+            }
+        }
+
+        if (request.getAddress() != null)
+            customerEntity.setAddress(request.getAddress());
+
+        if (request.getPhoneNumber() != null)
+            customerEntity.setPhoneNumber(request.getPhoneNumber());
+
+        if (request.getFirstName() != null)
+            customerEntity.setFirstName(request.getFirstName());
+
+        if (request.getLastName() != null)
+            customerEntity.setLastName(request.getLastName());
+
+        if (request.getPassword() != null) {
+            if (!passwordEncoder.matches(request.getPassword(), customerEntity.getPassword()))
+                customerEntity.setPassword(passwordEncoder.encode(request.getPassword()));
+        }
+
+        customerRepository.save(customerEntity);
     }
 
     @PostMapping("/signup")
