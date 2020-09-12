@@ -43,7 +43,8 @@ const Home = (loginResponse) => {
             const details = {
                 userType: loginResponse.location.state.loginDetails.role,
                 username: "JohnnyJohnJohns",
-                firstName: "John"
+                firstName: "John",
+                lastName: "Johns"
             }
             setUserDetails(details);
 
