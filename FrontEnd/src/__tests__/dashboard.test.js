@@ -5,7 +5,6 @@ import Adapter from 'enzyme-adapter-react-16';
 
 import { cleanup } from '@testing-library/react'
 import { shallow } from 'enzyme';
-import { useHistory } from 'react-router-dom';
 
 Enzyme.configure({adapter: new Adapter()})
 afterEach(cleanup);
@@ -102,7 +101,7 @@ jest.mock('react-router-dom', () => ({
             push: mockHistoryPush
         }),
 }));
-test('clicking profile button (for any user type) will lead to the url path /profile', () => {
+test('clicking profile button (for any user type) will correctly push path onto history with the current state (userDetails)', () => {
     const wrapper = shallow(<Dashboard userDetails={customerDetails}/>);
     const profileButton = wrapper.find('#profile');
 
