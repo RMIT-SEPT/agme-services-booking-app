@@ -1,8 +1,9 @@
 import React from 'react';
-import Enzyme, { mount } from 'enzyme';
+import Enzyme from 'enzyme';
 import Dashboard from '../components/dashboard.js';
 import Adapter from 'enzyme-adapter-react-16';
 
+import 'babel-polyfill';
 import { cleanup } from '@testing-library/react'
 import { shallow } from 'enzyme';
 
