@@ -10,9 +10,9 @@ const HomeAppointments = ({userDetails}) => {
 
     useEffect(() => {
         const fetchData = async() => {
-            // Request for customer's current bookings
+
             if (userType === 'customer') {
-                await fetch('http://localhost:8080/api/v1/customer/view/', {
+                await fetch('http://localhost:8080/api/v1/customer/view', {
                     method: 'GET',
                     headers: {
                         'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -21,21 +21,29 @@ const HomeAppointments = ({userDetails}) => {
                     response.json().then(array => {
                         setAppointments(array);
                     })
-                })
+                });
             } else if (userType === 'worker') {
-                //Do a request for worker's past appointments.
-                setAppointments(null);
+                await fetch('http://localhost:8080/api/v1/worker/bookings', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                }).then(response => {
+                    response.json().then(array => {
+                        setAppointments(array);
+                    })
+                });
             }
         }
         // Have to make the async function then call it for some reason.
         fetchData();
-    });
+    }, []);
 
     return(
         <div id="appointmentsContainer">
             <h1> Your Appointments </h1>
             {Object.entries(appointments).map(([key, value]) => {
-                return <Appointment details={value}/>
+                return <Appointment details={value} userType={userType}/>
             })}
         </div>
     )
