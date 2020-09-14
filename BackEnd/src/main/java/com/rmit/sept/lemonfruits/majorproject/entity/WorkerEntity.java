@@ -25,11 +25,11 @@ public class WorkerEntity extends UserEntity {
     private String role;
 
     @JsonIgnore
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "workerEntity")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "workerEntity")
     private Set<WorkingHoursEntity> workingHours;
 
     @JsonIgnore
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "workerEntity")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "workerEntity")
     private Set<BookingEntity> bookings;
 
     @Override

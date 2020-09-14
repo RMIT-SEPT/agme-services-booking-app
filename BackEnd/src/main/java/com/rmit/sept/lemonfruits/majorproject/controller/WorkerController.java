@@ -62,6 +62,9 @@ public class WorkerController {
         if (workingHoursEntity.get().getWorkerEntity().getId() != workerEntity.getId())
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Do not have access to entry");
 
+        if (workingHoursEntity.get().getEndTime().isBefore(LocalDateTime.now()))
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Cannot delete past entry");
+
         workingHoursRepository.delete(workingHoursEntity.get());
     }
 
@@ -72,7 +75,12 @@ public class WorkerController {
 
     @GetMapping(value = "/bookings", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<BookingEntity>> viewBookings(@AuthenticationPrincipal WorkerEntity workerEntity) {
-        return ok(bookingRepository.findByWorkerEntityAndStartTimeAfter(workerEntity, LocalDateTime.now()));
+        return ok(
+                workerEntity
+                        .getBookings()
+                        .stream()
+                        .filter(b -> b.getEndTime().isAfter(LocalDateTime.now()))
+                        .collect(Collectors.toList()));
     }
 
     @GetMapping("/bookings/history")
