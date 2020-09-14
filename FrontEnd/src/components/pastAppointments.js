@@ -29,7 +29,7 @@ const PastAppointments = ({userDetails}) => {
         }
         // Have to make the async function then call it for some reason.
         fetchData();
-    });
+    }, []);
 
     return(
         <div id="appointmentsContainer">

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
@@ -8,38 +8,45 @@ const BookingPage = (userDetails) => {
     const userName = userDetails.userName;
     const localizer = momentLocalizer(moment)
 
-    const date = new Date();
+    // Get start and end times
+    //const startTime = new Date();
 
-    const [myEventsList, setEvents] = useState([{
-        title: "hello",
-        start: new Date(),
-        end: new Date(),
-        allDay: false,
-        resource: null
-    }, 
-    {
-        title: "Fridge",
-        start: new Date('September 2, 2020 03:00:00'),
-        end: new Date('September 2, 2020 04:00:00'),
-        allDay: false,
-        resource: {
-            worker: "Dane Swan",
-            description: "AAAAAAAAAAAA"
-        }
-    },
-    {
-        title: "Lemon",
-        start: new Date('September 1, 2020 01:00:00'),
-        end: new Date('September 1, 2020 01:30:00'),
-        allDay: false,
-        resource: {
-            worker: "Mylie Cyrus",
-            description: "b"
-        }
-    }]);
+    const [availability, setAvailability] = useState([]);
 
-    const handleSelect = ({start, end}) => {
+    useEffect(() => {
+        const fetchData = async() => {
+            const response = await fetch(`http://localhost:8080/api/v1/customer/availabilities`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            }).then(response => {
+                
+                response.json().then(json => {
+                    json.map((availableBooking) => {
+                        
+                        const event = {
+                            title: `${availableBooking.workerEntity.role}: ${availableBooking.workerEntity.firstName}`,
+                            start: moment(availableBooking.startTime).toDate(),
+                            end: moment(availableBooking.endTime).toDate(),
+                            resource: {
+                                bookingId: availableBooking.bookingId,
+                                worker: availableBooking.workerEntity
+                            }
+                        }
+                        console.log(event)
+                        setAvailability([...availability, event])
+                    });
+                    
+                })
+            })
+        }
+        fetchData();
+    }, [])
+    /*
+    const handleAdd = ({start, end}) => {
         const title = window.prompt('New Event name')
+        
         if (title) {
             setEvents([...myEventsList, {
                 title: title,
@@ -49,22 +56,19 @@ const BookingPage = (userDetails) => {
                 resource: null
             }]);
         }
+        
     }
-
+    */
     return(
         <div id="bookings">
             <Calendar
+                id="customer-calendar"
                 localizer={localizer}
-                events={myEventsList}
-                startAccessor="start"
-                endAccessor="end"
+                events={availability}
                 style={{ height: 400, width: 750}}
                 defaultView={'work_week'}
                 views={['work_week', 'day', 'agenda']}
-                date={date}
-                selectable
-                onSelectEvent={event => alert(event.title)}
-                onSelectSlot={handleSelect}
+                //onSelectEvent={handleAdd}
             />
         </div>
     )
