@@ -9,66 +9,72 @@ const BookingPage = (userDetails) => {
     const localizer = momentLocalizer(moment)
 
     // Get start and end times
-    //const startTime = new Date();
+    //const startTimeFrame
+    //const endTimeFrame
 
-    const [availability, setAvailability] = useState([]);
+    const [availabilities, setAvailabilities] = useState([]);
 
     useEffect(() => {
         const fetchData = async() => {
-            const response = await fetch(`http://localhost:8080/api/v1/customer/availabilities`, {
+            await fetch(`http://localhost:8080/api/v1/customer/availabilities`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
                 }
             }).then(response => {
-                
                 response.json().then(json => {
-                    json.map((availableBooking) => {
-                        
+                    json.map((value) => {
+                        console.log(value.startTime)
                         const event = {
-                            title: `${availableBooking.workerEntity.role}: ${availableBooking.workerEntity.firstName}`,
-                            start: moment(availableBooking.startTime).toDate(),
-                            end: moment(availableBooking.endTime).toDate(),
+                            title: `${value.workerEntity.role}: ${value.workerEntity.firstName}`,
+                            start: moment(value.startTime).toDate(),
+                            end: moment(value.endTime).toDate(),
                             resource: {
-                                bookingId: availableBooking.bookingId,
-                                worker: availableBooking.workerEntity
+                                bookingId: value.bookingId,
+                                worker: value.workerEntity
                             }
                         }
-                        console.log(event)
-                        setAvailability([...availability, event])
+                        setAvailabilities([...availabilities, event])
                     });
-                    
                 })
             })
         }
         fetchData();
     }, [])
-    /*
-    const handleAdd = ({start, end}) => {
-        const title = window.prompt('New Event name')
-        
-        if (title) {
-            setEvents([...myEventsList, {
-                title: title,
-                start: start,
-                end: end,
-                allDay: false,
-                resource: null
-            }]);
+    
+    const handleAdd = (event) => {
+        if (window.confirm("Would you like to add this booking?")) {
+            // add customer entity to booking in database
+            makeBooking(event.resource)
         }
         
     }
-    */
+
+    const makeBooking = async(resource) => {
+        await fetch(`http://localhost:8080/api/v1/customer/booking/${resource.bookingId}`, {
+            method: 'GET',
+            headers: {
+                'Accept': '*/*',
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            },
+        }).then((response) => {
+            if (response.ok) {
+                // remove from calendar availabilities
+                setAvailabilities(availabilities.filter((availability) => (availability.resource.bookingId != resource.bookingId)));
+            }
+        })
+    }
+    
     return(
         <div id="bookings">
             <Calendar
                 id="customer-calendar"
                 localizer={localizer}
-                events={availability}
+                events={availabilities}
                 style={{ height: 400, width: 750}}
                 defaultView={'work_week'}
                 views={['work_week', 'day', 'agenda']}
-                //onSelectEvent={handleAdd}
+                onSelectEvent={handleAdd}
             />
         </div>
     )
