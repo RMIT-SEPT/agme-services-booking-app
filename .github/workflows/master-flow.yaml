@@ -1,0 +1,4 @@
+# master-flow.yaml
+# On change to master, build docker images
+# and push yaml to AWS
+
