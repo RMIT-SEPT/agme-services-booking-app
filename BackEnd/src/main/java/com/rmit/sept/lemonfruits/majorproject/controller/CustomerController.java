@@ -44,7 +44,7 @@ public class CustomerController {
     }
 
     @GetMapping(value = "/booking/{bookingId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<BookingEntity> makeBooking(@AuthenticationPrincipal CustomerEntity customerEntity, @PathVariable Integer bookingId) {
+    public ResponseEntity<BookingEntity> makeBooking(@AuthenticationPrincipal CustomerEntity customerEntity, @PathVariable Long bookingId) {
         Optional<BookingEntity> bookingEntity = bookingRepository.findById(bookingId);
         bookingEntity.filter(b -> b != null && b.getCustomerEntity() == null).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Booking not found"));
 

@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public interface BookingRepository extends JpaRepository<BookingEntity, Integer> {
+public interface BookingRepository extends JpaRepository<BookingEntity, Long> {
 
     //Get bookings that have not been assigned customer AND start time is after input time
     List<BookingEntity> findByCustomerEntityIsNullAndStartTimeAfter(LocalDateTime time);

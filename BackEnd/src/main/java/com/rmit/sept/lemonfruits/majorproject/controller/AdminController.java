@@ -4,6 +4,7 @@ import com.rmit.sept.lemonfruits.majorproject.entity.AdminEntity;
 import com.rmit.sept.lemonfruits.majorproject.entity.BookingEntity;
 import com.rmit.sept.lemonfruits.majorproject.entity.WorkerEntity;
 import com.rmit.sept.lemonfruits.majorproject.entity.WorkingHoursEntity;
+import com.rmit.sept.lemonfruits.majorproject.model.BookingRequest;
 import com.rmit.sept.lemonfruits.majorproject.repository.BookingRepository;
 import com.rmit.sept.lemonfruits.majorproject.repository.WorkerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +46,9 @@ public class AdminController {
 
     @PostMapping(value = "/workers", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<WorkerEntity> createWorker(@AuthenticationPrincipal AdminEntity adminEntity, @RequestBody WorkerEntity workerEntity) {
+        if (adminEntity.getAdminId() != null)
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Id cannot be set");
+
         if (workerRepository.getByUsername(workerEntity.getUsername()).isPresent())
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Username is already taken");
 
@@ -68,14 +72,35 @@ public class AdminController {
     }
 
     @PostMapping(value = "/booking", produces = MediaType.APPLICATION_JSON_VALUE)
-    public void makeBooking(@AuthenticationPrincipal AdminEntity adminEntity, @PathParam("workerId") String workerId) {
+    public void makeBooking(@AuthenticationPrincipal AdminEntity adminEntity, @RequestBody BookingRequest bookingRequest) {
+        if (bookingRequest.getEndTime().isBefore(bookingRequest.getStartTime()))
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "End time must be after start time");
 
+        WorkerEntity workerEntity = workerRepository.findById(bookingRequest.getWorkerId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Worker not found"));
 
+        BookingEntity newEntry = BookingEntity
+                .builder()
+                .workerEntity(workerEntity)
+                .endTime(bookingRequest.getEndTime())
+                .startTime(bookingRequest.getStartTime())
+                .build();
+
+        bookingRepository.save(newEntry);
     }
 
-    @PostMapping(value = "/booking/{bookingId}/{workerId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public void assignWorkerToBooking() {
+    @GetMapping(value = "/booking/{bookingId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public void assignWorkerToBooking(@AuthenticationPrincipal AdminEntity adminEntity, @PathVariable Long bookingId, @PathParam("workerId") Long workerId) {
+        BookingEntity bookingEntity = bookingRepository.getOne(bookingId);
 
+        WorkerEntity workerEntity = workerRepository.findById(workerId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Worker not found"));
+
+        if (bookingEntity == null)
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Could not find booking");
+
+        bookingEntity.setWorkerEntity(workerEntity);
+        bookingRepository.save(bookingEntity);
     }
 
     @GetMapping(value = "/bookings", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -87,7 +112,7 @@ public class AdminController {
     }
 
     @GetMapping(value = "/bookings/history", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<BookingEntity>> seeBookingHistory() {
+    public ResponseEntity<List<BookingEntity>> seeBookingHistory(@AuthenticationPrincipal AdminEntity adminEntity) {
         return ok(
                 bookingRepository.findAll()
                         .stream()
@@ -95,15 +120,18 @@ public class AdminController {
                         .collect(Collectors.toList()));
     }
 
-    public void getOpenHours() {
+    @GetMapping(value = "/businesshours", produces = MediaType.APPLICATION_JSON_VALUE)
+    public void getBusinessHour(@AuthenticationPrincipal AdminEntity adminEntity) {
 
     }
 
-    public void setOpenHours() {
+    @PostMapping(value = "/businesshours", produces = MediaType.APPLICATION_JSON_VALUE)
+    public void setBusinessHour(@AuthenticationPrincipal AdminEntity adminEntity) {
 
     }
 
-    public void deleteOpenHours() {
+    @DeleteMapping(value = "/businesshours/{businessHoursId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public void deleteBusinessHour(@AuthenticationPrincipal AdminEntity adminEntity) {
 
     }
 
