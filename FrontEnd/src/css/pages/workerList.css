@@ -1,0 +1,22 @@
+#workerListContainer {
+    flex-direction: row;
+    margin: 20px 20px;
+}
+
+#workerListContainer h1 {
+    font-size: 30px;
+    font-style: italic;
+    border-bottom: 2px solid blue;
+}
+
+#workerListContainer p, span {
+    font-size: 20px;
+}
+
+#workerListContainer span {
+    float: right;
+}
+
+#workerContainer {
+    border-bottom: 2px solid blue;
+}

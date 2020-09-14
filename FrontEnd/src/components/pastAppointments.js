@@ -22,14 +22,23 @@ const PastAppointments = ({userDetails}) => {
                         setAppointments(array);
                     })
                 })
-            } else if (userType === 'worker') {
-                //Do a request for worker's past appointments.
-                setAppointments(null);
+            } else if (userType === 'worker' || userType === 'admin') {
+                // Worker and Admin have similar endpoint, only difference is the userType.
+                await fetch(`http://localhost:8080/api/v1/${userType}/bookings/history`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                }).then(response => {
+                    response.json().then(array => {
+                        setAppointments(array);
+                    })
+                })
             }
         }
         // Have to make the async function then call it for some reason.
         fetchData();
-    });
+    }, []);
 
     return(
         <div id="appointmentsContainer">

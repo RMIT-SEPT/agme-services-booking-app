@@ -8,12 +8,17 @@ const Appointment = ({details, userType}) => {
     const customer = details.customerEntity;
     const worker = details.workerEntity;
 
-    const getCustomerName = () => {
-        return <p>Customer Assigned: {customer.firstName} {customer.lastName}</p>
-    }
+    const renderAppointmentDetails = () => {
+        switch (user) {
+            case ('customer'):
+                return <p>Worker Assigned: {worker.firstName} {worker.lastName} </p>
 
-    const getWorkerName = () => {
-        return <p>Worker Assigned: {worker.firstName} {worker.lastName} </p>
+            case ('worker'):
+                return <p>Customer: {customer.firstName} {customer.lastName}</p>
+
+            case ('admin'):
+                return <p>Customer: {customer.firstName} {customer.lastName}<br/> Worker Assigned: {worker.firstName} {worker.lastName}</p>
+        }
     }
 
     // The bottom of the appointment will say 'worker assigned' if the user variable is a customer. Vice versa as well.
@@ -25,7 +30,7 @@ const Appointment = ({details, userType}) => {
             </div>
             <div className="infoDiv">
                 <p>ID: {bookingId}</p>
-                {user === 'customer' ? getWorkerName() : getCustomerName()}
+                {renderAppointmentDetails()}
             </div>
         </div>
     )
