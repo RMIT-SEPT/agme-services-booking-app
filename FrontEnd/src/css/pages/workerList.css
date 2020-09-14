@@ -9,14 +9,82 @@
     border-bottom: 2px solid blue;
 }
 
-#workerListContainer p, span {
+.workerDetails {
     font-size: 20px;
 }
 
-#workerListContainer span {
+.idAndRole {
+    font-size: 20px;
     float: right;
 }
 
 #workerContainer {
     border-bottom: 2px solid blue;
+}
+
+.removeBtn {
+    border: 2px solid black;
+    border-radius: 3px;
+    background-color: red;
+    cursor: pointer;
+
+    margin-left: 30px;
+}
+
+.addBtn {
+    border: 2px solid black;
+    border-radius: 3px;
+    background-color: aqua;
+    cursor: pointer;
+
+    float: right;
+    height: 34px;
+    width: 100px;
+    font-weight: bold;
+}
+
+#closeModalBtn {
+    position: absolute;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+
+    border: 2px solid black;
+    border-radius: 3px;
+    background-color: red;
+    cursor: pointer;
+
+    font-weight: bold;
+    margin-top: 5px;
+}
+
+#newWorkerFormArea {
+    text-align: center;
+}
+
+#newWorkerFormArea p {
+    font-weight: bold;
+    font-size: 20px;
+}
+
+#newWorkerForm input {
+    display: block;
+    margin-top: 10px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 70%;
+
+    border: 2px solid blue;
+    border-radius: 3px;
+}
+
+#submitNewWorkerBtn {
+    margin-top: 20% !important;
+    margin-bottom: 182px;
+    padding: 10px 20px;
+    
+    background-color: blue;
+    color: white;
+
+    cursor: pointer;
 }

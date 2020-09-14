@@ -69,6 +69,7 @@ const AvailabilityPage = ({userDetails}) => {
     }
 
     const handleSelection = (event) => {
+        console.log(JSON.stringify(event,null,2))
         const newEvent = {
             startTime: moment(event.start).format('YYYY-MM-DD[T]HH:mm:ss[.000Z]'),
             endTime: moment(event.end).format('YYYY-MM-DD[T]HH:mm:ss[.000Z]')
@@ -101,6 +102,7 @@ const AvailabilityPage = ({userDetails}) => {
 
     return(
         <div id="availabilityContainer">
+            {console.log(`EVENTS:\n${JSON.stringify(availability,null,2)}`)}
             <Calendar 
                 localizer={localizer}
                 events={availability}
