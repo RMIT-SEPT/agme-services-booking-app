@@ -120,6 +120,14 @@ public class AdminController {
                         .collect(Collectors.toList()));
     }
 
+    @DeleteMapping(value = "/booking/{bookingId}")
+    public void deleteBooking(@AuthenticationPrincipal AdminEntity adminEntity, @PathVariable Long bookingId) {
+        BookingEntity bookingEntity = bookingRepository.findById(bookingId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Booking not found"));
+
+        bookingRepository.delete(bookingEntity);
+    }
+
     @GetMapping(value = "/businesshours", produces = MediaType.APPLICATION_JSON_VALUE)
     public void getBusinessHour(@AuthenticationPrincipal AdminEntity adminEntity) {
 
