@@ -14,12 +14,11 @@ const Home = (loginResponse) => {
     var userRole;
     const [authenticated, setAuthenticated] = useState(localStorage.getItem('token') === null ? false : true);
     const [userDetails, setUserDetails] = useState({});
-    // Use Effect will execute upon fully rendering.
+
     useEffect(async() => {
-        userRole = loginResponse.location.state.loginDetails.role;
-        if (userRole === 'customer') {
-            // Successful login, get user details from backend.
-            const response = await fetch(`http://localhost:8080/api/v1/customer/profile`, {
+        const fetchData = async() => {
+            userRole = loginResponse.location.state.loginDetails.role;
+            const response = await fetch(`http://localhost:8080/api/v1/${userRole}/profile`, {
                 method: 'GET',
                 headers: {
                     'Accept': '*/*',
@@ -27,36 +26,42 @@ const Home = (loginResponse) => {
                 }
             }).then(response => {
                 response.json().then(json => {
-                    const details = {
-                        userType: loginResponse.location.state.loginDetails.role,
-                        username: json.username,
-                        firstName: json.firstName,
-                        lastName: json.lastName,
-                        address: json.address,
-                        phoneNumber: json.phoneNumber
+                    if (userRole == 'customer') {
+                        const details = {
+                            userType: loginResponse.location.state.loginDetails.role,
+                            id: json.id,
+                            username: json.username,
+                            firstName: json.firstName,
+                            lastName: json.lastName,
+                            address: json.address,
+                            phoneNumber: json.phoneNumber
+                        }
+                        setUserDetails(details);
+                    } else if (userRole == 'worker') {
+                        const details = {
+                            userType: loginResponse.location.state.loginDetails.role,
+                            id: json.id,
+                            username: json.username,
+                            firstName: json.firstName,
+                            lastName: json.lastName,
+                            role: json.role
+                        }
+                        setUserDetails(details);
+                    } else if (userRole == 'admin') {
+                        // Not sure admin's details payload.
+                        const details = {
+                            userType: loginResponse.location.state.loginDetails.role,
+                            id: json.id,
+                            username: json.username,
+                            firstName: json.firstName,
+                            lastName: json.lastName
+                        }
+                        setUserDetails(details);
                     }
-                    setUserDetails(details);
                 })
-            });
-        } else if (userRole === 'worker') {
-            // Do a request for worker's profile details
-            const details = {
-                userType: loginResponse.location.state.loginDetails.role,
-                username: "JohnnyJohnJohns",
-                firstName: "John",
-                lastName: "Johns"
-            }
-            setUserDetails(details);
-
-        } else {
-            // Relevant admin details, if necessary.
-            const details = {
-                userType: loginResponse.location.state.loginDetails.role,
-                username: "JohnnyJohnJohns",
-                firstName: "John"
-            }
-            setUserDetails(details);
+            })
         }
+        fetchData();
     }, []);
 
     const pathname = window.location.pathname;
