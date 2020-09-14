@@ -11,23 +11,29 @@ const WorkerList = ({userDetails}) => {
     const [workersData, setWorkersData] = useState([]);
     const localizer = momentLocalizer(moment);
 
-    useEffect(async() => {
+    useEffect(() => {
         var allWorkers = [];
 
-        const asyncGetWorkerHours = async(value, individualWorkerDetails) => {
-            await fetch(`http://localhost:8080/api/v1/admin/workers/${value.id}`, {
-                method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+        const getAllWorkerHours = (array) => {
+            // For each worker object, need to make a fetch to get that worker's hours. Key is index, Value is the worker object itself.
+            Object.entries(array).map(async([key, value]) => {
+                let individualWorkerDetails = {
+                    id: value.id,
+                    details: value
                 }
-            }).then(response => {
-                response.json().then(array => {
-                    individualWorkerDetails['availability'] = array;
-                    allWorkers.push(individualWorkerDetails);
+                let response = await fetch(`http://localhost:8080/api/v1/admin/workers/${value.id}`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                }).then(response => {
+                    response.json().then(array => {
+                        individualWorkerDetails['availability'] = array;
+                        allWorkers.push(individualWorkerDetails);
+                        console.log("finshed a worker");
+                    })
                 })
             })
-            console.log("This should be before")
-            return individualWorkerDetails;
         }
 
         const fetchData = async() => {
@@ -40,26 +46,43 @@ const WorkerList = ({userDetails}) => {
 
             }).then(response => {
                 // Array holds all worker objects, each with format {id=..., firstName=..., lastName=..., username=..., role=...}
-                response.json().then(array => {
+                response.json().then(async(array) => {
+                    console.log(JSON.stringify(array,null,2))
+                    const workersArray = [];
 
-                    // For each worker object, need to make a fetch to get that worker's hours. Key is index, Value is the worker object itself.
-                    Object.entries(array).map(async([key, value]) => {
+                    let i = 0;
+                    const requests = Object.entries(array).map(async ([key, value]) => {
+                        i++;
                         let individualWorkerDetails = {
                             id: value.id,
                             details: value
                         }
-                        let response = await asyncGetWorkerHours(value, individualWorkerDetails);
-                        console.log(`WorkersData: ${JSON.stringify(workersData,null,2)}`);
-                        setWorkersData([...workersData, response]);
+                        let response = await fetch(`http://localhost:8080/api/v1/admin/workers/${value.id}`, {
+                            method: 'GET',
+                            headers: {
+                                'Authorization': `Bearer ${localStorage.getItem('token')}`
+                            }
+                        }).then(response => {
+                            response.json().then(array => {
+                                individualWorkerDetails['availability'] = array;
+                                console.log(JSON.stringify(individualWorkerDetails,null,2))
+                                allWorkers.push(individualWorkerDetails);
+                                workersArray.push(individualWorkerDetails);
+                            })
+                        })
+                    })
+
+                    Promise.all(requests).then(() => {
+                        setWorkersData(workersArray);
+                        console.log(`workers ARray: ${JSON.stringify(workersArray,null,2)}`)
+                        console.log(i);
+
                     })
                 })
             })
-
-            console.log("Final print for fetch")
         }
 
-        await fetchData();
-        console.log("after")
+        fetchData();
     }, []);
 
     return(
