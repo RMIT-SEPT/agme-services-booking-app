@@ -1,11 +1,10 @@
 package com.rmit.sept.lemonfruits.majorproject.controller;
 
-import com.rmit.sept.lemonfruits.majorproject.entity.AdminEntity;
-import com.rmit.sept.lemonfruits.majorproject.entity.BookingEntity;
-import com.rmit.sept.lemonfruits.majorproject.entity.WorkerEntity;
-import com.rmit.sept.lemonfruits.majorproject.entity.WorkingHoursEntity;
+import com.rmit.sept.lemonfruits.majorproject.entity.*;
 import com.rmit.sept.lemonfruits.majorproject.model.BookingRequest;
+import com.rmit.sept.lemonfruits.majorproject.model.BusinessHoursRequest;
 import com.rmit.sept.lemonfruits.majorproject.repository.BookingRepository;
+import com.rmit.sept.lemonfruits.majorproject.repository.BusinessHoursRepository;
 import com.rmit.sept.lemonfruits.majorproject.repository.WorkerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,6 +18,7 @@ import org.springframework.web.server.ResponseStatusException;
 import javax.websocket.server.PathParam;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -33,6 +33,8 @@ public class AdminController {
     private BookingRepository bookingRepository;
 
     private PasswordEncoder passwordEncoder;
+
+    private BusinessHoursRepository businessHoursRepository;
 
     @GetMapping(value = "/profile", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<AdminEntity> getProfile(@AuthenticationPrincipal AdminEntity adminEntity) {
@@ -129,18 +131,41 @@ public class AdminController {
     }
 
     @GetMapping(value = "/businesshours", produces = MediaType.APPLICATION_JSON_VALUE)
-    public void getBusinessHour(@AuthenticationPrincipal AdminEntity adminEntity) {
-
+    public ResponseEntity<List<BusinessHoursEntity>> getBusinessHours(@AuthenticationPrincipal AdminEntity adminEntity) {
+        return ok(businessHoursRepository.findAll().stream()
+                .filter(b -> b.getEndTime().isAfter(LocalDateTime.now()))
+                .collect(Collectors.toList())
+        );
     }
 
     @PostMapping(value = "/businesshours", produces = MediaType.APPLICATION_JSON_VALUE)
-    public void setBusinessHour(@AuthenticationPrincipal AdminEntity adminEntity) {
+    public void setBusinessHours(@AuthenticationPrincipal AdminEntity adminEntity, @RequestBody BusinessHoursRequest businessHoursRequest) {
+        if (!businessHoursRepository.isThereOverlapingEntry(businessHoursRequest.getStartTime(), businessHoursRequest.getEndTime()).isEmpty())
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Overlapping entry already made");
 
+        if (businessHoursRequest.getEndTime().isBefore(businessHoursRequest.getStartTime()))
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "End time must be after start time");
+
+        BusinessHoursEntity newEntry = BusinessHoursEntity
+                .builder()
+                .endTime(businessHoursRequest.getEndTime())
+                .startTime(businessHoursRequest.getStartTime())
+                .build();
+
+        businessHoursRepository.save(newEntry);
     }
 
     @DeleteMapping(value = "/businesshours/{businessHoursId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public void deleteBusinessHour(@AuthenticationPrincipal AdminEntity adminEntity) {
+    public void deleteBusinessHours(@AuthenticationPrincipal AdminEntity adminEntity, @PathVariable Long businessHoursId) {
+        Optional<BusinessHoursEntity> businessHoursEntity = businessHoursRepository.findById(businessHoursId);
 
+        if (!businessHoursEntity.isPresent())
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Entry not found");
+
+        if (businessHoursEntity.get().getEndTime().isBefore(LocalDateTime.now()))
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Cannot delete past entry");
+
+        businessHoursRepository.delete(businessHoursEntity.get());
     }
 
     @Autowired
@@ -156,5 +181,10 @@ public class AdminController {
     @Autowired
     public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
+    }
+
+    @Autowired
+    public void setBusinessHoursRepository(BusinessHoursRepository businessHoursRepository) {
+        this.businessHoursRepository = businessHoursRepository;
     }
 }

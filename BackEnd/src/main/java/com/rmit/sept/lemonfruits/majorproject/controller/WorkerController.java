@@ -1,10 +1,12 @@
 package com.rmit.sept.lemonfruits.majorproject.controller;
 
 import com.rmit.sept.lemonfruits.majorproject.entity.BookingEntity;
+import com.rmit.sept.lemonfruits.majorproject.entity.BusinessHoursEntity;
 import com.rmit.sept.lemonfruits.majorproject.entity.WorkerEntity;
 import com.rmit.sept.lemonfruits.majorproject.entity.WorkingHoursEntity;
 import com.rmit.sept.lemonfruits.majorproject.model.HoursRequest;
 import com.rmit.sept.lemonfruits.majorproject.repository.BookingRepository;
+import com.rmit.sept.lemonfruits.majorproject.repository.BusinessHoursRepository;
 import com.rmit.sept.lemonfruits.majorproject.repository.WorkingHoursRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,6 +31,8 @@ public class WorkerController {
 
     private BookingRepository bookingRepository;
 
+    private BusinessHoursRepository businessHoursRepository;
+
     @GetMapping(value = "/profile", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<WorkerEntity> viewProfile(@AuthenticationPrincipal WorkerEntity workerEntity) {
         return ok(workerEntity);
@@ -41,6 +45,13 @@ public class WorkerController {
 
         if (hoursRequest.getEndTime().isBefore(hoursRequest.getStartTime()))
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "End time must be after start time");
+
+        BusinessHoursEntity businessHoursEntity = businessHoursRepository.getBusinessHourThatContainsTime(hoursRequest.getStartTime());
+        if (businessHoursEntity == null)
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Outside business hours");
+
+        if (hoursRequest.getEndTime().isAfter(businessHoursEntity.getEndTime()))
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Outside business hours");
 
         WorkingHoursEntity newEntry = WorkingHoursEntity
                 .builder()
@@ -101,5 +112,10 @@ public class WorkerController {
     @Autowired
     public void setBookingRepository(BookingRepository bookingRepository) {
         this.bookingRepository = bookingRepository;
+    }
+
+    @Autowired
+    public void setBusinessHoursRepository(BusinessHoursRepository businessHoursRepository) {
+        this.businessHoursRepository = businessHoursRepository;
     }
 }
