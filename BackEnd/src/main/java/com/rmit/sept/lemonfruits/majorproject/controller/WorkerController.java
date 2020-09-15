@@ -17,6 +17,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.springframework.http.ResponseEntity.ok;
 
@@ -61,22 +62,35 @@ public class WorkerController {
         if (workingHoursEntity.get().getWorkerEntity().getId() != workerEntity.getId())
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Do not have access to entry");
 
+        if (workingHoursEntity.get().getEndTime().isBefore(LocalDateTime.now()))
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Cannot delete past entry");
+
         workingHoursRepository.delete(workingHoursEntity.get());
     }
 
     @GetMapping(value = "/availability", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<WorkingHoursEntity> getAvailability(@AuthenticationPrincipal WorkerEntity workerEntity) {
-        return workingHoursRepository.findByWorkerEntityAndStartTimeAfter(workerEntity, LocalDateTime.now());
+    public ResponseEntity<List<WorkingHoursEntity>> getAvailability(@AuthenticationPrincipal WorkerEntity workerEntity) {
+        return ok(workingHoursRepository.findByWorkerEntityAndStartTimeAfter(workerEntity, LocalDateTime.now()));
     }
 
     @GetMapping(value = "/bookings", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<BookingEntity> viewBookings(@AuthenticationPrincipal WorkerEntity workerEntity) {
-        return bookingRepository.findByWorkerEntityAndStartTimeAfter(workerEntity, LocalDateTime.now());
+    public ResponseEntity<List<BookingEntity>> viewBookings(@AuthenticationPrincipal WorkerEntity workerEntity) {
+        return ok(
+                workerEntity
+                        .getBookings()
+                        .stream()
+                        .filter(b -> b.getEndTime().isAfter(LocalDateTime.now()))
+                        .collect(Collectors.toList()));
     }
 
     @GetMapping("/bookings/history")
-    public List<BookingEntity> viewBookingHistory(@AuthenticationPrincipal WorkerEntity workerEntity) {
-        return bookingRepository.findByWorkerEntity(workerEntity);
+    public ResponseEntity<List<BookingEntity>> viewBookingHistory(@AuthenticationPrincipal WorkerEntity workerEntity) {
+        return ok(
+                workerEntity
+                        .getBookings()
+                        .stream()
+                        .filter(b -> b.getEndTime().isBefore(LocalDateTime.now()))
+                        .collect(Collectors.toList()));
     }
 
     @Autowired
