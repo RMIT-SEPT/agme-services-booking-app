@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { useHistory, Redirect, Route, useLocation } from 'react-router-dom';
 import '../css/home.css';
 
 import Dashboard from '../components/dashboard';
@@ -9,6 +8,8 @@ import PastAppointments from '../components/pastAppointments.js';
 import BookingPage from './customer/bookingPage';
 import Availability from './worker/availabilityPage';
 import ProfilePage from './profile';
+import WorkerList from './admin/workerList';
+import AdminCalendar from './admin/adminCalendar';
 
 const Home = (loginResponse) => {
     var userRole;
@@ -95,10 +96,20 @@ const Home = (loginResponse) => {
                 break;
 
             case ("admin"):
-                return "some admin calendar or something";
+                switch (pathname) {
+                    case "/home":
+                        return <WorkerList userDetails={userDetails}/>
+                    case "/businesshours":
+                        return <AdminCalendar userDetails={userDetails}/>
+                    case "/history":
+                        return <PastAppointments userDetails={userDetails}/>
+                    case "/createbookings":
+                        return <PastAppointments userDetails={userDetails}/>
+                }
+                break;
 
             default:
-                return "ERROR: UserType not found, reload or somethin lmao";
+                return "ERROR: UserType not found. Try logging in again.";
         }
     }
 

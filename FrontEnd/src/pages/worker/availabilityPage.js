@@ -69,13 +69,14 @@ const AvailabilityPage = ({userDetails}) => {
     }
 
     const handleSelection = (event) => {
+        console.log(JSON.stringify(event,null,2))
         const newEvent = {
             startTime: moment(event.start).format('YYYY-MM-DD[T]HH:mm:ss[.000Z]'),
             endTime: moment(event.end).format('YYYY-MM-DD[T]HH:mm:ss[.000Z]')
         }
-        const dateReadable = moment(newEvent.startTime).format('MMMM Do');
-        const startTimeReadable = moment(newEvent.startTime).format('LT');
-        const endTimeReadable = moment(newEvent.endTime).format('LT');
+        const dateReadable = moment(event.start).format('MMMM Do');
+        const startTimeReadable = moment(event.start).format('LT');
+        const endTimeReadable = moment(event.end).format('LT');
         if (window.confirm(`Set as AVAILABLE on ${dateReadable} between ${startTimeReadable} and ${endTimeReadable}?`)) {
             // Make a post request, adding this availability and add this to availability state.
             addAvailabilityRequest(newEvent)
@@ -101,8 +102,8 @@ const AvailabilityPage = ({userDetails}) => {
 
     return(
         <div id="availabilityContainer">
+            {console.log(`EVENTS:\n${JSON.stringify(availability,null,2)}`)}
             <Calendar 
-                id={"calendar"}
                 localizer={localizer}
                 events={availability}
                 style={calendarStyle}

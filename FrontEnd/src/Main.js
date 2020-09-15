@@ -16,6 +16,10 @@ const Main = () =>  {
             <Route exact path='/availability' component={Home}></Route>
             <Route exact path='/booking' component={Home}></Route>
             <Route exact path='/history' component={Home}></Route>
+            <Route exact path='/workers' component={Home}></Route>
+            <Route exact path='/businesshours' component={Home}></Route>
+            <Route exact path='/createbookings' component={Home}></Route>
+
         </Switch>
     );
 }
