@@ -1,0 +1,26 @@
+#dashboardContainer {
+    display: flex;
+    flex-direction: column;
+
+    margin-left: 10%;
+    text-align: center;
+    height: 85vh;
+    width: 15%;
+
+    border: 2px solid red;
+}
+
+.dashboardButton {
+    margin: 15px auto;
+    height: 40px;
+    width: 60%;
+
+    color: white;
+    background-color: blue;
+    border: 1px solid blue;
+    border-radius: 4px;
+    
+    font-size: 15px;
+
+    cursor: pointer;
+}

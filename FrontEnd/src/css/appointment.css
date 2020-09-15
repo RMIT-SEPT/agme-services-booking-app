@@ -1,0 +1,38 @@
+#appointmentsContainer {
+    flex-direction: row;
+    margin: 20px 20px;
+}
+
+#appointmentsContainer h1 {
+    padding-bottom: 5px;
+
+    font-size: 30px;
+    font-style: italic;
+    border-bottom: 2px solid blue;
+}
+
+#appointmentContainer {
+    display: flex;
+    flex-direction: row;
+
+    margin: 20px auto;
+    padding: 10px 5px;
+    border: 2px solid red;
+}
+
+.timeDiv {
+    width: 25%;
+
+    border-right: 5px solid blue;
+}
+
+.timeDiv p {
+    font-size: 20px;
+    text-align: center;
+}
+
+.infoDiv p {
+    font-size: 20px;
+    text-align: center;
+    margin: 5% 20px 5% 20px;
+}
