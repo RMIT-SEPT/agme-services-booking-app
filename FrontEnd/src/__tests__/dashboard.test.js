@@ -77,15 +77,15 @@ test('renders with correct buttons for admin type', () => {
     
     // Get ID's within the Dashboard
     const home = wrapper.find('#home');
-    const profile = wrapper.find('#profile');
-    const employees = wrapper.find('#employees');
+    const businessHours = wrapper.find('#businesshours');
     const history = wrapper.find('#history');
+    const createBooking = wrapper.find('#createbookings');
 
     // Check that there is ONE ID of each in the Dashboard.
     expect(home.length).toEqual(1);
-    expect(profile.length).toEqual(1);
-    expect(employees.length).toEqual(1);
+    expect(businessHours.length).toEqual(1);
     expect(history.length).toEqual(1);
+    expect(createBooking.length).toEqual(1);
 
     // Check both the customer unique button and worker unique button do NOT exist in the Dashboard.
     const booking = wrapper.find('#booking');
