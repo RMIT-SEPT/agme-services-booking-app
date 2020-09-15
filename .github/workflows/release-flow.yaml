@@ -1,6 +1,7 @@
 # release-flow.yaml
 # On change to release, run unit tests and make 
 # pull request on master branch.
+name: Front/Backend Unit Testing
 on:
   push:
     branches: [release]
@@ -10,7 +11,7 @@ on:
 jobs:
 
   job-1:
-    name: FrontEnd Tests
+    name: React Unit Tests
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -23,7 +24,7 @@ jobs:
       run: yarn test
 
   job-2:
-    name: BackEnd Tests
+    name: Springboot Unit Tests
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -35,7 +36,7 @@ jobs:
         with:
           java-version: 1.8
       - name: Build with Maven
-        run: mvn -B package --file pom.xml -Dspring.profiles.active=dev
+        run: mvn -B package --file pom.xml -Dspring.profiles.active=test
 
   job-3:
     name: Create Pull Request
@@ -49,7 +50,7 @@ jobs:
         --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
         --header 'Accept: application/vnd.github.v3+json' \
         --data '{
-          "title":"Staged & Ready!",
+          "title":"Staged for Deployment: Pending Review",
           "body": "This pull request was automatically created by the GitHub Action workflow **${{ github.workflow }}**. \n\n The commit hash was: _${{ github.sha }}_.",
           "head":"release",
           "base":"master"

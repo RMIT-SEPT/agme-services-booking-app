@@ -2,3 +2,22 @@
 # On change to master, build docker images
 # and push yaml to AWS
 
+name: Deploy to Kubernetes AWS EC2
+on:
+  push: 
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  job-1:
+    name: Call Deloy Script
+    runs-on: ubuntu-latest
+    steps:
+      - name: SSH into AWS EC2 Instance & Call Deploy Script
+        uses: garygrossgarten/github-action-ssh@release
+        with:
+          command: ls -a
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME}}
+          privateKey: ${{ secrets.PRIVATE_KEY}}
