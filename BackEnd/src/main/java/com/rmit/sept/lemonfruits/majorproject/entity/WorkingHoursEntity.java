@@ -1,5 +1,6 @@
 package com.rmit.sept.lemonfruits.majorproject.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -18,6 +19,7 @@ public class WorkingHoursEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long entryId;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "worker_id")
     private WorkerEntity workerEntity;

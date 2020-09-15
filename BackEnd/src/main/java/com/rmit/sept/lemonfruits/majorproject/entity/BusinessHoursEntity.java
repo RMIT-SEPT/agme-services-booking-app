@@ -10,23 +10,16 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Builder
-@Table(name = "bookings")
+@Table(name = "business_hours")
 @Entity
-public class BookingEntity {
+public class BusinessHoursEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long bookingId;
+    private long bhEntryId;
 
     private LocalDateTime startTime;
 
     private LocalDateTime endTime;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "worker_id")
-    private WorkerEntity workerEntity;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id")
-    private CustomerEntity customerEntity;
 }

@@ -2,10 +2,12 @@ package unit.com.rmit.sept.lemonfruits.majorproject.controller;
 
 import com.rmit.sept.lemonfruits.majorproject.controller.WorkerController;
 import com.rmit.sept.lemonfruits.majorproject.entity.BookingEntity;
+import com.rmit.sept.lemonfruits.majorproject.entity.BusinessHoursEntity;
 import com.rmit.sept.lemonfruits.majorproject.entity.WorkerEntity;
 import com.rmit.sept.lemonfruits.majorproject.entity.WorkingHoursEntity;
 import com.rmit.sept.lemonfruits.majorproject.model.HoursRequest;
 import com.rmit.sept.lemonfruits.majorproject.repository.BookingRepository;
+import com.rmit.sept.lemonfruits.majorproject.repository.BusinessHoursRepository;
 import com.rmit.sept.lemonfruits.majorproject.repository.WorkingHoursRepository;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -36,6 +38,9 @@ public class WorkerControllerTest {
     @Mock
     private BookingRepository bookingRepository;
 
+    @Mock
+    private BusinessHoursRepository businessHoursRepository;
+
     private WorkerEntity testWorker;
 
     @BeforeAll
@@ -63,13 +68,19 @@ public class WorkerControllerTest {
 
 
     @Test
-    public void createWorkerAvailabilityTest() {
+    public void createWorkerAvailabilityTestInsideBusinessHours() {
         when(workingHoursRepository.isThereOverlapingEntry(isNotNull(), isNotNull())).thenReturn(Collections.emptyList());
+
+        BusinessHoursEntity businessHoursEntity = BusinessHoursEntity.builder()
+                .startTime(LocalDateTime.of(2010, 10, 1, 0, 00))
+                .endTime(LocalDateTime.of(2010, 10, 1, 23, 00))
+                .build();
+        when(businessHoursRepository.getBusinessHourThatContainsTime(notNull())).thenReturn(businessHoursEntity);
 
 
         HoursRequest hoursRequest = new HoursRequest();
-        hoursRequest.setStartTime(LocalDateTime.of(2010,  10, 1, 1, 00));
-        hoursRequest.setEndTime(LocalDateTime.of(2010,  10, 1, 2, 00));
+        hoursRequest.setStartTime(LocalDateTime.of(2010, 10, 1, 1, 00));
+        hoursRequest.setEndTime(LocalDateTime.of(2010, 10, 1, 2, 00));
 
         workerController.createAvailability(testWorker, hoursRequest);
 
@@ -77,12 +88,44 @@ public class WorkerControllerTest {
     }
 
     @Test
+    public void createWorkerAvailabilityTestIncludingInsideBusinessHours() {
+        when(workingHoursRepository.isThereOverlapingEntry(isNotNull(), isNotNull())).thenReturn(Collections.emptyList());
+
+        BusinessHoursEntity businessHoursEntity = BusinessHoursEntity.builder()
+                .startTime(LocalDateTime.of(2010, 10, 1, 1, 00))
+                .endTime(LocalDateTime.of(2010, 10, 1, 2, 00))
+                .build();
+        when(businessHoursRepository.getBusinessHourThatContainsTime(notNull())).thenReturn(businessHoursEntity);
+        HoursRequest hoursRequest = new HoursRequest();
+        hoursRequest.setStartTime(LocalDateTime.of(2010, 10, 1, 1, 00));
+        hoursRequest.setEndTime(LocalDateTime.of(2010, 10, 1, 2, 00));
+
+        workerController.createAvailability(testWorker, hoursRequest);
+
+        verify(workingHoursRepository, atLeastOnce()).save(any());
+    }
+
+    @Test
+    public void createWorkerAvailabilityTestOutsideBusinessHours() {
+        when(workingHoursRepository.isThereOverlapingEntry(isNotNull(), isNotNull())).thenReturn(Collections.emptyList());
+
+
+        HoursRequest hoursRequest = new HoursRequest();
+        hoursRequest.setStartTime(LocalDateTime.of(2010, 10, 1, 1, 00));
+        hoursRequest.setEndTime(LocalDateTime.of(2010, 10, 1, 2, 00));
+
+        assertThrows(ResponseStatusException.class, () -> workerController.createAvailability(testWorker, hoursRequest));
+
+        verify(workingHoursRepository, never()).save(any());
+    }
+
+    @Test
     public void createOverlappingAvailabilityTest() {
         when(workingHoursRepository.isThereOverlapingEntry(isNotNull(), isNotNull())).thenReturn(Collections.singletonList(new WorkingHoursEntity()));
 
         HoursRequest hoursRequest = new HoursRequest();
-        hoursRequest.setStartTime(LocalDateTime.of(2010,  10, 1, 1, 00));
-        hoursRequest.setEndTime(LocalDateTime.of(2010,  10, 1, 2, 00));
+        hoursRequest.setStartTime(LocalDateTime.of(2010, 10, 1, 1, 00));
+        hoursRequest.setEndTime(LocalDateTime.of(2010, 10, 1, 2, 00));
 
         assertThrows(ResponseStatusException.class, () -> workerController.createAvailability(testWorker, hoursRequest));
     }
