@@ -45,7 +45,6 @@ const BookingPage = (userDetails) => {
             // add customer entity to booking in database
             makeBooking(event.resource)
         }
-        
     }
 
     const makeBooking = async(resource) => {

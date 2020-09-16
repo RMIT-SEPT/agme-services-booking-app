@@ -22,8 +22,6 @@ const AdminBookings = (userDetails) => {
                 }
             }).then(response => {
                 response.json().then(async(json) => {
-                    
-                    //console.log(workers)
                     Object.entries(json).map(([key, value]) => {
                         allWorkers.push(value);
                         setWorkers([...allWorkers])
@@ -31,8 +29,8 @@ const AdminBookings = (userDetails) => {
 
                     if (allWorkers.length > 0) {
                         handleBookingsChange(allWorkers[0].id);
+                        setCurrentWorker(allWorkers[0])
                     }
-                    
                 })
             })
         }
@@ -42,6 +40,7 @@ const AdminBookings = (userDetails) => {
 
     const handleBookingsChange = async(e) => {
         var allBookings = [];
+        setCurrentWorker(workers.find((worker) => worker.id == e));
         await fetch(`http://localhost:8080/api/v1/admin/bookings`, {
             method: 'GET',
             headers: {
@@ -49,9 +48,8 @@ const AdminBookings = (userDetails) => {
             }
         }).then(response => { 
             response.json().then(json => {
-                
                 var filteredBookings = json.filter((booking) => booking.workerEntity.id == e);
-                //console.log(filteredBookings)
+                
                 if (filteredBookings.length > 0) {
                     filteredBookings.map((value) => {
                         const customerName = value.customerEntity ? value.customerEntity.username : "null";
@@ -74,9 +72,48 @@ const AdminBookings = (userDetails) => {
                 
             })
         })
-        
-        //setBookings([...allBookings]);
-    } 
+    }
+
+    const handleSelectSlot = async({start, end}) => {
+        if (window.confirm(`Add booking for ${currentWorker.firstName} on ${start.toString().substring(0,15)}`)) {
+            
+            const data = {
+                startTime: moment(start).format().substring(0,19),
+                endTime: moment(end).format().substring(0,19),
+                workerId: currentWorker.id
+            }
+
+            await fetch(`http://localhost:8080/api/v1/admin/booking`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                },
+                body: JSON.stringify(data)
+            }).then(response => {
+                if (response.ok) {
+                    handleBookingsChange(currentWorker.id);
+                }
+            })
+        }
+    }
+
+    const handleDelete = async(event) => {
+        if (window.confirm("Would you like to remove this booking?")) {
+            // remove this booking entity from the database
+            await fetch(`http://localhost:8080/api/v1/admin/booking/${event.resource.bookingId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            }).then((response) => {
+                if (response.ok) {
+                    // remove from calendar
+                    setBookings(bookings.filter((booking) => (booking.resource.bookingId != event.resource.bookingId)));
+                }
+            })
+        }
+    }
 
     return (
         <div id="admin-bookings">
@@ -88,12 +125,11 @@ const AdminBookings = (userDetails) => {
                 defaultView={'work_week'}
                 views={['work_week', 'day', 'agenda']}
                 selectable={'ignoreEvents'}
-                onSelectSlot={(e) => window.alert("hello")}
-                onSelectEvent={(e) => window.alert(e.title)}
+                onSelectSlot={handleSelectSlot}
+                onSelectEvent={handleDelete}
             />
             <select onChange={(e) => handleBookingsChange(e.target.value)}>
                 {Object.entries(workers).map(([key, value]) => {
-                    //console.log(value)
                     return <option value={value.id} label={value.username}/>
                 })}
             </select>
