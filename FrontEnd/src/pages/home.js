@@ -10,6 +10,7 @@ import Availability from './worker/availabilityPage';
 import ProfilePage from './profile';
 import WorkerList from './admin/workerList';
 import AdminCalendar from './admin/adminCalendar';
+import AdminBookings from './admin/adminBookings';
 
 const Home = (loginResponse) => {
     var userRole;
@@ -104,7 +105,7 @@ const Home = (loginResponse) => {
                     case "/history":
                         return <PastAppointments userDetails={userDetails}/>
                     case "/createbookings":
-                        return <PastAppointments userDetails={userDetails}/>
+                        return <AdminBookings userDetails={userDetails}/>
                 }
                 break;
 

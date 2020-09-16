@@ -11,6 +11,7 @@ const AdminBookings = (userDetails) => {
     const [bookings, setBookings] = useState([]);
     const [workers, setWorkers] = useState([]);
     const [currentWorker, setCurrentWorker] = useState(null);
+
     useEffect(() => {
         var allWorkers = []
         const fetchData = async() => {
@@ -40,7 +41,7 @@ const AdminBookings = (userDetails) => {
     }, [])
 
     const handleBookingsChange = async(e) => {
-        
+        var allBookings = [];
         await fetch(`http://localhost:8080/api/v1/admin/bookings`, {
             method: 'GET',
             headers: {
@@ -48,8 +49,9 @@ const AdminBookings = (userDetails) => {
             }
         }).then(response => { 
             response.json().then(json => {
-                var filteredBookings = json.filter((booking) => booking.workerEntity.id == e);
                 
+                var filteredBookings = json.filter((booking) => booking.workerEntity.id == e);
+                //console.log(filteredBookings)
                 if (filteredBookings.length > 0) {
                     filteredBookings.map((value) => {
                         const customerName = value.customerEntity ? value.customerEntity.username : "null";
@@ -61,14 +63,19 @@ const AdminBookings = (userDetails) => {
                                 bookingId: value.bookingId
                             }
                         }
-                        setBookings([...bookings, event])
+                        allBookings.push(event);
+                        
+                        setBookings([...allBookings])
                     })
                 }
                 else {
                     setBookings([])
                 }
+                
             })
         })
+        
+        //setBookings([...allBookings]);
     } 
 
     return (
@@ -80,8 +87,9 @@ const AdminBookings = (userDetails) => {
                 style={{ height: 400, width: 750}}
                 defaultView={'work_week'}
                 views={['work_week', 'day', 'agenda']}
-                
-                
+                selectable={'ignoreEvents'}
+                onSelectSlot={(e) => window.alert("hello")}
+                onSelectEvent={(e) => window.alert(e.title)}
             />
             <select onChange={(e) => handleBookingsChange(e.target.value)}>
                 {Object.entries(workers).map(([key, value]) => {
