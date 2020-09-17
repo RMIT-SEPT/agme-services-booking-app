@@ -9,8 +9,7 @@ const Login = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [authenticated, setAuthenticated] = useState(false);
-    // Should be the JSON object that backend returns to us.
-    const [loginDetails, setLoginDetails] = useState('');
+    const [responseMsg, setResponseMsg] = useState('');
 
     const setUsernameState = (newValue) => {
         setUsername(newValue.target.value);
@@ -42,8 +41,11 @@ const Login = () => {
                     localStorage.setItem('token', json.token);
                     localStorage.setItem('token-expiry', new Date().getTime() + 500000);
                     localStorage.setItem('role', json.role);
-                    setLoginDetails(json);
                     setAuthenticated(true);
+                })
+            } else {
+                response.json().then(json => {
+                    setResponseMsg(`Invalid Username/Password Supplied.`)
                 })
             }
         });
@@ -59,6 +61,7 @@ const Login = () => {
                     <input className="loginInputField" name="username" type="text" placeholder=" Username" onChange={setUsernameState}/>
                     <input className="loginInputField" name="password" type="password" placeholder=" Password" onChange={setPasswordState}/>
                     <input className="submitBtn" type="button" value="Login" onClick={handleSubmit}/>
+                    <p id="loginResponseMsg">{responseMsg}</p>
                     <p>Don't have an account? <Link to="/signup">Register here</Link></p>
                 </form>
             </div>

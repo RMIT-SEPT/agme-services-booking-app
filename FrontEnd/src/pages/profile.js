@@ -66,7 +66,7 @@ const Profile = () => {
             body: JSON.stringify(data)
         }).then(response => {
             if (response.ok) {
-                setEditedDetails('Successfully edited profile details. Please refresh to view your new details.');
+                setEditedDetails('Successfully edited profile details. Please re-login to view your new details.');
             } else {
                 setEditedDetails('Failed to edit profile details.');
             }

@@ -44,7 +44,7 @@ const HomeAppointments = () => {
         <div id="appointmentsContainer">
             <h1> Your Appointments </h1>
             {Object.entries(appointments).map(([key, value]) => {
-                return <Appointment details={value} userType={userType}/>
+                return <Appointment key={key} details={value} userType={userType}/>
             })}
         </div>
     )

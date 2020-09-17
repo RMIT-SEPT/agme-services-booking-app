@@ -15,10 +15,10 @@ const Home = () => {
     const [authenticated, setAuthenticated] = useState(localStorage.getItem('token') === null ? false : true);
     const [userDetails, setUserDetails] = useState({});
 
-    useEffect(async() => {
+    useEffect(() => {
         const fetchData = async() => {
             const userRole = localStorage.getItem('role');
-            const response = await fetch(`http://localhost:8080/api/v1/${userRole}/profile`, {
+            await fetch(`http://localhost:8080/api/v1/${userRole}/profile`, {
                 method: 'GET',
                 headers: {
                     'Accept': '*/*',
@@ -26,7 +26,7 @@ const Home = () => {
                 }
             }).then(response => {
                 response.json().then(json => {
-                    if (userRole == 'customer') {
+                    if (userRole === 'customer') {
                         const details = {
                             userType: userRole,
                             id: json.id,
@@ -38,7 +38,7 @@ const Home = () => {
                         }
                         localStorage.setItem('userDetails', JSON.stringify(details));
                         setUserDetails(details);
-                    } else if (userRole == 'worker') {
+                    } else if (userRole === 'worker') {
                         const details = {
                             userType: userRole,
                             id: json.id,
@@ -49,7 +49,7 @@ const Home = () => {
                         }
                         localStorage.setItem('userDetails', JSON.stringify(details));
                         setUserDetails(details);
-                    } else if (userRole == 'admin') {
+                    } else if (userRole === 'admin') {
                         // Not sure admin's details payload.
                         const details = {
                             userType: userRole,
@@ -81,8 +81,9 @@ const Home = () => {
                         return <BookingPage/>
                     case "/history":
                         return <PastAppointments/>
+                    default:
+                        return;
                 }
-                break;
 
             case ("worker"):
                 switch (pathname) {
@@ -94,8 +95,9 @@ const Home = () => {
                         return <Availability/>
                     case "/history":
                         return <PastAppointments/>
+                    default:
+                        return;
                 }
-                break;
 
             case ("admin"):
                 switch (pathname) {
@@ -107,8 +109,12 @@ const Home = () => {
                         return <PastAppointments/>
                     case "/createbookings":
                         return <PastAppointments/>
+                    default:
+                        return;
                 }
-                break;
+
+            default:
+                return;
         }
     }
 

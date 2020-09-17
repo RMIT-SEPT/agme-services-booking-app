@@ -45,8 +45,6 @@ const WorkerList = () => {
         var allWorkers = [];
 
         const fetchData = async() => {
-            const requests = [];
-
             await fetch(`http://localhost:8080/api/v1/admin/workers`, {
                 method: 'GET',
                 headers: {

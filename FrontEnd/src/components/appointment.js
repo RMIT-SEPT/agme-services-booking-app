@@ -32,6 +32,9 @@ const Appointment = ({details, userType}) => {
                         {customerString} {workerString}
                     </React.Fragment>
                 )
+
+            default:
+                return;
         }
     }
 

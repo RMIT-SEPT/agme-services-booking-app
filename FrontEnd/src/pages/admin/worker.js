@@ -30,7 +30,7 @@ const Worker = ({worker, localizer}) => {
             }
             allEvents.push(newEvent)
         })
-    }, [])
+    })
 
     const handleRemove = async() => {
         const fullName = `${firstName} ${lastName}`;

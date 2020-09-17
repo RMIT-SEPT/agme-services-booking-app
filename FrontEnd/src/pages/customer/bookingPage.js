@@ -59,7 +59,7 @@ const BookingPage = () => {
         }).then((response) => {
             if (response.ok) {
                 // remove from calendar availabilities
-                setAvailabilities(availabilities.filter((availability) => (availability.resource.bookingId != resource.bookingId)));
+                setAvailabilities(availabilities.filter((availability) => (availability.resource.bookingId !== resource.bookingId)));
             }
         })
     }
