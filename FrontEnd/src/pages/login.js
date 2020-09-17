@@ -41,6 +41,7 @@ const Login = () => {
                 response.json().then(json => {
                     localStorage.setItem('token', json.token);
                     localStorage.setItem('token-expiry', new Date().getTime() + 500000);
+                    localStorage.setItem('role', json.role);
                     setLoginDetails(json);
                     setAuthenticated(true);
                 })
@@ -50,7 +51,7 @@ const Login = () => {
 
     return (
         <div id="loginContainer">
-            { authenticated ? history.push("/home", {loginDetails: loginDetails}) : null}
+            { authenticated ? history.push("/home") : null}
 
             <h1 id="header">Login</h1>
             <div id="formArea">

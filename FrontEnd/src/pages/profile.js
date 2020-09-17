@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import '../css/profile.css';
 
-const Profile = ({userDetails}) => {
+const Profile = () => {
     // Images are random numbers, choose a random avatar!
     const randomNumber = Math.floor(1 + Math.random() * (6 - 1));
 
+    const userDetails = JSON.parse(localStorage.getItem('userDetails'));
     const userType = userDetails.userType;
     const [editedDetails, setEditedDetails] = useState('');
     const [firstName, setFirstName] = useState(userDetails.firstName);
@@ -65,7 +66,7 @@ const Profile = ({userDetails}) => {
             body: JSON.stringify(data)
         }).then(response => {
             if (response.ok) {
-                setEditedDetails('Successfully edited profile details. Please re-login to view your new details.');
+                setEditedDetails('Successfully edited profile details. Please refresh to view your new details.');
             } else {
                 setEditedDetails('Failed to edit profile details.');
             }
@@ -98,7 +99,7 @@ const Profile = ({userDetails}) => {
     return (
         <div className="profileContainer">
             <div id="avatarContainer">
-                <img src={`${randomNumber}.png`} alt="Avatar"/>
+                <img src={`${userDetails.id % 5}.png`} alt="Avatar"/>
                 <p>{userDetails.firstName} {userDetails.lastName}</p>
             </div>
             <div id="profileDetailsContainer">

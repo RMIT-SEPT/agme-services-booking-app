@@ -3,9 +3,7 @@ import '../../css/pages/workerList.css';
 
 import Worker from './worker.js';
 
-const WorkerList = ({userDetails}) => {
-    const userType = userDetails.userType;
-
+const WorkerList = () => {
     const [workers, setWorkers] = useState([]);
 
     useEffect(() => {

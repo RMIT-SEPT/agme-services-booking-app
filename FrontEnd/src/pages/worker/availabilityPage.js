@@ -3,7 +3,7 @@ import { Calendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
 import '../../css/pages/availabilityPage.css'
 
-const AvailabilityPage = ({userDetails}) => {
+const AvailabilityPage = () => {
     const [availability, setAvailability] = useState([]);
 
     const localizer = momentLocalizer(moment);

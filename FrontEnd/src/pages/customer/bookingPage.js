@@ -4,8 +4,7 @@ import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import '../../css/pages/bookingPage.css';
 
-const BookingPage = (userDetails) => {
-    const userName = userDetails.userName;
+const BookingPage = () => {
     const localizer = momentLocalizer(moment)
 
     // Get start and end times
