@@ -1,4 +1,5 @@
 import React from 'react';
+import moment from 'moment';
 
 const Appointment = ({details, userType}) => {
     const user = userType;
@@ -9,15 +10,16 @@ const Appointment = ({details, userType}) => {
     const worker = details.workerEntity;
 
     const renderAppointmentDetails = () => {
+        const custName = customer ? `${customer.firstName} ${customer.lastName}` : "null";
         switch (user) {
             case ('customer'):
                 return <p>Worker Assigned: {worker.firstName} {worker.lastName} </p>
 
             case ('worker'):
-                return <p>Customer: {customer.firstName} {customer.lastName}</p>
+                return <p>Customer: {custName}</p>
 
             case ('admin'):
-                return <p>Customer: {customer.firstName} {customer.lastName}<br/> Worker Assigned: {worker.firstName} {worker.lastName}</p>
+                return <p>Customer: {custName}<br/> Worker Assigned: {worker.firstName} {worker.lastName}</p>
         }
     }
 
@@ -25,8 +27,8 @@ const Appointment = ({details, userType}) => {
     return(
         <div id="appointmentContainer">
             <div className="timeDiv">
-                <p>{startTime}</p>
-                <p>{endTime}</p>
+                <p>{moment(startTime).format("dddd, MMMM Do")}</p>
+                <p>{moment(startTime).format("LT")} - {moment(endTime).format("LT")}</p>
             </div>
             <div className="infoDiv">
                 <p>ID: {bookingId}</p>
