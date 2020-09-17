@@ -1,0 +1,87 @@
+# Define a 'Service' To Expose mysql to Other Services
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres  # DNS name 
+  labels:
+    app: postgres
+    tier: database
+spec:
+  ports:
+    - port: 3306
+      targetPort: 3306
+  selector:       # mysql Pod Should contain same labels
+    app: postgres
+    tier: database
+  clusterIP: None  # We Use DNS, Thus ClusterIP is not relevant
+
+---
+
+# Define a 'Persistent Voulume Claim'(PVC) for Mysql Storage, dynamically provisioned by cluster
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-pv-claim # name of PVC essential for identifying the storage data 
+  labels:
+    app: postgres
+    tier: database
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+
+---
+
+# Configure 'Deployment' of mysql server
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres
+  labels:
+    app: postgres
+    tier: database
+spec:
+  selector: 
+    matchLabels:
+      app: postgres
+      tier: database
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: postgres
+        tier: database
+    spec:
+      containers:
+      - image: postgres:latest # image from docker-hub
+        imagePullPolicy: "IfNotPresent"
+        name: postgres 
+        env:
+        - name: POSTGRES_USER # Setting USER username on mysql From a 'Secret'
+          valueFrom:
+            secretKeyRef:
+              name: db-creds
+              key: username
+        - name: POSTGRES_PASSWORD # Setting USER Password on mysql From a 'Secret'
+          valueFrom:
+            secretKeyRef:
+              name: db-creds
+              key: password
+        - name: POSTGRES_DB # Setting Database Name from a 'ConfigMap'
+          valueFrom:
+            configMapKeyRef:
+              name: db-config
+              key: name
+        ports:
+        - containerPort: 5432
+          name: postgres
+        volumeMounts:        # Mounting voulume obtained from Persistent Volume Claim
+        - name: postgres-persistent-storage
+          mountPath: /var/lib/mysql
+      volumes:
+      - name: postgres-persistent-storage # Obtaining 'vloume' from PVC
+        persistentVolumeClaim:
+          claimName: postgres-pv-claim
