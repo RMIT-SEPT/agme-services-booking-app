@@ -10,10 +10,41 @@ import Availability from './worker/availabilityPage';
 import ProfilePage from './profile';
 import WorkerList from './admin/workerList';
 import AdminCalendar from './admin/adminCalendar';
+import { useIdleTimer } from 'react-idle-timer'
+import { useHistory } from 'react-router-dom';
 
 const Home = () => {
-    const [authenticated, setAuthenticated] = useState(localStorage.getItem('token') === null ? false : true);
+    const history = useHistory();
+
+    const authenticated = useState(localStorage.getItem('token') === null ? false : true);
     const [userDetails, setUserDetails] = useState({});
+    // 600000 = 10 minutes
+    const timeoutMs = 600000;
+
+    // If false, which is only when the user tries to come to this page without a token, redirect to login.
+    if (!authenticated) {
+        localStorage.clear();
+        history.push("/");
+    }
+
+    // If user comes to this page when token has already expired or is not present, redirect to login page.
+    if (new Date().getTime() > new Date(localStorage.getItem('token-expiry')).getTime() && localStorage.getItem('token') !== null) {
+        alert(`Your session has expired. Redirecting back to login page.`);
+        localStorage.clear();
+        history.push("/");
+    }
+
+    const handleOnIdle = event => {
+        alert(`You have been idle for more than ${Math.floor(timeoutMs / 60000)} minutes. Redirecting back to login page.`);
+        localStorage.clear();
+        history.push("/");
+    }
+
+    // Tracks idle activity. If idle for more than X minutes, log user out.
+    useIdleTimer({
+        timeout: timeoutMs,
+        onIdle: handleOnIdle,
+    })
 
     useEffect(() => {
         const fetchData = async() => {

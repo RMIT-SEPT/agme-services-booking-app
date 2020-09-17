@@ -49,7 +49,7 @@ const Signup = () => {
         };
 
         // use whatever the springboot url is
-        const response = await fetch('http://localhost:8080/api/v1/customer/signup', {
+        await fetch('http://localhost:8080/api/v1/customer/signup', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

@@ -28,7 +28,7 @@ const Login = () => {
         };
 
         // POST request to backend with the data JSON
-        const response = await fetch('http://localhost:8080/api/v1/user/login', {
+        await fetch('http://localhost:8080/api/v1/user/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -38,8 +38,11 @@ const Login = () => {
         }).then(response => {
             if (response.ok) {
                 response.json().then(json => {
+                    const expiryTime = new Date();
+                    expiryTime.setMinutes(expiryTime.getMinutes() + 10)
+
                     localStorage.setItem('token', json.token);
-                    localStorage.setItem('token-expiry', new Date().getTime() + 500000);
+                    localStorage.setItem('token-expiry', expiryTime);
                     localStorage.setItem('role', json.role);
                     setAuthenticated(true);
                 })
