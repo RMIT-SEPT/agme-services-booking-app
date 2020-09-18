@@ -39,7 +39,7 @@ const Login = () => {
             if (response.ok) {
                 response.json().then(json => {
                     const expiryTime = new Date();
-                    expiryTime.setMinutes(expiryTime.getMinutes() + 1)
+                    expiryTime.setMinutes(expiryTime.getMinutes() + 20)
 
                     localStorage.setItem('token', json.token);
                     localStorage.setItem('token-expiry', expiryTime);
