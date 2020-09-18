@@ -16,10 +16,10 @@ import { useHistory } from 'react-router-dom';
 const Home = () => {
     const history = useHistory();
 
-    const authenticated = useState(localStorage.getItem('token') === null ? false : true);
+    const [authenticated, setAuthenticated] = useState(localStorage.getItem('token') === null ? false : true);
     const [userDetails, setUserDetails] = useState({});
     // 600000 = 10 minutes
-    const timeoutMs = 600000;
+    const timeoutMs = 3600000;
 
     // If false, which is only when the user tries to come to this page without a token, redirect to login.
     if (!authenticated) {

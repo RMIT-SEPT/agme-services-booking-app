@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import Modal from 'react-modal';
+import { useHistory } from 'react-router-dom';
 import '../css/supportLinks.css';
 
 const SupportLinks = ({userDetails}) => {
+    const history = useHistory();
     const userName = userDetails.username;
     const [aboutModalOpen, setAboutModalOpen] = useState(false);
     const [contactModalOpen, setContactModalOpen] = useState(false);
@@ -18,6 +20,14 @@ const SupportLinks = ({userDetails}) => {
             color: 'black'
         }
     };
+
+    const handleSignOut = () => {
+        if (window.confirm("Are you sure you want to sign out?")) {
+            localStorage.clear();
+            window.alert("You have been signed out. Redirecting to login page.");
+            history.push("/");
+        }
+    }
 
     return(
         <div id="supportLinks">
@@ -42,7 +52,8 @@ const SupportLinks = ({userDetails}) => {
             </Modal>
 
             <button className="buttonAsText" onClick={() => setAboutModalOpen(true)}>About Us</button>
-            <button className="buttonAsText" to="/contactus" onClick={() => setContactModalOpen(true)}>Contact Us</button>
+            <button className="buttonAsText" onClick={() => setContactModalOpen(true)}>Contact Us</button>
+            <button className="buttonAsText" onClick={handleSignOut}>Sign Out</button>
             <span className="individualSupportItem">Welcome, {userName}!</span>
         </div>
     )

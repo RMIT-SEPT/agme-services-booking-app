@@ -8,7 +8,7 @@ const Login = () => {
 
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [authenticated, setAuthenticated] = useState(false);
+    const [authenticated, setAuthenticated] = useState(localStorage.getItem('token') === null ? false : true);
     const [responseMsg, setResponseMsg] = useState('');
 
     const setUsernameState = (newValue) => {
