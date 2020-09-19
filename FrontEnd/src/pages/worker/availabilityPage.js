@@ -3,7 +3,7 @@ import { Calendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
 import '../../css/pages/availabilityPage.css'
 
-const AvailabilityPage = ({userDetails}) => {
+const AvailabilityPage = () => {
     const [availability, setAvailability] = useState([]);
 
     const localizer = momentLocalizer(moment);
@@ -14,7 +14,7 @@ const AvailabilityPage = ({userDetails}) => {
 
     useEffect(() => {
         const fetchData = async() => {
-            const response = await fetch(`http://localhost:8080/api/v1/worker/availability`, {
+            await fetch(`http://localhost:8080/api/v1/worker/availability`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -69,7 +69,6 @@ const AvailabilityPage = ({userDetails}) => {
     }
 
     const handleSelection = (event) => {
-        console.log(JSON.stringify(event,null,2))
         const newEvent = {
             startTime: moment(event.start).format('YYYY-MM-DD[T]HH:mm:ss[.000Z]'),
             endTime: moment(event.end).format('YYYY-MM-DD[T]HH:mm:ss[.000Z]')
@@ -102,7 +101,6 @@ const AvailabilityPage = ({userDetails}) => {
 
     return(
         <div id="availabilityContainer">
-            {console.log(`EVENTS:\n${JSON.stringify(availability,null,2)}`)}
             <Calendar 
                 localizer={localizer}
                 events={availability}

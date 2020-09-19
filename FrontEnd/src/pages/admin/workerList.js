@@ -7,7 +7,7 @@ import '../../css/pages/workerList.css';
 
 import Worker from './worker.js';
 
-const WorkerList = ({userDetails}) => {
+const WorkerList = () => {
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [workersData, setWorkersData] = useState([]);
     const localizer = momentLocalizer(moment);
@@ -45,8 +45,6 @@ const WorkerList = ({userDetails}) => {
         var allWorkers = [];
 
         const fetchData = async() => {
-            const requests = [];
-
             await fetch(`http://localhost:8080/api/v1/admin/workers`, {
                 method: 'GET',
                 headers: {
@@ -91,7 +89,6 @@ const WorkerList = ({userDetails}) => {
             password: password,
             role: role
         }
-        console.log(`sending:\n ${JSON.stringify(newWorkerDetails)}`)
         await fetch(`http://localhost:8080/api/v1/admin/workers`, {
             method: 'POST',
             headers: {

@@ -16,10 +16,27 @@ const Appointment = ({details, userType}) => {
                 return <p>Worker Assigned: {worker.firstName} {worker.lastName} </p>
 
             case ('worker'):
-                return <p>Customer: {custName}</p>
+                if (customer !== null)
+                    return <p>Customer: {customer.firstName} {customer.lastName}</p>
+                else
+                    return <p>No Customer Assigned</p>
 
             case ('admin'):
-                return <p>Customer: {custName}<br/> Worker Assigned: {worker.firstName} {worker.lastName}</p>
+                let customerString;
+                let workerString;
+                customerString = (customer === null) ? 
+                    <p>No Customer Assigned<br/></p> : <p>Customer: {customer.firstName} {customer.lastName}<br/></p>;
+                workerString = (worker === null) ?
+                    <p>No Worker Assigned</p> : <p>Worker Assigned: {worker.firstName} {worker.lastName}</p>
+
+                return (
+                    <React.Fragment>
+                        {customerString} {workerString}
+                    </React.Fragment>
+                )
+
+            default:
+                return;
         }
     }
 

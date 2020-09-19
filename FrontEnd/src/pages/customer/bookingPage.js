@@ -4,8 +4,7 @@ import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import '../../css/pages/bookingPage.css';
 
-const BookingPage = (userDetails) => {
-    const userName = userDetails.userName;
+const BookingPage = () => {
     const localizer = momentLocalizer(moment)
 
     // Get start and end times
@@ -60,7 +59,7 @@ const BookingPage = (userDetails) => {
         }).then((response) => {
             if (response.ok) {
                 // remove from calendar availabilities
-                setAvailabilities(availabilities.filter((availability) => (availability.resource.bookingId != resource.bookingId)));
+                setAvailabilities(availabilities.filter((availability) => (availability.resource.bookingId !== resource.bookingId)));
             }
         })
     }

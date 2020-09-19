@@ -8,7 +8,7 @@ const Dashboard = ({userDetails}) => {
     let history = useHistory();
 
     const handleTabClick = (e => {
-        if (window.location.pathname != "/" + e.target.id) {
+        if (window.location.pathname !== "/" + e.target.id) {
             history.push("/" + e.target.id, userDetails);
         }
     })
@@ -45,6 +45,9 @@ const Dashboard = ({userDetails}) => {
                         <input className="dashboardButton" type="button" id="createbookings" value="Create Bookings" onClick={handleTabClick}/>
                     </React.Fragment>
                 );
+
+            default:
+                return;
         }
     }
 

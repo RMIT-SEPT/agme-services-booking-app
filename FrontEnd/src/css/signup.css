@@ -41,3 +41,8 @@ p, a {
 
     cursor: pointer;
 }
+
+#responseMsg {
+    font-weight: bold;
+    font-size: 17px;
+}
