@@ -10,6 +10,7 @@ import Availability from './worker/availabilityPage';
 import ProfilePage from './profile';
 import WorkerList from './admin/workerList';
 import AdminCalendar from './admin/adminCalendar';
+import AdminBookings from './admin/adminBookings';
 import { useIdleTimer } from 'react-idle-timer'
 import { useHistory } from 'react-router-dom';
 
@@ -139,7 +140,7 @@ const Home = () => {
                     case "/history":
                         return <PastAppointments/>
                     case "/createbookings":
-                        return <PastAppointments/>
+                        return <AdminBookings userDetails={userDetails}/>
                     default:
                         return;
                 }

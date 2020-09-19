@@ -1,4 +1,4 @@
-#bookings {
+#bookings, #admin-bookings {
     display: flex;
     justify-content: center;
     align-items: center;

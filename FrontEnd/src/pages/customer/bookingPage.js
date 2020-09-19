@@ -11,7 +11,7 @@ const BookingPage = () => {
     //const startTimeFrame
     //const endTimeFrame
 
-    const [availabilities, setAvailabilities] = useState([]);
+    const [bookings, setBookings] = useState([]);
 
     useEffect(() => {
         const fetchData = async() => {
@@ -23,17 +23,15 @@ const BookingPage = () => {
             }).then(response => {
                 response.json().then(json => {
                     json.map((value) => {
-                        console.log(value.startTime)
                         const event = {
                             title: `${value.workerEntity.role}: ${value.workerEntity.firstName}`,
                             start: moment(value.startTime).toDate(),
                             end: moment(value.endTime).toDate(),
                             resource: {
-                                bookingId: value.bookingId,
-                                worker: value.workerEntity
+                                bookingId: value.bookingId
                             }
                         }
-                        setAvailabilities([...availabilities, event])
+                        setBookings([...bookings, event])
                     });
                 })
             })
@@ -46,7 +44,6 @@ const BookingPage = () => {
             // add customer entity to booking in database
             makeBooking(event.resource)
         }
-        
     }
 
     const makeBooking = async(resource) => {
@@ -59,7 +56,7 @@ const BookingPage = () => {
         }).then((response) => {
             if (response.ok) {
                 // remove from calendar availabilities
-                setAvailabilities(availabilities.filter((availability) => (availability.resource.bookingId !== resource.bookingId)));
+                setBookings(bookings.filter((booking) => (booking.resource.bookingId != resource.bookingId)));
             }
         })
     }
@@ -69,7 +66,7 @@ const BookingPage = () => {
             <Calendar
                 id="customer-calendar"
                 localizer={localizer}
-                events={availabilities}
+                events={bookings}
                 style={{ height: 400, width: 750}}
                 defaultView={'work_week'}
                 views={['work_week', 'day', 'agenda']}
