@@ -8,45 +8,85 @@ const AdminBusinessHours = () => {
     const [businessHours, setBusinessHours] = useState([]);
 
     useEffect(() => {
-        const fetchData = async() => {
+        displayEvents();
+    }, []);
+
+    const displayEvents = async() => {
+        var allEvents = [];
+        await fetch(`http://localhost:8080/api/v1/admin/businesshours`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+        }).then(response => {
+            response.json().then((json) => {
+                json.map((value) => {
+                    const event = {
+                        title: "Business Hours",
+                        start: moment(value.startTime).toDate(),
+                        end: moment(value.endTime).toDate(),
+                        resource: {
+                            id: value.bhEntryId
+                        }
+                    }
+                    allEvents.push(event)
+                    setBusinessHours([...allEvents])
+                });
+            })
+        })
+    }
+
+    const handleSelectSlot = async({start, end}) => {
+        if (window.confirm(`Add business hours on ${start.toString().substring(0,15)}`)) {
+            const data = {
+                startTime: moment(start).format().substring(0,19),
+                endTime: moment(end).format().substring(0,19)
+            }
+
             await fetch(`http://localhost:8080/api/v1/admin/businesshours`, {
-                method: 'GET',
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                },
+                body: JSON.stringify(data)
+            }).then(response => {
+                if (response.ok) {
+                    displayEvents();
+                }
+            })
+        }
+    }
+
+    const handleSelectEvent = async(event) =>{
+        if (window.confirm("Are you sure you want to remove these business hours?")) {
+            // remove this booking entity from the database
+            await fetch(`http://localhost:8080/api/v1/admin/businesshours/${event.resource.id}`, {
+                method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
                 }
-            }).then(response => {
-                response.json().then((json) => {
-                    json.map((value) => {
-                        const event = {
-                            title: "Business Time",
-                            start: moment(value.startTime).toDate(),
-                            end: moment(value.endTime).toDate(),
-                            resource: {
-                                bookingId: value.bhEntryId
-                            }
-                        }
-                        setBusinessHours([...businessHours, event])
-                    });
-                })
+            }).then((response) => {
+                if (response.ok) {
+                    // remove from calendar
+                    setBusinessHours(businessHours.filter((item) => (item.resource.id != event.resource.id)));
+                }
             })
         }
-
-        fetchData();
-    }, []);
-
+    }
 
     return(
         <div id="admin-business-hours">
             <Calendar
                 localizer={localizer}
                 events={businessHours}
-                style={{ height: 400, width: 750}}
+                style={{ height: 545, width: 800}}
                 defaultView={'work_week'}
-                views={['work_week', 'day']}
+                views={['work_week', 'day', 'agenda']}
                 selectable={'ignoreEvents'}
-                //onSelectSlot={handleSelectSlot}
+                onSelectSlot={handleSelectSlot}
+                onSelectEvent={handleSelectEvent}
             />
-
         </div>
     )
 }
