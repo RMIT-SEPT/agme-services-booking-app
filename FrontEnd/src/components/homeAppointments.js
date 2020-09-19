@@ -3,7 +3,8 @@ import '../css/appointment.css';
 
 import Appointment from './appointment.js';
 
-const HomeAppointments = ({userDetails}) => {
+const HomeAppointments = () => {
+    const userDetails = JSON.parse(localStorage.getItem('userDetails'));
     const userType = userDetails.userType;
 
     const [appointments, setAppointments] = useState([]);
@@ -43,7 +44,7 @@ const HomeAppointments = ({userDetails}) => {
         <div id="appointmentsContainer">
             <h1> Your Appointments </h1>
             {Object.entries(appointments).map(([key, value]) => {
-                return <Appointment details={value} userType={userType}/>
+                return <Appointment key={key} details={value} userType={userType}/>
             })}
         </div>
     )
