@@ -4,8 +4,7 @@ import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import '../../css/pages/bookingPage.css';
 
-const AdminBookings = (userDetails) => {
-    const userName = userDetails.userName;
+const AdminBookings = () => {
     const localizer = momentLocalizer(moment);
 
     const [bookings, setBookings] = useState([]);
@@ -118,7 +117,6 @@ const AdminBookings = (userDetails) => {
     return (
         <div id="admin-bookings">
             <Calendar
-                id="admin-calendar"
                 localizer={localizer}
                 events={bookings}
                 style={{ height: 400, width: 750}}

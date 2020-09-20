@@ -49,3 +49,7 @@ insert into working_hours (entry_id, end_time, start_time, worker_id) values (50
 insert into working_hours (entry_id, end_time, start_time, worker_id) values (864, '2020-11-14 10:45:00', '2020-11-14 09:45:00', 9);
 insert into working_hours (entry_id, end_time, start_time, worker_id) values (89, '2020-11-11 12:30:00', '2020-11-11 10:30:00', 10);
 insert into working_hours (entry_id, end_time, start_time, worker_id) values (52, '2020-11-13 15:30:00', '2020-11-13 14:30:00', 10);
+
+-- Add business hours
+
+insert into business_hours (bh_entry_id, end_time, start_time) values (50, '2020-09-21 17:00:00', '2020-09-21 09:00:00');

@@ -11,6 +11,7 @@ import ProfilePage from './profile';
 import WorkerList from './admin/workerList';
 import AdminCalendar from './admin/adminCalendar';
 import AdminBookings from './admin/adminBookings';
+import AdminBusinessHours from './admin/adminBusinessHours';
 import { useIdleTimer } from 'react-idle-timer'
 import { useHistory } from 'react-router-dom';
 
@@ -21,13 +22,7 @@ const Home = () => {
     const [userDetails, setUserDetails] = useState({});
     // 600000 = 10 minutes
     const timeoutMs = 3600000;
-
-    // If false, which is only when the user tries to come to this page without a token, redirect to login.
-    if (!authenticated) {
-        localStorage.clear();
-        history.push("/");
-    }
-
+    
     // If user comes to this page when token has already expired or is not present, redirect to login page.
     if (new Date().getTime() > new Date(localStorage.getItem('token-expiry')).getTime() && localStorage.getItem('token') !== null) {
         alert(`Your session has expired. Redirecting back to login page.`);
@@ -48,55 +43,62 @@ const Home = () => {
     })
 
     useEffect(() => {
-        const fetchData = async() => {
-            const userRole = localStorage.getItem('role');
-            await fetch(`http://localhost:8080/api/v1/${userRole}/profile`, {
-                method: 'GET',
-                headers: {
-                    'Accept': '*/*',
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
-                }
-            }).then(response => {
-                response.json().then(json => {
-                    if (userRole === 'customer') {
-                        const details = {
-                            userType: userRole,
-                            id: json.id,
-                            username: json.username,
-                            firstName: json.firstName,
-                            lastName: json.lastName,
-                            address: json.address,
-                            phoneNumber: json.phoneNumber
-                        }
-                        localStorage.setItem('userDetails', JSON.stringify(details));
-                        setUserDetails(details);
-                    } else if (userRole === 'worker') {
-                        const details = {
-                            userType: userRole,
-                            id: json.id,
-                            username: json.username,
-                            firstName: json.firstName,
-                            lastName: json.lastName,
-                            role: json.role
-                        }
-                        localStorage.setItem('userDetails', JSON.stringify(details));
-                        setUserDetails(details);
-                    } else if (userRole === 'admin') {
-                        // Not sure admin's details payload.
-                        const details = {
-                            userType: userRole,
-                            id: json.id,
-                            username: json.username,
-                            firstName: json.firstName,
-                            lastName: json.lastName
-                        }
-                        localStorage.setItem('userDetails', JSON.stringify(details));
-                        setUserDetails(details);
-                    }
-                })
-            })
+        // If false, which is only when the user tries to come to this page without a token, redirect to login.
+        if (!authenticated) {
+            localStorage.clear();
+            history.push("/");
         }
-        fetchData();
+        else {
+            const fetchData = async() => {
+                const userRole = localStorage.getItem('role');
+                await fetch(`http://localhost:8080/api/v1/${userRole}/profile`, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': '*/*',
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                }).then(response => {
+                    response.json().then(json => {
+                        if (userRole === 'customer') {
+                            const details = {
+                                userType: userRole,
+                                id: json.id,
+                                username: json.username,
+                                firstName: json.firstName,
+                                lastName: json.lastName,
+                                address: json.address,
+                                phoneNumber: json.phoneNumber
+                            }
+                            localStorage.setItem('userDetails', JSON.stringify(details));
+                            setUserDetails(details);
+                        } else if (userRole === 'worker') {
+                            const details = {
+                                userType: userRole,
+                                id: json.id,
+                                username: json.username,
+                                firstName: json.firstName,
+                                lastName: json.lastName,
+                                role: json.role
+                            }
+                            localStorage.setItem('userDetails', JSON.stringify(details));
+                            setUserDetails(details);
+                        } else if (userRole === 'admin') {
+                            // Not sure admin's details payload.
+                            const details = {
+                                userType: userRole,
+                                id: json.id,
+                                username: json.username,
+                                firstName: json.firstName,
+                                lastName: json.lastName
+                            }
+                            localStorage.setItem('userDetails', JSON.stringify(details));
+                            setUserDetails(details);
+                        }
+                    })
+                })
+            }
+            fetchData();
+        }
     }, []);
 
     const pathname = window.location.pathname;
@@ -136,11 +138,11 @@ const Home = () => {
                     case "/home":
                         return <WorkerList/>
                     case "/businesshours":
-                        return <AdminCalendar/>
+                        return <AdminBusinessHours/>
                     case "/history":
                         return <PastAppointments/>
                     case "/createbookings":
-                        return <AdminBookings userDetails={userDetails}/>
+                        return <AdminBookings/>
                     default:
                         return;
                 }
