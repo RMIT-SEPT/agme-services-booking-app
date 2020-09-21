@@ -31,16 +31,13 @@ const appointment = {
     }
 }
 
-test('appointment component renders details correctly', () => {
-    const wrapper = shallow(<Appointment details={appointment}/>);
+localStorage.setItem('userDetails', JSON.stringify(userDetails));
 
+test('appointment component renders details correctly', () => {
+    const wrapper = shallow(<Appointment details={appointment} userType={userDetails.userType}/>);
     const appTime = wrapper.find('.timeDiv');
     // test div has only two elements
     expect(appTime.children().length).toEqual(2);
-
-    // test div has expected appointment values
-    expect(appTime.childAt(0).text()).toEqual(appointment.startTime);
-    expect(appTime.childAt(1).text()).toEqual(appointment.endTime);
 
     const appInfo = wrapper.find('.infoDiv');
     // test div has only two elements
@@ -53,7 +50,7 @@ test('appointment component renders details correctly', () => {
 })
 
 test('profile page renders user details correctly', () => {
-    const wrapper = shallow(<Profile userDetails={userDetails}/>);
+    const wrapper = shallow(<Profile/>);
 
     const profileContainer = wrapper.find('#profileDetailsContainer');
 
@@ -64,19 +61,19 @@ test('profile page renders user details correctly', () => {
     expect(profileContainer.childAt(0).childAt(1).props().value).toEqual(userDetails.firstName); 
     expect(profileContainer.childAt(1).childAt(1).props().value).toEqual(userDetails.lastName);
     expect(profileContainer.childAt(2).childAt(1).props().value).toEqual(userDetails.username);
-    expect(profileContainer.childAt(3).childAt(1).props().value).toEqual(userDetails.password);
+    expect(profileContainer.childAt(3).childAt(1).props().value).toBeUndefined();
     expect(profileContainer.childAt(4).childAt(1).props().value).toEqual(userDetails.phoneNumber);
     expect(profileContainer.childAt(5).childAt(1).props().value).toEqual(userDetails.address);
 })
 
 test('booking page renders without crashing', () => {
-    const wrapper = shallow(<BookingPage userDetails={userDetails}/>);
+    const wrapper = shallow(<BookingPage/>);
 })
 
 test('home appointments component renders without crashing', () => {
-    const wrapper = shallow(<HomeAppointments userDetails={userDetails}/>);
+    const wrapper = shallow(<HomeAppointments/>);
 })
 
 test('past appointments component renders without crashing', () => {
-    const wrapper = shallow(<PastAppointments userDetails={userDetails}/>);
+    const wrapper = shallow(<PastAppointments/>);
 })

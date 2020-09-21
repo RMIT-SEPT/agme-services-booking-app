@@ -10,7 +10,6 @@ const Appointment = ({details, userType}) => {
     const worker = details.workerEntity;
 
     const renderAppointmentDetails = () => {
-        const custName = customer ? `${customer.firstName} ${customer.lastName}` : "null";
         switch (user) {
             case ('customer'):
                 return <p>Worker Assigned: {worker.firstName} {worker.lastName} </p>
