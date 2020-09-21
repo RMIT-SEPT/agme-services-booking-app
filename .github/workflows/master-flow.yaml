@@ -4,20 +4,20 @@
 
 name: Deploy to Kubernetes AWS EC2
 on:
-  push: 
+  push:
     branches: [master]
   pull_request:
     branches: [master]
 
 jobs:
   job-1:
-    name: Call Deloy Script
+    name: Call Deploy Script
     runs-on: ubuntu-latest
     steps:
       - name: SSH into AWS EC2 Instance & Call Deploy Script
         uses: garygrossgarten/github-action-ssh@release
         with:
-          command: ls -a
+          command: ./runner.sh
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME}}
           privateKey: ${{ secrets.PRIVATE_KEY}}
