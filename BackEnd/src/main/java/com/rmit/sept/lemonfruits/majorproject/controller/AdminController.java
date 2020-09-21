@@ -48,7 +48,7 @@ public class AdminController {
 
     @PostMapping(value = "/workers", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<WorkerEntity> createWorker(@AuthenticationPrincipal AdminEntity adminEntity, @RequestBody WorkerEntity workerEntity) {
-        if (adminEntity.getAdminId() != null)
+        if (workerEntity.getId() != null)
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Id cannot be set");
 
         if (workerRepository.getByUsername(workerEntity.getUsername()).isPresent())
