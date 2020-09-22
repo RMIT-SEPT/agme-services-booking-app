@@ -5,7 +5,7 @@ echo "runner.sh script starting..."
 echo "Docker down and checkout to master & update"
 docker-compose down;
 git pull;
-git checkout feature/deployment;
+git checkout master;
 
 echo "Move to Backend & Creating new Springboot Image"
 cd ..;
