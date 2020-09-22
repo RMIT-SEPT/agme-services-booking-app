@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
 import '../css/profile.css';
 
-const Profile = ({userDetails}) => {
-    // Images are random numbers, choose a random avatar!
-    const randomNumber = Math.floor(1 + Math.random() * (6 - 1));
-
+const Profile = () => {
+    const userDetails = JSON.parse(localStorage.getItem('userDetails'));
     const userType = userDetails.userType;
     const [editedDetails, setEditedDetails] = useState('');
     const [firstName, setFirstName] = useState(userDetails.firstName);
@@ -41,21 +39,21 @@ const Profile = ({userDetails}) => {
     const handleSubmit = async () => {
         // JSON to send to backend API. Compare new states with the original in userDetail, and only send the ones you're changing.
         const data = { };
-        if (userDetails.firstName != firstName)
+        if (userDetails.firstName !== firstName)
             data.firstName = firstName
-        if (userDetails.lastName != lastName)
+        if (userDetails.lastName !== lastName)
             data.lastName = lastName;
-        if (userDetails.username != username)
+        if (userDetails.username !== username)
             data.username = username;
-        if (password != null) 
+        if (password !== null) 
             data.password = password;
-        if (userDetails.phoneNumber != phoneNumber)
+        if (userDetails.phoneNumber !== phoneNumber)
             data.phoneNumber = phoneNumber;
-        if (userDetails.address != address)
+        if (userDetails.address !== address)
             data.address = address;
 
         // POST request to backend with the data JSON
-        const response = await fetch(`http://localhost:8080/api/v1/customer/profile/edit`, {
+        await fetch(process.env.REACT_APP_API_URL + `/api/v1/customer/profile/edit`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -98,7 +96,7 @@ const Profile = ({userDetails}) => {
     return (
         <div className="profileContainer">
             <div id="avatarContainer">
-                <img src={`${randomNumber}.png`} alt="Avatar"/>
+                <img src={`${userDetails.id % 5}.png`} alt="Avatar"/>
                 <p>{userDetails.firstName} {userDetails.lastName}</p>
             </div>
             <div id="profileDetailsContainer">

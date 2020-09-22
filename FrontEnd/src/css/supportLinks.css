@@ -3,7 +3,23 @@
 }
 
 .individualSupportItem {
-    padding: 0px 30px;
-
+    padding: 0px 15px;
     font-size: 20px;
+}
+
+.buttonAsText { 
+    background:none;border:none; 
+    padding: 0px 15px;
+    font-size: 20px;
+    border: none;
+    cursor: pointer;
+}
+
+.buttonAsText:focus {
+    outline: none;
+}
+
+.modalText {
+    font-size: 30px;
+    white-space: pre-line;
 }

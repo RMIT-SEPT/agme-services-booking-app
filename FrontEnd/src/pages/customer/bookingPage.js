@@ -4,19 +4,18 @@ import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import '../../css/pages/bookingPage.css';
 
-const BookingPage = (userDetails) => {
-    const userName = userDetails.userName;
+const BookingPage = () => {
     const localizer = momentLocalizer(moment)
 
     // Get start and end times
     //const startTimeFrame
     //const endTimeFrame
 
-    const [availabilities, setAvailabilities] = useState([]);
+    const [bookings, setBookings] = useState([]);
 
     useEffect(() => {
         const fetchData = async() => {
-            await fetch(`http://localhost:8080/api/v1/customer/availabilities`, {
+            await fetch(process.env.REACT_APP_API_URL + `/api/v1/customer/availabilities`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -24,17 +23,15 @@ const BookingPage = (userDetails) => {
             }).then(response => {
                 response.json().then(json => {
                     json.map((value) => {
-                        console.log(value.startTime)
                         const event = {
                             title: `${value.workerEntity.role}: ${value.workerEntity.firstName}`,
                             start: moment(value.startTime).toDate(),
                             end: moment(value.endTime).toDate(),
                             resource: {
-                                bookingId: value.bookingId,
-                                worker: value.workerEntity
+                                bookingId: value.bookingId
                             }
                         }
-                        setAvailabilities([...availabilities, event])
+                        setBookings([...bookings, event])
                     });
                 })
             })
@@ -47,11 +44,10 @@ const BookingPage = (userDetails) => {
             // add customer entity to booking in database
             makeBooking(event.resource)
         }
-        
     }
 
     const makeBooking = async(resource) => {
-        await fetch(`http://localhost:8080/api/v1/customer/booking/${resource.bookingId}`, {
+        await fetch(process.env.REACT_APP_API_URL + `/api/v1/customer/booking/${resource.bookingId}`, {
             method: 'GET',
             headers: {
                 'Accept': '*/*',
@@ -60,7 +56,7 @@ const BookingPage = (userDetails) => {
         }).then((response) => {
             if (response.ok) {
                 // remove from calendar availabilities
-                setAvailabilities(availabilities.filter((availability) => (availability.resource.bookingId != resource.bookingId)));
+                setBookings(bookings.filter((booking) => (booking.resource.bookingId != resource.bookingId)));
             }
         })
     }
@@ -70,10 +66,10 @@ const BookingPage = (userDetails) => {
             <Calendar
                 id="customer-calendar"
                 localizer={localizer}
-                events={availabilities}
+                events={bookings}
                 style={{ height: 400, width: 750}}
-                defaultView={'work_week'}
-                views={['work_week', 'day', 'agenda']}
+                defaultView={'week'}
+                views={['week', 'day', 'agenda']}
                 onSelectEvent={handleAdd}
             />
         </div>

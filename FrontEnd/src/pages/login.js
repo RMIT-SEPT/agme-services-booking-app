@@ -8,9 +8,8 @@ const Login = () => {
 
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [authenticated, setAuthenticated] = useState(false);
-    // Should be the JSON object that backend returns to us.
-    const [loginDetails, setLoginDetails] = useState('');
+    const [authenticated, setAuthenticated] = useState(localStorage.getItem('token') === null ? false : true);
+    const [responseMsg, setResponseMsg] = useState('');
 
     const setUsernameState = (newValue) => {
         setUsername(newValue.target.value);
@@ -29,7 +28,7 @@ const Login = () => {
         };
 
         // POST request to backend with the data JSON
-        const response = await fetch('http://localhost:8080/api/v1/user/login', {
+        await fetch(process.env.REACT_APP_API_URL + `/api/v1/user/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -39,10 +38,17 @@ const Login = () => {
         }).then(response => {
             if (response.ok) {
                 response.json().then(json => {
+                    const expiryTime = new Date();
+                    expiryTime.setMinutes(expiryTime.getMinutes() + 20)
+
                     localStorage.setItem('token', json.token);
-                    localStorage.setItem('token-expiry', new Date().getTime() + 500000);
-                    setLoginDetails(json);
+                    localStorage.setItem('token-expiry', expiryTime);
+                    localStorage.setItem('role', json.role);
                     setAuthenticated(true);
+                })
+            } else {
+                response.json().then(json => {
+                    setResponseMsg(`Invalid Username/Password Supplied.`)
                 })
             }
         });
@@ -50,7 +56,7 @@ const Login = () => {
 
     return (
         <div id="loginContainer">
-            { authenticated ? history.push("/home", {loginDetails: loginDetails}) : null}
+            { authenticated ? history.push("/home") : null}
 
             <h1 id="header">Login</h1>
             <div id="formArea">
@@ -58,6 +64,7 @@ const Login = () => {
                     <input className="loginInputField" name="username" type="text" placeholder=" Username" onChange={setUsernameState}/>
                     <input className="loginInputField" name="password" type="password" placeholder=" Password" onChange={setPasswordState}/>
                     <input className="submitBtn" type="button" value="Login" onClick={handleSubmit}/>
+                    <p id="loginResponseMsg">{responseMsg}</p>
                     <p>Don't have an account? <Link to="/signup">Register here</Link></p>
                 </form>
             </div>

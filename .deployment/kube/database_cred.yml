@@ -1,0 +1,19 @@
+# Define 'Configmap' to store non-sensitive database configuration 
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: db-config
+data:
+  host: postgres   
+  name: sept-main
+
+---
+
+# Define 'Secret' to store db-credentials 
+apiVersion: v1
+kind: Secret
+metadata:
+  name: db-creds
+data:
+  username: bGVtb25ncmFi
+  password: YWRvbQ==

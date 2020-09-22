@@ -10,6 +10,7 @@ const Signup = () => {
     const [phone, setPhone] = useState('');
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [responseMsg, setResponseMsg] = useState('');
 
     const setFirstNameState = (newValue) => {
         setFirstName(newValue.target.value);
@@ -48,14 +49,21 @@ const Signup = () => {
         };
 
         // use whatever the springboot url is
-        const response = await fetch('http://localhost:8080/api/v1/customer/signup', {
+        await fetch(process.env.REACT_APP_API_URL + `/api/v1/customer/signup`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(data)
+        }).then(response => {
+            if (response.ok) {
+                setResponseMsg(`Successfully created user '${username}'`);
+            } else {
+                response.json().then(json => {
+                    setResponseMsg(`Failed to create user: ${json.message}`);
+                })
+            }
         });
-        alert(`Response: ${response}`);
     }
 
     return(
@@ -70,6 +78,7 @@ const Signup = () => {
                     <input name="username" type="text" placeholder=" Username" onChange={setUsernameState}/>
                     <input name="password" type="password" placeholder=" Password" onChange={setPasswordState}/>
                     <input className="submitBtn" type="button" value="Register" onClick={handleSubmit}/>
+                    <p id="responseMsg">{responseMsg}</p>
                     <p>Already have an account? <Link to="/">Login here</Link></p>
                 </form>
             </div>

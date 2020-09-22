@@ -1,4 +1,5 @@
 import React from 'react';
+import moment from 'moment';
 
 const Appointment = ({details, userType}) => {
     const user = userType;
@@ -14,10 +15,27 @@ const Appointment = ({details, userType}) => {
                 return <p>Worker Assigned: {worker.firstName} {worker.lastName} </p>
 
             case ('worker'):
-                return <p>Customer: {customer.firstName} {customer.lastName}</p>
+                if (customer !== null)
+                    return <p>Customer: {customer.firstName} {customer.lastName}</p>
+                else
+                    return <p>No Customer Assigned</p>
 
             case ('admin'):
-                return <p>Customer: {customer.firstName} {customer.lastName}<br/> Worker Assigned: {worker.firstName} {worker.lastName}</p>
+                let customerString;
+                let workerString;
+                customerString = (customer === null) ? 
+                    <p>No Customer Assigned<br/></p> : <p>Customer: {customer.firstName} {customer.lastName}<br/></p>;
+                workerString = (worker === null) ?
+                    <p>No Worker Assigned</p> : <p>Worker Assigned: {worker.firstName} {worker.lastName}</p>
+
+                return (
+                    <React.Fragment>
+                        {customerString} {workerString}
+                    </React.Fragment>
+                )
+
+            default:
+                return;
         }
     }
 
@@ -25,8 +43,8 @@ const Appointment = ({details, userType}) => {
     return(
         <div id="appointmentContainer">
             <div className="timeDiv">
-                <p>{startTime}</p>
-                <p>{endTime}</p>
+                <p>{moment(startTime).format("dddd, MMMM Do")}</p>
+                <p>{moment(startTime).format("LT")} - {moment(endTime).format("LT")}</p>
             </div>
             <div className="infoDiv">
                 <p>ID: {bookingId}</p>
