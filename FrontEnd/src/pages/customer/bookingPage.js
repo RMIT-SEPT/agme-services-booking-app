@@ -15,7 +15,7 @@ const BookingPage = () => {
 
     useEffect(() => {
         const fetchData = async() => {
-            await fetch(`http://localhost:8080/api/v1/customer/availabilities`, {
+            await fetch(process.env.REACT_APP_API_URL + '/api/v1/customer/availabilities', {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -47,7 +47,7 @@ const BookingPage = () => {
     }
 
     const makeBooking = async(resource) => {
-        await fetch(`http://localhost:8080/api/v1/customer/booking/${resource.bookingId}`, {
+        await fetch(process.env.REACT_APP_API_URL + '/api/v1/customer/booking/${resource.bookingId}', {
             method: 'GET',
             headers: {
                 'Accept': '*/*',

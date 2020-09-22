@@ -13,7 +13,7 @@ const AdminBusinessHours = () => {
 
     const displayEvents = async() => {
         var allEvents = [];
-        await fetch(`http://localhost:8080/api/v1/admin/businesshours`, {
+        await fetch(process.env.REACT_APP_API_URL + '/api/v1/admin/businesshours', {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -43,7 +43,7 @@ const AdminBusinessHours = () => {
                 endTime: moment(end).format().substring(0,19)
             }
 
-            await fetch(`http://localhost:8080/api/v1/admin/businesshours`, {
+            await fetch(process.env.REACT_APP_API_URL + '/api/v1/admin/businesshours', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -61,7 +61,7 @@ const AdminBusinessHours = () => {
     const handleSelectEvent = async(event) =>{
         if (window.confirm("Are you sure you want to remove these business hours?")) {
             // remove this booking entity from the database
-            await fetch(`http://localhost:8080/api/v1/admin/businesshours/${event.resource.id}`, {
+            await fetch(process.env.REACT_APP_API_URL + '/api/v1/admin/businesshours/${event.resource.id}', {
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`

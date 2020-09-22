@@ -14,7 +14,7 @@ const AvailabilityPage = () => {
 
     useEffect(() => {
         const fetchData = async() => {
-            await fetch(`http://localhost:8080/api/v1/worker/availability`, {
+            await fetch(process.env.REACT_APP_API_URL + '/api/v1/worker/availability', {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -41,7 +41,7 @@ const AvailabilityPage = () => {
     }, [])
 
     const addAvailabilityRequest = async(data) => {
-        await fetch('http://localhost:8080/api/v1/worker/availability', {
+        await fetch(process.env.REACT_APP_API_URL + '/api/v1/worker/availability', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -56,7 +56,7 @@ const AvailabilityPage = () => {
 
     const removeAvailabilityRequest = async(data) => {
         const entryId = data.title.substr(data.title.indexOf(' ') + 1);
-        await fetch(`http://localhost:8080/api/v1/worker/availability/${entryId}`, {
+        await fetch(process.env.REACT_APP_API_URL + '/api/v1/worker/availability/${entryId}', {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
