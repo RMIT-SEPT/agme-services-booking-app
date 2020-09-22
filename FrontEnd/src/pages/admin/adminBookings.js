@@ -120,8 +120,8 @@ const AdminBookings = () => {
                 localizer={localizer}
                 events={bookings}
                 style={{ height: 400, width: 750}}
-                defaultView={'work_week'}
-                views={['work_week', 'day', 'agenda']}
+                defaultView={'week'}
+                views={['week', 'day', 'agenda']}
                 selectable={'ignoreEvents'}
                 onSelectSlot={handleSelectSlot}
                 onSelectEvent={handleDelete}

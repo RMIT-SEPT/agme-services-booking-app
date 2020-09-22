@@ -81,8 +81,8 @@ const AdminBusinessHours = () => {
                 localizer={localizer}
                 events={businessHours}
                 style={{ height: 545, width: 800}}
-                defaultView={'work_week'}
-                views={['work_week', 'day', 'agenda']}
+                defaultView={'week'}
+                views={['week', 'day', 'agenda']}
                 selectable={'ignoreEvents'}
                 onSelectSlot={handleSelectSlot}
                 onSelectEvent={handleSelectEvent}

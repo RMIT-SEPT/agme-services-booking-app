@@ -106,7 +106,7 @@ const AvailabilityPage = () => {
                 events={availability}
                 style={calendarStyle}
                 defaultView={'week'}
-                views={['week', 'work_week', 'day']}
+                views={['week', 'day', 'agenda']}
                 selectable={true}
                 onSelectSlot={handleSelection}
                 onSelectEvent={handleDelete}
