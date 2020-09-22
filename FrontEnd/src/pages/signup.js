@@ -49,7 +49,7 @@ const Signup = () => {
         };
 
         // use whatever the springboot url is
-        await fetch(process.env.REACT_APP_API_URL + '/api/v1/customer/signup', {
+        await fetch(process.env.REACT_APP_API_URL + `/api/v1/customer/signup`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

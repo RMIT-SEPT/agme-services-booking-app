@@ -13,7 +13,7 @@ const PastAppointments = () => {
         const fetchData = async() => {
             // Request for customer's past bookings.
             if (userType === 'customer') {
-                await fetch('http://localhost:8080/api/v1/customer/view/past', {
+                await fetch(process.env.REACT_APP_API_URL + `/api/v1/customer/view/past`, {
                     method: 'GET',
                     headers: {
                         'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -25,7 +25,7 @@ const PastAppointments = () => {
                 })
             } else if (userType === 'worker' || userType === 'admin') {
                 // Worker and Admin have similar endpoint, only difference is the userType.
-                await fetch(`http://localhost:8080/api/v1/${userType}/bookings/history`, {
+                await fetch(process.env.REACT_APP_API_URL + `/api/v1/${userType}/bookings/history`, {
                     method: 'GET',
                     headers: {
                         'Authorization': `Bearer ${localStorage.getItem('token')}`

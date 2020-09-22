@@ -13,7 +13,7 @@ const HomeAppointments = () => {
         const fetchData = async() => {
 
             if (userType === 'customer') {
-                await fetch('http://localhost:8080/api/v1/customer/view', {
+                await fetch(process.env.REACT_APP_API_URL + `/api/v1/customer/view`, {
                     method: 'GET',
                     headers: {
                         'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -24,7 +24,7 @@ const HomeAppointments = () => {
                     })
                 });
             } else if (userType === 'worker') {
-                await fetch('http://localhost:8080/api/v1/worker/bookings', {
+                await fetch(process.env.REACT_APP_API_URL + `/api/v1/worker/bookings`, {
                     method: 'GET',
                     headers: {
                         'Authorization': `Bearer ${localStorage.getItem('token')}`
