@@ -17,7 +17,8 @@ jobs:
       - name: SSH into AWS EC2 Instance & Call Deploy Script
         uses: garygrossgarten/github-action-ssh@release
         with:
-          command: ./runner.sh
+          command: (cd ~/majorproject-8-mon-17-30-4-lemonfruits/.deployment/; sh runner.sh)
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME}}
           privateKey: ${{ secrets.PRIVATE_KEY}}
+
