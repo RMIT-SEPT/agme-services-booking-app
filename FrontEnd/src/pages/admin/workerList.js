@@ -7,7 +7,7 @@ import '../../css/pages/workerList.css';
 
 import Worker from './worker.js';
 
-const WorkerList = ({userDetails}) => {
+const WorkerList = () => {
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [workersData, setWorkersData] = useState([]);
     const localizer = momentLocalizer(moment);
@@ -45,9 +45,7 @@ const WorkerList = ({userDetails}) => {
         var allWorkers = [];
 
         const fetchData = async() => {
-            const requests = [];
-
-            await fetch(`http://localhost:8080/api/v1/admin/workers`, {
+            await fetch(process.env.REACT_APP_API_URL + `/api/v1/admin/workers`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -63,7 +61,7 @@ const WorkerList = ({userDetails}) => {
                             id: value.id,
                             details: value
                         }
-                        await fetch(`http://localhost:8080/api/v1/admin/workers/${value.id}`, {
+                        await fetch(process.env.REACT_APP_API_URL + `/api/v1/admin/workers/${value.id}`, {
                             method: 'GET',
                             headers: {
                                 'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -91,8 +89,7 @@ const WorkerList = ({userDetails}) => {
             password: password,
             role: role
         }
-        console.log(`sending:\n ${JSON.stringify(newWorkerDetails)}`)
-        await fetch(`http://localhost:8080/api/v1/admin/workers`, {
+        await fetch(process.env.REACT_APP_API_URL + `/api/v1/admin/workers`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

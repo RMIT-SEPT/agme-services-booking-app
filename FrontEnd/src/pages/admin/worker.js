@@ -30,12 +30,12 @@ const Worker = ({worker, localizer}) => {
             }
             allEvents.push(newEvent)
         })
-    }, [])
+    })
 
     const handleRemove = async() => {
         const fullName = `${firstName} ${lastName}`;
         if (window.confirm(`Are you sure you want to remove worker ${fullName}?`)) {
-            await fetch(`http://localhost:8080/api/v1/admin/workers/${id}`, {
+            await fetch(process.env.REACT_APP_API_URL + `/api/v1/admin/workers/${id}`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`

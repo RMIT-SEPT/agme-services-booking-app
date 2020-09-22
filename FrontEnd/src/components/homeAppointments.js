@@ -3,7 +3,8 @@ import '../css/appointment.css';
 
 import Appointment from './appointment.js';
 
-const HomeAppointments = ({userDetails}) => {
+const HomeAppointments = () => {
+    const userDetails = JSON.parse(localStorage.getItem('userDetails'));
     const userType = userDetails.userType;
 
     const [appointments, setAppointments] = useState([]);
@@ -12,7 +13,7 @@ const HomeAppointments = ({userDetails}) => {
         const fetchData = async() => {
 
             if (userType === 'customer') {
-                await fetch('http://localhost:8080/api/v1/customer/view', {
+                await fetch(process.env.REACT_APP_API_URL + `/api/v1/customer/view`, {
                     method: 'GET',
                     headers: {
                         'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -23,7 +24,7 @@ const HomeAppointments = ({userDetails}) => {
                     })
                 });
             } else if (userType === 'worker') {
-                await fetch('http://localhost:8080/api/v1/worker/bookings', {
+                await fetch(process.env.REACT_APP_API_URL + `/api/v1/worker/bookings`, {
                     method: 'GET',
                     headers: {
                         'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -43,7 +44,7 @@ const HomeAppointments = ({userDetails}) => {
         <div id="appointmentsContainer">
             <h1> Your Appointments </h1>
             {Object.entries(appointments).map(([key, value]) => {
-                return <Appointment details={value} userType={userType}/>
+                return <Appointment key={key} details={value} userType={userType}/>
             })}
         </div>
     )

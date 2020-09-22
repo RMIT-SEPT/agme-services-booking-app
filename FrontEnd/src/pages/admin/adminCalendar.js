@@ -3,14 +3,12 @@ import '../../css/pages/workerList.css';
 
 import Worker from './worker.js';
 
-const WorkerList = ({userDetails}) => {
-    const userType = userDetails.userType;
-
+const WorkerList = () => {
     const [workers, setWorkers] = useState([]);
 
     useEffect(() => {
         const fetchData = async() => {
-            await fetch(`http://localhost:8080/api/v1/admin/workers`, {
+            await fetch(process.env.REACT_APP_API_URL + `/api/v1/admin/workers`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`

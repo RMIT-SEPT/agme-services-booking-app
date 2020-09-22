@@ -1,0 +1,49 @@
+# Define 'Service' to expose FrontEnd Application
+apiVersion: v1
+kind: Service
+metadata:
+  name: sept-frontend
+spec:
+  selector: # pod labels should match these
+    app: sept
+    tier: frontend
+  ports:
+  - protocol: "TCP"
+    port: 80
+    targetPort: 8080
+  type: LoadBalancer # use NodePort if you are not running Kubernetes on Cloud
+
+---
+
+# 'Deployment' to manage of configuration of frontEnd Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sept-frontend
+  labels: # pod labels should match these
+    app: sept
+    tier: frontend
+spec:
+  replicas: 2  # number of replicas of frontEnd application
+  selector:
+    matchLabels: 
+      app: sept
+      tier: frontend
+  template:
+    metadata:
+      labels: # Must match 'Service' and 'Deployment' labels
+        app: sept
+        tier: frontend  
+    spec:                 
+      containers: 
+      - name: sept-frontend
+        image: SEPT_FRONTEND_DOCKER_IMAGE_NAME  # docker image of frontend application
+        imagePullPolicy: Never
+        env: 
+          -  name: SERVER_URI 
+             valueFrom:
+               configMapKeyRef:
+                 name: backend-config 
+                 key: server-uri
+        ports:
+        - containerPort: 8080
