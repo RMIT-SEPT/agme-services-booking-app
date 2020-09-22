@@ -51,7 +51,7 @@ const Home = () => {
         else {
             const fetchData = async() => {
                 const userRole = localStorage.getItem('role');
-                await fetch(process.env.REACT_APP_API_URL + '/api/v1/${userRole}/profile', {
+                await fetch(process.env.REACT_APP_API_URL + `/api/v1/${userRole}/profile`, {
                     method: 'GET',
                     headers: {
                         'Accept': '*/*',

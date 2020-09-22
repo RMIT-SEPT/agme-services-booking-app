@@ -14,7 +14,7 @@ const AdminBookings = () => {
     useEffect(() => {
         var allWorkers = []
         const fetchData = async() => {
-            await fetch(process.env.REACT_APP_API_URL + '/api/v1/admin/workers', {
+            await fetch(process.env.REACT_APP_API_URL + `/api/v1/admin/workers`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -40,7 +40,7 @@ const AdminBookings = () => {
     const handleBookingsChange = async(e) => {
         var allBookings = [];
         setCurrentWorker(workers.find((worker) => worker.id == e));
-        await fetch(process.env.REACT_APP_API_URL + '/api/v1/admin/bookings', {
+        await fetch(process.env.REACT_APP_API_URL + `/api/v1/admin/bookings`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -82,7 +82,7 @@ const AdminBookings = () => {
                 workerId: currentWorker.id
             }
 
-            await fetch(process.env.REACT_APP_API_URL + '/api/v1/admin/booking', {
+            await fetch(process.env.REACT_APP_API_URL + `/api/v1/admin/booking`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -100,7 +100,7 @@ const AdminBookings = () => {
     const handleDelete = async(event) => {
         if (window.confirm("Would you like to remove this booking?")) {
             // remove this booking entity from the database
-            await fetch(process.env.REACT_APP_API_URL + '/api/v1/admin/booking/${event.resource.bookingId}', {
+            await fetch(process.env.REACT_APP_API_URL + `/api/v1/admin/booking/${event.resource.bookingId}`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`

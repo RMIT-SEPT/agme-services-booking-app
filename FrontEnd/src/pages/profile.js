@@ -53,7 +53,7 @@ const Profile = () => {
             data.address = address;
 
         // POST request to backend with the data JSON
-        await fetch(process.env.REACT_APP_API_URL + '/api/v1/customer/profile/edit', {
+        await fetch(process.env.REACT_APP_API_URL + `/api/v1/customer/profile/edit`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

@@ -28,7 +28,7 @@ const Login = () => {
         };
 
         // POST request to backend with the data JSON
-        await fetch(process.env.REACT_APP_API_URL + '/api/v1/user/login', {
+        await fetch(process.env.REACT_APP_API_URL + `/api/v1/user/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
