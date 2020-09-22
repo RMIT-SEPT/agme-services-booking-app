@@ -8,7 +8,7 @@ const WorkerList = () => {
 
     useEffect(() => {
         const fetchData = async() => {
-            await fetch(`http://localhost:8080/api/v1/admin/workers`, {
+            await fetch(process.env.REACT_APP_API_URL + '/api/v1/admin/workers', {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
