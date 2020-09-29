@@ -8,7 +8,7 @@ const AvailabilityPage = () => {
 
     const localizer = momentLocalizer(moment);
     const calendarStyle = {
-        height: 752,
+        height: 552,
         margin: '20px 10px'
     }
 

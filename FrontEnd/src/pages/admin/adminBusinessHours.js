@@ -4,6 +4,10 @@ import moment from 'moment';
 
 const AdminBusinessHours = () => {
     const localizer = momentLocalizer(moment);
+    const calendarStyle = {
+        height: 533,
+        margin: '20px 10px'
+    }
 
     const [businessHours, setBusinessHours] = useState([]);
 
@@ -80,7 +84,7 @@ const AdminBusinessHours = () => {
             <Calendar
                 localizer={localizer}
                 events={businessHours}
-                style={{ height: 545, width: 800}}
+                style={calendarStyle}
                 defaultView={'week'}
                 views={['week', 'day', 'agenda']}
                 selectable={'ignoreEvents'}

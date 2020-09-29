@@ -6,6 +6,10 @@ import '../../css/pages/bookingPage.css';
 
 const AdminBookings = () => {
     const localizer = momentLocalizer(moment);
+    const calendarStyle = {
+        height: 515,
+        margin: '20px 10px'
+    }
 
     const [bookings, setBookings] = useState([]);
     const [workers, setWorkers] = useState([]);
@@ -116,21 +120,21 @@ const AdminBookings = () => {
 
     return (
         <div id="admin-bookings">
+            <select onChange={(e) => handleBookingsChange(e.target.value)} id="adminWorkerSelection">
+                {Object.entries(workers).map(([key, value]) => {
+                    return <option value={value.id} label={value.username}/>
+                })}
+            </select>
             <Calendar
                 localizer={localizer}
                 events={bookings}
-                style={{ height: 400, width: 750}}
+                style={calendarStyle}
                 defaultView={'week'}
                 views={['week', 'day', 'agenda']}
                 selectable={'ignoreEvents'}
                 onSelectSlot={handleSelectSlot}
                 onSelectEvent={handleDelete}
             />
-            <select onChange={(e) => handleBookingsChange(e.target.value)}>
-                {Object.entries(workers).map(([key, value]) => {
-                    return <option value={value.id} label={value.username}/>
-                })}
-            </select>
         </div>
     )
 }
