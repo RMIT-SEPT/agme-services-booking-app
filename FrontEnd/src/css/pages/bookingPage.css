@@ -1,6 +1,15 @@
 #bookings, #admin-bookings, #admin-business-hours {
+    /*
     display: flex;
     justify-content: center;
     align-items: center;
     padding-top: 50px;
+    */
+    height: 85vh;
+    margin: 20px 10px;
+}
+
+#adminWorkerSelection {
+    display: block;
+    margin: 0 auto;
 }
