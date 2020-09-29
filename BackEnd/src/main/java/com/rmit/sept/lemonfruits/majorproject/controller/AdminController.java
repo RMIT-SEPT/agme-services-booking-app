@@ -3,6 +3,7 @@ package com.rmit.sept.lemonfruits.majorproject.controller;
 import com.rmit.sept.lemonfruits.majorproject.entity.*;
 import com.rmit.sept.lemonfruits.majorproject.model.BookingRequest;
 import com.rmit.sept.lemonfruits.majorproject.model.BusinessHoursRequest;
+import com.rmit.sept.lemonfruits.majorproject.model.WorkerChangeRequest;
 import com.rmit.sept.lemonfruits.majorproject.repository.BookingRepository;
 import com.rmit.sept.lemonfruits.majorproject.repository.BusinessHoursRepository;
 import com.rmit.sept.lemonfruits.majorproject.repository.WorkerRepository;
@@ -61,6 +62,39 @@ public class AdminController {
         workerRepository.save(workerEntity);
 
         return ok(workerEntity);
+    }
+
+
+    @PutMapping(value = "/workers/{workerId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public void editWorker(@AuthenticationPrincipal AdminEntity adminEntity, @PathVariable Long workerId, @RequestBody WorkerChangeRequest request) {
+        WorkerEntity workerEntity = workerRepository.getOne(workerId);
+
+        if (workerEntity == null)
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Worker not found");
+
+        if (request.getUsername() != null) {
+            if (workerRepository.getByUsername(request.getUsername()).isPresent()) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Username already in use");
+            } else {
+                workerEntity.setUsername(request.getUsername());
+            }
+        }
+
+        if (request.getRole() != null)
+            workerEntity.setRole(request.getRole());
+
+        if (request.getFirstName() != null)
+            workerEntity.setFirstName(request.getFirstName());
+
+        if (request.getLastName() != null)
+            workerEntity.setLastName(request.getLastName());
+
+        if (request.getPassword() != null) {
+            if (!passwordEncoder.matches(request.getPassword(), workerEntity.getPassword()))
+                workerEntity.setPassword(passwordEncoder.encode(request.getPassword()));
+        }
+
+        workerRepository.save(workerEntity);
     }
 
     @GetMapping(value = "/workers/{workerId}", produces = MediaType.APPLICATION_JSON_VALUE)
