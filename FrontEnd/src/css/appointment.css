@@ -4,6 +4,7 @@
 }
 
 #appointmentsContainer h1 {
+    padding-top: 30px;
     padding-bottom: 5px;
 
     font-size: 30px;
@@ -19,16 +20,7 @@
 
     margin: 20px auto;
     padding: 5px 5px;
-    border-radius: 50px;
-}
-
-.showXAmount {
-    font-size: 20px;
-    float: right;
-    text-decoration: underline;
-
-    padding: 10px 8px 0px 8px;
-    cursor: pointer;
+    border-radius: 30px;
 }
 
 .timeDiv {

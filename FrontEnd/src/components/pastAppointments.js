@@ -2,12 +2,14 @@ import React, { useState, useEffect } from 'react';
 import '../css/appointment.css';
 
 import Appointment from './appointment.js';
+import FilterAmount from '../components/filterAmount.js';
 
 const PastAppointments = () => {
     const userDetails = JSON.parse(localStorage.getItem('userDetails'));
     const userType = userDetails.userType;
 
     const [appointments, setAppointments] = useState([]);
+    const [showAmount, setShowAmount] = useState(appointments.length);
 
     useEffect(() => {
         const fetchData = async() => {
@@ -21,6 +23,7 @@ const PastAppointments = () => {
                 }).then(response => {
                     response.json().then(array => {
                         setAppointments(array);
+                        setShowAmount(array.length);
                     })
                 })
             } else if (userType === 'worker' || userType === 'admin') {
@@ -33,18 +36,20 @@ const PastAppointments = () => {
                 }).then(response => {
                     response.json().then(array => {
                         setAppointments(array);
+                        setShowAmount(array.length);
                     })
                 })
             }
         }
-        // Have to make the async function then call it for some reason.
         fetchData();
     }, []);
 
     return(
         <div id="appointmentsContainer">
-            <h1> Past Appointments </h1>
-            {Object.entries(appointments).map(([key, value]) => {
+            <h1> Past Appointments
+                <FilterAmount maxAmount={appointments.length} setShowAmount={setShowAmount}/>
+            </h1>
+            {Object.entries(appointments.slice(0, showAmount)).map(([key, value]) => {
                 return <Appointment key={key} details={value} userType={userType}/>
             })}
         </div>

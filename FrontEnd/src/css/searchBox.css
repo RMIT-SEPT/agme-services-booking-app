@@ -1,0 +1,13 @@
+#searchBoxContainer {
+    float: right;
+    font-weight: bold;
+}
+
+.searchBox {
+
+}
+
+/* This will override the box colour for the searchbox if we want */
+.ForwardRef-root-1 {
+    background-color: #f48fb1 !important;
+}
