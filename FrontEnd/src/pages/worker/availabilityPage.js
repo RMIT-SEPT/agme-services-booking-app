@@ -12,35 +12,37 @@ const AvailabilityPage = () => {
         margin: '20px 10px'
     }
 
-    useEffect(() => {
-        const fetchData = async() => {
-            await fetch(process.env.REACT_APP_API_URL + `/api/v1/worker/availability`, {
-                method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
-                }
-            }).then(response => {
-                response.json().then(array => {
-                    let availabilityEvents = [];
-                    // Loop through array, where each element is a day of availability for the week.
-                    // Key is the index, value is the object itself (contains detail for the day).
-                    Object.entries(array).map(([key, value]) => {
-                        const dayAvailable = {
-                            title: `ID: ${value.entryId}`,
-                            start: new Date(value.startTime),
-                            end: new Date(value.endTime)
-                        }
-                        availabilityEvents.push(dayAvailable);
-                    });
+    const fetchAvailabilities = async() => {
+        await fetch(process.env.REACT_APP_API_URL + `/api/v1/worker/availability`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+        }).then(response => {
+            response.json().then(array => {
+                let availabilityEvents = [];
+                // Loop through array, where each element is a day of availability for the week.
+                // Key is the index, value is the object itself (contains detail for the day).
+                Object.entries(array).map(([key, value]) => {
+                    const dayAvailable = {
+                        title: `ID: ${value.entryId}`,
+                        start: new Date(value.startTime),
+                        end: new Date(value.endTime)
+                    }
+                    availabilityEvents.push(dayAvailable);
+                });
 
-                    setAvailability(availabilityEvents);
-                })
+                setAvailability(availabilityEvents);
             })
-        }
-        fetchData();
+        });
+    }
+
+    useEffect(() => {
+        fetchAvailabilities();
     }, [])
 
-    const addAvailabilityRequest = async(data) => {
+    // Returns a boolean, true if successful, false if failed.
+    const addAvailabilityRequest = async(data, startTime, endTime) => {
         await fetch(process.env.REACT_APP_API_URL + `/api/v1/worker/availability`, {
             method: 'POST',
             headers: {
@@ -49,8 +51,16 @@ const AvailabilityPage = () => {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
             },
             body: JSON.stringify(data)
-        }).then(() => {
-            return;
+        }).then(response => {
+            if (response.ok) {
+                setAvailability([...availability, {start: startTime, end: endTime}]);
+                fetchAvailabilities();
+            } else {
+                response.json().then(json => {
+                    window.alert(`Failed to set availability: ${json.message}`);
+                    return false;
+                })
+            }
         })
     }
 
@@ -77,9 +87,8 @@ const AvailabilityPage = () => {
         const startTimeReadable = moment(event.start).format('LT');
         const endTimeReadable = moment(event.end).format('LT');
         if (window.confirm(`Set as AVAILABLE on ${dateReadable} between ${startTimeReadable} and ${endTimeReadable}?`)) {
-            // Make a post request, adding this availability and add this to availability state.
-            addAvailabilityRequest(newEvent)
-            setAvailability([...availability, {start: event.start, end: event.end}]);
+            // Make a post request, and if request is OK, set the availabilities (the events on the calendar).
+            addAvailabilityRequest(newEvent, event.start, event.end)
         }
     }
 
