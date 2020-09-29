@@ -15,24 +15,34 @@
     display: flex;
     flex-direction: row;
 
+    background-color: #90caf9;
+
     margin: 20px auto;
-    padding: 10px 5px;
-    border: 2px solid red;
+    padding: 5px 5px;
+    border-radius: 50px;
+}
+
+.showXAmount {
+    font-size: 20px;
+    float: right;
+    text-decoration: underline;
+
+    padding: 10px 8px 0px 8px;
+    cursor: pointer;
 }
 
 .timeDiv {
     width: 40%;
-
-    border-right: 5px solid blue;
+    border-right: 5px solid #121212;
 }
 
 .timeDiv p {
-    font-size: 20px;
+    font-size: 16px;
     text-align: center;
 }
 
 .infoDiv p {
-    font-size: 20px;
+    font-size: 16px;
     text-align: center;
-    margin: 5% 20px 5% 20px;
+    margin-left: 20px;
 }

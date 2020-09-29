@@ -8,6 +8,7 @@ const HomeAppointments = () => {
     const userType = userDetails.userType;
 
     const [appointments, setAppointments] = useState([]);
+    const [showAmount, setShowAmount] = useState(appointments.length);
 
     useEffect(() => {
         const fetchData = async() => {
@@ -32,6 +33,7 @@ const HomeAppointments = () => {
                 }).then(response => {
                     response.json().then(array => {
                         setAppointments(array);
+                        setShowAmount(array.length);
                     })
                 });
             }
@@ -42,8 +44,18 @@ const HomeAppointments = () => {
 
     return(
         <div id="appointmentsContainer">
-            <h1> Your Appointments </h1>
-            {Object.entries(appointments).map(([key, value]) => {
+            <h1> Your Appointments 
+                <span className="showXAmount" onClick={() => setShowAmount(appointments.length)}>
+                    Show All
+                </span>
+                <span className="showXAmount" onClick={() => setShowAmount(10)}>
+                    Show 10
+                </span>
+                <span className="showXAmount" onClick={() => setShowAmount(5)}>
+                    Show 5
+                </span>
+            </h1>
+            {Object.entries(appointments.slice(0, showAmount)).map(([key, value]) => {
                 return <Appointment key={key} details={value} userType={userType}/>
             })}
         </div>
