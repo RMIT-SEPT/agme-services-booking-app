@@ -12,67 +12,96 @@ const HomeAppointments = () => {
 
     const [appointments, setAppointments] = useState([]);
     const [showAmount, setShowAmount] = useState(appointments.length);
-    const [searchFilter, setSearchFilter] = useState(null);
-    const [filteredAppointments, setFilteredAppointments] = useState([]);
+
+    // Filter related variables
+    const [idFilter, setIdFilter] = useState(null);
+    const [dateFilter, setDateFilter] = useState(null);
+    const [workerFilter, setWorkerFilter] = useState(null);
+    const [customerFilter, setCustomerFilter] = useState(null);
+
+    const [filteredAppointments, setFilteredAppointments] = useState(appointments);
 
     const debug = () => {
-        let tempAppointments = [];
-        // Outer loop (i.e. all appointments, which is an array)
-        Object.entries(appointments).map(([outerKey, outerValue]) => {
-
-            // Inner loop (i.e. per appointment, which is a JSON)
-            // Each 'innerKey' will be the keys for the JSON, e.g. bookingId, startTime, endTime, etc.
-            // InnerValue is not working for some reason, so using longhand appointments[outerKey][innerKey] to get the value instead.
-            Object.keys(appointments[outerKey]).forEach((innerKey, innerValue) => {
-                // console.log(`key: ${innerKey}, value: ${appointments[outerKey][innerKey]}`);
-
-                // If it's a time, convert it to human readable (e.g. Wednesday, September 30th) and see if searchFilter matches.
-                // If I include an OR here with endTime, then this if statement triggers twice on the same appointment, which should not be the case.
-                if (innerKey === 'startTime') {
-                    console.log(`moment: ${moment(appointments[outerKey][innerKey]).format("dddd, MMMM Do")}`);
-                    if (moment(appointments[outerKey][innerKey]).format("dddd, MMMM Do").includes(searchFilter)) {
-                        tempAppointments.push(appointments[outerKey]);
-                    }
-                }
-            })
-        })
-
-        console.log(JSON.stringify(tempAppointments, null, 2));
+        // console.log(JSON.stringify(filteredAppointments, null, 2));
+        console.log(appointments);
     }
 
-    const handleNewFilter = (newFilter) => {
+    const setNewFilter = (filter, value) => {
+        setFilteredAppointments([]);
+        switch (filter) {
+            case("ID"):
+                setIdFilter(value);
+                break;
+
+            case("Date"):
+                setDateFilter(value);
+                break;
+
+            case("Worker"):
+                setWorkerFilter(value);
+                break;
+
+            case("Customer"):
+                setCustomerFilter(value);
+                break;
+        }
+    }
+
+    // useEffect which has dependency on the filters (everytime a filter changes, execute this)
+    useEffect(() => {
         let tempAppointments = [];
+        if (idFilter === null && dateFilter === null && workerFilter === null && customerFilter === null) {
+            setFilteredAppointments(appointments);
+            return;
+        }
 
-        // Outer loop (i.e. all appointments, which is an array)
+        // Outer loop, each iteration is a new appointment, and 'outerKey' is just the index starting from 0.
+        // For each filter, check if its true. If all are true, add that appointment to the tempAppointments.
         Object.entries(appointments).map(([outerKey, outerValue]) => {
+            // if bookingId matches
+            let idFilterMatches = idFilter === null ? true : false;
+            if (String(appointments[outerKey]['bookingId']).startsWith(String(idFilter))) {
+                idFilterMatches = true;
+            }
 
-            // Inner loop (i.e. per appointment, which is a JSON)
-            // Each 'innerKey' will be the keys for the JSON, e.g. bookingId, startTime, endTime, etc.
-            // InnerValue is not working for some reason, so using longhand appointments[outerKey][innerKey] to get the value instead.
-            Object.keys(appointments[outerKey]).forEach((innerKey, innerValue) => {
-                // console.log(`key: ${innerKey}, value: ${appointments[outerKey][innerKey]}`);
+            // Date
+            let dateFilterMatches = dateFilter === null ? true : false;
+            if (moment(appointments[outerKey]['startTime']).format("dddd, MMMM Do").includes(dateFilter)) {
+                dateFilterMatches = true;
+            }
 
-                // If bookingId, then its just a number, and check if equal.
-                if (innerKey === 'bookingId') {
-                    console.log(`Apts: ${String(appointments[outerKey][innerKey])} and newFilter: ${String(newFilter)}`)
-                    if (String(appointments[outerKey][innerKey]).startsWith(String(newFilter))) {
-                        tempAppointments.push(appointments[outerKey]);
+            // Worker, iterate through each key for the worker object and just check if its similar.
+            let workerFilterMatches = workerFilter === null ? true : false;
+            if (appointments[outerKey]['workerEntity'] !== null) {
+                Object.entries(appointments[outerKey]['workerEntity']).map(([workerEntityKey, workerEntityValue]) => {
+                    if (String(workerEntityValue).includes(String(workerFilter))) {
+                        workerFilterMatches = true;
+                        return;
                     }
-                }
-                // If it's a time, convert it to human readable (e.g. Wednesday, September 30th) and see if searchFilter matches.
-                // If I include an OR here with endTime, then this if statement triggers twice on the same appointment, which should not be the case.
-                else if (innerKey === 'startTime') {
-                    if (moment(appointments[outerKey][innerKey]).format("dddd, MMMM Do").includes(newFilter)) {
-                        tempAppointments.push(appointments[outerKey]);
+                })
+            }
+
+            // Iterate through the key/values of the customerEntity, and if any match the customerFilter, set the bool to true.
+            let customerFilterMatches = customerFilter === null ? true : false;
+            if (appointments[outerKey]['customerEntity'] !== null) {
+                Object.entries(appointments[outerKey]['customerEntity']).map(([customerEntityKey, customerEntityValue]) => {
+                    if (customerEntityKey === 'address' || customerEntityKey === 'phoneNumber') { return; }
+                    if (String(customerEntityValue).includes(String(customerFilter))) {
+                        customerFilterMatches = true
+                        return;
                     }
-                }
-            })
+                })
+            }
+
+            if (idFilterMatches && dateFilterMatches && workerFilterMatches && customerFilterMatches) {
+                tempAppointments.push(appointments[outerKey]);
+            }
         })
 
-        setSearchFilter(newFilter);
         setFilteredAppointments(tempAppointments);
-    }
+    }, [idFilter, dateFilter, workerFilter, customerFilter])
 
+    // useEffect which will call the first time the page loads (and thats it)
     useEffect(() => {
         const fetchData = async() => {
 
@@ -98,12 +127,14 @@ const HomeAppointments = () => {
                 }).then(response => {
                     response.json().then(array => {
                         setAppointments(array);
+                        setFilteredAppointments(array);
                         setShowAmount(array.length);
                     })
                 });
             }
         }
         fetchData();
+        console.log(idFilter);
     }, []);
 
     return(
@@ -111,16 +142,11 @@ const HomeAppointments = () => {
             <button onClick={debug}>
                 debug
             </button>
-            <SearchBox handleNewFilter={handleNewFilter}/>
             <h1> Your Appointments 
                 <FilterAmount maxAmount={appointments.length} setShowAmount={setShowAmount}/>
             </h1>
-            {searchFilter === null ? 
-            Object.entries(appointments.slice(0, showAmount)).map(([key, value]) => {
-                return <Appointment key={key} details={value} userType={userType}/>
-            }) 
-            :
-            Object.entries(filteredAppointments.slice(0, showAmount)).map(([key, value]) => {
+            <SearchBox setNewFilter={setNewFilter}/>
+            {Object.entries(filteredAppointments.slice(0, showAmount)).map(([key, value]) => {
                 return <Appointment key={key} details={value} userType={userType}/>
             })}
         </div>

@@ -1,13 +1,15 @@
 #searchBoxContainer {
-    float: right;
+    display: flex;
+    flex-direction: row;
     font-weight: bold;
 }
 
 .searchBox {
-
+    margin: 0px auto;
+    width: 23%;
 }
 
 /* This will override the box colour for the searchbox if we want */
 .ForwardRef-root-1 {
-    background-color: #f48fb1 !important;
+    /* background-color: #f48fb1 !important; */
 }
