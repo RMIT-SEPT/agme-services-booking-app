@@ -52,6 +52,15 @@ public class CustomerController {
         bookingRepository.save(bookingEntity.get());
         return ok(bookingEntity.get());
     }
+    
+    @DeleteMapping(value = "/booking/{bookingId}")
+    public void deleteBooking(@AuthenticationPrincipal CustomerEntity customerEntity, @PathVariable Long bookingId) {
+    	BookingEntity bookingEntity = bookingRepository.findById(bookingId)
+    			.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Booking not found"));
+    	
+    	bookingEntity.setCustomerEntity(null);
+    	bookingRepository.save(bookingEntity);
+    }
 
     @GetMapping(value = "/view", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<BookingEntity>> viewBookings(@AuthenticationPrincipal CustomerEntity customerEntity) {

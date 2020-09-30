@@ -1,7 +1,7 @@
 import React from 'react';
 import moment from 'moment';
 
-const Appointment = ({details, userType}) => {
+const Appointment = ({details, userType, futureApp}) => {
     const user = userType;
     const bookingId = details.bookingId;
     const startTime = details.startTime;
@@ -12,8 +12,17 @@ const Appointment = ({details, userType}) => {
     const renderAppointmentDetails = () => {
         switch (user) {
             case ('customer'):
-                return <p>Worker Assigned: {worker.firstName} {worker.lastName} </p>
+                let removeBookingBtn;
+                if (futureApp) {
+                    removeBookingBtn = <p><input className="removeBooking" type="button" value="Cancel Booking"/></p>
+                }
 
+                return (
+                    <React.Fragment>
+                        <p>Worker Assigned: {worker.firstName} {worker.lastName} </p>
+                        {removeBookingBtn}
+                    </React.Fragment>
+                )
             case ('worker'):
                 if (customer !== null)
                     return <p>Customer: {customer.firstName} {customer.lastName}</p>
