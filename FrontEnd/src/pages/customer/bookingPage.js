@@ -19,6 +19,7 @@ const BookingPage = () => {
 
     useEffect(() => {
         const fetchData = async() => {
+            var allEvents = [];
             await fetch(process.env.REACT_APP_API_URL + `/api/v1/customer/availabilities`, {
                 method: 'GET',
                 headers: {
@@ -35,7 +36,8 @@ const BookingPage = () => {
                                 bookingId: value.bookingId
                             }
                         }
-                        setBookings([...bookings, event])
+                        allEvents.push(event)
+                        setBookings([...allEvents])
                     });
                 })
             })
