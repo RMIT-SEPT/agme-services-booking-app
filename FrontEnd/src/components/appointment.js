@@ -1,7 +1,7 @@
 import React from 'react';
 import moment from 'moment';
 
-const Appointment = ({details, userType, futureApp}) => {
+const Appointment = ({details, userType, futureApp, displayBookings}) => {
     const user = userType;
     const bookingId = details.bookingId;
     const startTime = details.startTime;
@@ -9,12 +9,29 @@ const Appointment = ({details, userType, futureApp}) => {
     const customer = details.customerEntity;
     const worker = details.workerEntity;
 
+    const handleCancel = async() => {
+        if (window.confirm("Are you sure you want to cancel the booking?")) {
+            // remove customer entity from this booking
+            await fetch(process.env.REACT_APP_API_URL + `/api/v1/customer/booking/${bookingId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            }).then((response) => {
+                if (response.ok) {
+                    // refresh page
+                    displayBookings();
+                }
+            })
+        }
+    }
+
     const renderAppointmentDetails = () => {
         switch (user) {
             case ('customer'):
                 let removeBookingBtn;
                 if (futureApp) {
-                    removeBookingBtn = <p><input className="removeBooking" type="button" value="Cancel Booking"/></p>
+                    removeBookingBtn = <p><input className="removeBooking" type="button" value="Cancel Booking" onClick={handleCancel}/></p>
                 }
 
                 return (
