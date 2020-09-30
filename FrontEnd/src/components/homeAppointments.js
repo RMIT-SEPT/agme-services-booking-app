@@ -18,13 +18,40 @@ const HomeAppointments = () => {
     const [dateFilter, setDateFilter] = useState(null);
     const [workerFilter, setWorkerFilter] = useState(null);
     const [customerFilter, setCustomerFilter] = useState(null);
-
     const [filteredAppointments, setFilteredAppointments] = useState(appointments);
 
-    const debug = () => {
-        // console.log(JSON.stringify(filteredAppointments, null, 2));
-        console.log(appointments);
-    }
+    // useEffect which will call the first time the page loads (and thats it)
+    useEffect(() => {
+        const fetchData = async() => {
+            if (userType === 'customer') {
+                await fetch(process.env.REACT_APP_API_URL + `/api/v1/customer/view`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                }).then(response => {
+                    response.json().then(array => {
+                        setAppointments(array);
+                        setShowAmount(array.length);
+                    })
+                });
+            } else if (userType === 'worker') {
+                await fetch(process.env.REACT_APP_API_URL + `/api/v1/worker/bookings`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                }).then(response => {
+                    response.json().then(array => {
+                        setAppointments(array);
+                        setFilteredAppointments(array);
+                        setShowAmount(array.length);
+                    })
+                });
+            }
+        }
+        fetchData();
+    }, []);
 
     const setNewFilter = (filter, value) => {
         setFilteredAppointments([]);
@@ -101,47 +128,8 @@ const HomeAppointments = () => {
         setFilteredAppointments(tempAppointments);
     }, [idFilter, dateFilter, workerFilter, customerFilter])
 
-    // useEffect which will call the first time the page loads (and thats it)
-    useEffect(() => {
-        const fetchData = async() => {
-
-            if (userType === 'customer') {
-                await fetch(process.env.REACT_APP_API_URL + `/api/v1/customer/view`, {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${localStorage.getItem('token')}`
-                    }
-                }).then(response => {
-                    response.json().then(array => {
-                        setAppointments(array);
-                        setShowAmount(array.length);
-                    })
-                });
-            } else if (userType === 'worker') {
-
-                await fetch(process.env.REACT_APP_API_URL + `/api/v1/worker/bookings`, {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${localStorage.getItem('token')}`
-                    }
-                }).then(response => {
-                    response.json().then(array => {
-                        setAppointments(array);
-                        setFilteredAppointments(array);
-                        setShowAmount(array.length);
-                    })
-                });
-            }
-        }
-        fetchData();
-        console.log(idFilter);
-    }, []);
-
     return(
         <div id="appointmentsContainer">
-            <button onClick={debug}>
-                debug
-            </button>
             <h1> Your Appointments 
                 <FilterAmount maxAmount={appointments.length} setShowAmount={setShowAmount}/>
             </h1>
