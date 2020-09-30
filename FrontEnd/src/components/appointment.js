@@ -22,6 +22,9 @@ const Appointment = ({details, userType, futureApp, displayBookings}) => {
                     // refresh page
                     displayBookings();
                 }
+                else {
+                    window.alert("Can't cancel booking 48 hours from start time");
+                }
             })
         }
     }
