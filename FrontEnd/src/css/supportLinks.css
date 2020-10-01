@@ -15,8 +15,8 @@
     cursor: pointer;
 }
 
-.buttonAsText:focus {
-    outline: none;
+.buttonAsText:hover {
+    text-decoration: underline;
 }
 
 .modalText {

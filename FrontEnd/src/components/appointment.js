@@ -46,16 +46,10 @@ const Appointment = ({details, userType}) => {
     return(
         <FadeIn>
             <Paper id="appointmentContainer" >
-                <div>
-                    <div className="timeDiv">
-                        <p>{moment(startTime).format("dddd, MMMM Do")}</p>
-                        <p>{moment(startTime).format("LT")} - {moment(endTime).format("LT")}</p>
-                    </div>
-                    <div className="infoDiv">
-                        <p>ID: {bookingId}</p>
-                        {renderAppointmentDetails()}
-                    </div>
-                </div>
+                <p>ID: {bookingId}</p>
+                <p>{moment(startTime).format("dddd, MMMM Do")}</p>
+                <p>{moment(startTime).format("LT")} - {moment(endTime).format("LT")}</p>
+                {renderAppointmentDetails()}
             </Paper>
         </FadeIn>
     )

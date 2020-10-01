@@ -1,8 +1,8 @@
 .showXAmount {
-    font-size: 20px;
+    /* font-size: 20px; */
     float: right;
     text-decoration: underline;
 
-    padding: 10px 8px 0px 8px;
+    padding: 0px 8px 0px 8px;
     cursor: pointer;
 }

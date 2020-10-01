@@ -5,6 +5,7 @@ import Appointment from './appointment.js';
 import FilterAmount from '../components/filterAmount.js';
 import SearchBox from '../components/searchBox.js';
 import moment from 'moment';
+import Card from 'react-bootstrap/Card';
 
 const HomeAppointments = () => {
     const userDetails = JSON.parse(localStorage.getItem('userDetails'));
@@ -130,14 +131,17 @@ const HomeAppointments = () => {
 
     return(
         <div id="appointmentsContainer">
-            <h1> Your Appointments 
+            <Card.Header> Your Appointments 
                 <FilterAmount maxAmount={appointments.length} setShowAmount={setShowAmount}/>
-            </h1>
-            <SearchBox setNewFilter={setNewFilter}/>
-            <div className={userType !== "customer"? "holdsAllAppointmentsDivAsWorkerAdmin" : "holdsAllAppointmentsDivAsCustomer"}>
-                {Object.entries(filteredAppointments.slice(0, showAmount)).map(([key, value]) => {
-                    return <Appointment key={key} details={value} userType={userType}/>
-                })}
+            </Card.Header>
+
+            <div id="appointmentsContainerBody">
+                <SearchBox setNewFilter={setNewFilter}/>
+                <div className={userType !== "customer"? "holdsAllAppointmentsDivAsWorkerAdmin" : "holdsAllAppointmentsDivAsCustomer"}>
+                    {Object.entries(filteredAppointments.slice(0, showAmount)).map(([key, value]) => {
+                        return <Appointment key={key} details={value} userType={userType}/>
+                    })}
+                </div>
             </div>
         </div>
     )

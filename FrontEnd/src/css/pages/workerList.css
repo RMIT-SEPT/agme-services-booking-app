@@ -32,6 +32,7 @@
 }
 
 .addBtn {
+    font-size: 13px;
     border: 2px solid black;
     border-radius: 3px;
     background-color: aqua;

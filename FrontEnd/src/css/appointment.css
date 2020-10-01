@@ -1,20 +1,22 @@
 #appointmentsContainer {
-    flex-direction: row;
-    margin: 20px 20px;
+    
+}
+
+#appointmentsContainerBody {
+    padding: 2%;
 }
 
 #appointmentsContainer h1 {
-    padding-top: 30px;
+    margin-top: 0px;
     padding-bottom: 5px;
 
     font-size: 30px;
     font-style: italic;
-    border-bottom: 2px solid blue;
 }
 
 #appointmentContainer {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
 
     background-color: #90caf9;
 
@@ -42,5 +44,4 @@
 .holdsAllAppointmentsDivAsWorkerAdmin {
     display: grid;
     grid-template-columns: 25% 25% 25% 25%;
-    /* grid-template-rows: auto; */
 }

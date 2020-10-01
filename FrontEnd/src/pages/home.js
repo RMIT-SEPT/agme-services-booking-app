@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import '../css/home.css';
 
+import Banner from '../components/banner.js';
 import Dashboard from '../components/dashboard';
 import SupportLinks from '../components/supportLinks.js';
 import HomeAppointments from '../components/homeAppointments.js';
@@ -9,7 +10,7 @@ import BookingPage from './customer/bookingPage';
 import Availability from './worker/availabilityPage';
 import ProfilePage from './profile';
 import WorkerList from './admin/workerList';
-import AdminCalendar from './admin/adminCalendar';
+import Card from 'react-bootstrap/Card';
 import AdminBookings from './admin/adminBookings';
 import AdminBusinessHours from './admin/adminBusinessHours';
 import { useIdleTimer } from 'react-idle-timer'
@@ -154,10 +155,12 @@ const Home = () => {
 
     return (
         <div className="homeContainer">
-            <Dashboard userDetails={userDetails}/>
-            <div className="homeMainArea">
-                <SupportLinks userDetails={userDetails}/>
-                {loadHomeMainView()}
+            <Banner userDetails={userDetails}/>
+            <div id="dashboardMainContainer">
+                <Dashboard userDetails={userDetails}/>
+                <Card className="homeMainArea">
+                    {loadHomeMainView()}
+                </Card>
             </div>
         </div>
     )

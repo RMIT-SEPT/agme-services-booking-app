@@ -11,7 +11,7 @@ const SearchBox = ( {setNewFilter} ) => {
                 className='searchBox'
                 placeholder="ID"
                 // searchIcon=""
-                style={{backgroundColor: "#5C5C5C"}}
+                style={{backgroundColor: "#F7F7F7"}}
                 onChange={value => value === '' ? setNewFilter("ID", null) : setNewFilter("ID", value)}
                 onCancelSearch={() => setNewFilter("ID", null)}
             />
@@ -19,7 +19,7 @@ const SearchBox = ( {setNewFilter} ) => {
                 className='searchBox'
                 placeholder="Date"
                 // searchIcon=""
-                style={{backgroundColor: 1 == 2 ? "black" : "#5C5C5C"}}
+                style={{backgroundColor: 1 == 2 ? "black" : "#F7F7F7"}}
                 onChange={value => value === '' ? setNewFilter("Date", null) : setNewFilter("Date", value)}
                 onCancelSearch={() => setNewFilter("Date", null)}
             />
@@ -27,7 +27,7 @@ const SearchBox = ( {setNewFilter} ) => {
                 className='searchBox'
                 placeholder="Worker"
                 // searchIcon=""
-                style={{backgroundColor: "#5C5C5C"}}
+                style={{backgroundColor: "#F7F7F7"}}
                 onChange={value => value === '' ? setNewFilter("Worker", null) : setNewFilter("Worker", value)}
                 onCancelSearch={() => setNewFilter("Worker", null)}
             />
@@ -35,7 +35,7 @@ const SearchBox = ( {setNewFilter} ) => {
                 className='searchBox'
                 placeholder="Customer"
                 // searchIcon=""
-                style={{backgroundColor: "#5C5C5C"}}
+                style={{backgroundColor: "#F7F7F7"}}
                 onChange={value => value === '' ? setNewFilter("Customer", null) : setNewFilter("Customer", value)}
                 onCancelSearch={() => setNewFilter("Customer", null)}
             />

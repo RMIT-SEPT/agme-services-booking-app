@@ -2,7 +2,8 @@ import React from 'react';
 
 import '../css/dashboard.css';
 import { useHistory } from 'react-router-dom';
-import Card from '@material-ui/core/Card';
+import Card from 'react-bootstrap/Card';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Dashboard = ({userDetails}) => {
     const userType = userDetails.userType;
@@ -53,10 +54,10 @@ const Dashboard = ({userDetails}) => {
     }
 
     return(
-        <div id="dashboardContainer">
-            <h1> Dashboard </h1>
+        <Card id="dashboardContainer">
+            <Card.Header>Navigation</Card.Header>
             {renderButtons()}
-        </div>
+        </Card>
     )
 }
 

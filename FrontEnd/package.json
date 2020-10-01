@@ -9,6 +9,7 @@
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
     "babel-polyfill": "^6.26.0",
+    "bootstrap": "^4.5.2",
     "env-cmd": "^10.1.0",
     "material-ui-search-bar": "^1.0.0",
     "moment": "^2.27.0",
