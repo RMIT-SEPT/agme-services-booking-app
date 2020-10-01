@@ -134,9 +134,11 @@ const HomeAppointments = () => {
                 <FilterAmount maxAmount={appointments.length} setShowAmount={setShowAmount}/>
             </h1>
             <SearchBox setNewFilter={setNewFilter}/>
-            {Object.entries(filteredAppointments.slice(0, showAmount)).map(([key, value]) => {
-                return <Appointment key={key} details={value} userType={userType}/>
-            })}
+            <div className={userType !== "customer"? "holdsAllAppointmentsDivAsWorkerAdmin" : "holdsAllAppointmentsDivAsCustomer"}>
+                {Object.entries(filteredAppointments.slice(0, showAmount)).map(([key, value]) => {
+                    return <Appointment key={key} details={value} userType={userType}/>
+                })}
+            </div>
         </div>
     )
 }

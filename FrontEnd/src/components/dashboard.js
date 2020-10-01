@@ -2,6 +2,7 @@ import React from 'react';
 
 import '../css/dashboard.css';
 import { useHistory } from 'react-router-dom';
+import Card from '@material-ui/core/Card';
 
 const Dashboard = ({userDetails}) => {
     const userType = userDetails.userType;

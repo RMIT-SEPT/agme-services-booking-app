@@ -5,7 +5,7 @@ const Banner = () => {
 
     return(
         <div id="bannerContainer">
-            <h1> AGME </h1>
+            <img src='https://i.imgur.com/nSVo0FP.png'></img>
         </div>
     )
 }

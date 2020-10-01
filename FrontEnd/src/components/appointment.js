@@ -2,6 +2,7 @@ import React from 'react';
 import moment from 'moment';
 
 import FadeIn from 'react-fade-in';
+import Paper from '@material-ui/core/Paper';
 
 const Appointment = ({details, userType}) => {
     const user = userType;
@@ -44,16 +45,18 @@ const Appointment = ({details, userType}) => {
     // The bottom of the appointment will say 'worker assigned' if the user variable is a customer. Vice versa as well.
     return(
         <FadeIn>
-            <div id="appointmentContainer">
-                <div className="timeDiv">
-                    <p>{moment(startTime).format("dddd, MMMM Do")}</p>
-                    <p>{moment(startTime).format("LT")} - {moment(endTime).format("LT")}</p>
+            <Paper id="appointmentContainer" >
+                <div>
+                    <div className="timeDiv">
+                        <p>{moment(startTime).format("dddd, MMMM Do")}</p>
+                        <p>{moment(startTime).format("LT")} - {moment(endTime).format("LT")}</p>
+                    </div>
+                    <div className="infoDiv">
+                        <p>ID: {bookingId}</p>
+                        {renderAppointmentDetails()}
+                    </div>
                 </div>
-                <div className="infoDiv">
-                    <p>ID: {bookingId}</p>
-                    {renderAppointmentDetails()}
-                </div>
-            </div>
+            </Paper>
         </FadeIn>
     )
 }
