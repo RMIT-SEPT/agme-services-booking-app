@@ -2,6 +2,9 @@
 
 echo "runner.sh script starting..."
 
+eval "$(ssh-agent -s)";
+ssh-add -k ~/deploy;
+
 echo "Docker down and checkout to master & update"
 docker-compose down;
 git pull;
