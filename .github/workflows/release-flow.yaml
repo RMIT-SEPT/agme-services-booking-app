@@ -1,11 +1,9 @@
 # release-flow.yaml
-# On change to release, run unit tests and make 
+# On change to release, run unit tests and make
 # pull request on master branch.
 name: Front/Backend Unit Testing
 on:
   push:
-    branches: [release]
-  pull_request:
     branches: [release]
 
 jobs:
@@ -54,4 +52,5 @@ jobs:
           "body": "This pull request was automatically created by the GitHub Action workflow **${{ github.workflow }}**. \n\n The commit hash was: _${{ github.sha }}_.",
           "head":"release",
           "base":"master"
-          }' 
+          }'
+
