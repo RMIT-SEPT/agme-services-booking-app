@@ -36,3 +36,10 @@
     text-align: center;
     margin: 5% 20px 5% 20px;
 }
+
+.removeBooking {
+    border: 2px solid black;
+    border-radius: 3px;
+    background-color: red;
+    cursor: pointer;
+}

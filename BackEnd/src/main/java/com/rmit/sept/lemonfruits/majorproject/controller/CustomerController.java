@@ -47,10 +47,24 @@ public class CustomerController {
     public ResponseEntity<BookingEntity> makeBooking(@AuthenticationPrincipal CustomerEntity customerEntity, @PathVariable Long bookingId) {
         Optional<BookingEntity> bookingEntity = bookingRepository.findById(bookingId);
         bookingEntity.filter(b -> b != null && b.getCustomerEntity() == null).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Booking not found"));
-
+        
         bookingEntity.get().setCustomerEntity(customerEntity);
         bookingRepository.save(bookingEntity.get());
         return ok(bookingEntity.get());
+    }
+    
+    @DeleteMapping(value = "/booking/{bookingId}")
+    public void deleteBooking(@AuthenticationPrincipal CustomerEntity customerEntity, @PathVariable Long bookingId) {
+    	BookingEntity bookingEntity = bookingRepository.findById(bookingId)
+    			.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Booking not found"));
+    	
+    	if (bookingEntity.getStartTime().isAfter(LocalDateTime.now().plusDays(2))) {
+    		bookingEntity.setCustomerEntity(null);
+        	bookingRepository.save(bookingEntity);
+    	}
+    	else {
+    		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can't cancel booking within 48 hours");
+    	}
     }
 
     @GetMapping(value = "/view", produces = MediaType.APPLICATION_JSON_VALUE)
