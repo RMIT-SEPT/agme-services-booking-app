@@ -23,36 +23,36 @@ const HomeAppointments = () => {
 
     // useEffect which will call the first time the page loads (and thats it)
     useEffect(() => {
-        const fetchData = async() => {
-            if (userType === 'customer') {
-                await fetch(process.env.REACT_APP_API_URL + `/api/v1/customer/view`, {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${localStorage.getItem('token')}`
-                    }
-                }).then(response => {
-                    response.json().then(array => {
-                        setAppointments(array);
-                        setShowAmount(array.length);
-                    })
-                });
-            } else if (userType === 'worker') {
-                await fetch(process.env.REACT_APP_API_URL + `/api/v1/worker/bookings`, {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${localStorage.getItem('token')}`
-                    }
-                }).then(response => {
-                    response.json().then(array => {
-                        setAppointments(array);
-                        setFilteredAppointments(array);
-                        setShowAmount(array.length);
-                    })
-                });
-            }
-        }
-        fetchData();
+        displayBookings();
     }, []);
+
+    const displayBookings = async() => {
+        if (userType === 'customer') {
+            await fetch(process.env.REACT_APP_API_URL + `/api/v1/customer/view`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            }).then(response => {
+                response.json().then(array => {
+                    setAppointments(array);
+                    setShowAmount(array.length);
+                })
+            });
+        } else if (userType === 'worker') {
+            await fetch(process.env.REACT_APP_API_URL + `/api/v1/worker/bookings`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            }).then(response => {
+                response.json().then(array => {
+                    setAppointments(array);
+                    setShowAmount(array.length);
+                })
+            });
+        }
+    }
 
     const setNewFilter = (filter, value) => {
         setFilteredAppointments([]);
@@ -130,7 +130,7 @@ const HomeAppointments = () => {
     }, [idFilter, dateFilter, workerFilter, customerFilter])
 
     return(
-        <div id="appointmentsContainer">
+        <div id="appointmentsContainer"
             <Card.Header> Your Appointments 
                 <FilterAmount maxAmount={appointments.length} setShowAmount={setShowAmount}/>
             </Card.Header>
@@ -139,7 +139,7 @@ const HomeAppointments = () => {
                 <SearchBox setNewFilter={setNewFilter}/>
                 <div className={userType !== "customer"? "holdsAllAppointmentsDivAsWorkerAdmin" : "holdsAllAppointmentsDivAsCustomer"}>
                     {Object.entries(filteredAppointments.slice(0, showAmount)).map(([key, value]) => {
-                        return <Appointment key={key} details={value} userType={userType}/>
+                        return <Appointment details={value} userType={userType} futureApp={true} displayBookings={displayBookings}/>
                     })}
                 </div>
             </div>

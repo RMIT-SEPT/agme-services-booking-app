@@ -6,6 +6,10 @@ import '../../css/pages/bookingPage.css';
 
 const BookingPage = () => {
     const localizer = momentLocalizer(moment)
+    const calendarStyle = {
+        height: 533,
+        margin: '20px 10px'
+    }
 
     // Get start and end times
     //const startTimeFrame
@@ -15,6 +19,7 @@ const BookingPage = () => {
 
     useEffect(() => {
         const fetchData = async() => {
+            var allEvents = [];
             await fetch(process.env.REACT_APP_API_URL + `/api/v1/customer/availabilities`, {
                 method: 'GET',
                 headers: {
@@ -31,7 +36,8 @@ const BookingPage = () => {
                                 bookingId: value.bookingId
                             }
                         }
-                        setBookings([...bookings, event])
+                        allEvents.push(event)
+                        setBookings([...allEvents])
                     });
                 })
             })
@@ -67,7 +73,7 @@ const BookingPage = () => {
                 id="customer-calendar"
                 localizer={localizer}
                 events={bookings}
-                style={{ height: 400, width: 750}}
+                style={calendarStyle}
                 defaultView={'week'}
                 views={['week', 'day', 'agenda']}
                 onSelectEvent={handleAdd}

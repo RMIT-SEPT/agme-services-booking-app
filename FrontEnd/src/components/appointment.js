@@ -1,10 +1,7 @@
 import React from 'react';
 import moment from 'moment';
 
-import FadeIn from 'react-fade-in';
-import Paper from '@material-ui/core/Paper';
-
-const Appointment = ({details, userType}) => {
+const Appointment = ({details, userType, futureApp, displayBookings}) => {
     const user = userType;
     const bookingId = details.bookingId;
     const startTime = details.startTime;
@@ -12,11 +9,40 @@ const Appointment = ({details, userType}) => {
     const customer = details.customerEntity;
     const worker = details.workerEntity;
 
+    const handleCancel = async() => {
+        if (window.confirm("Are you sure you want to cancel the booking?")) {
+            // remove customer entity from this booking
+            await fetch(process.env.REACT_APP_API_URL + `/api/v1/customer/booking/${bookingId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            }).then((response) => {
+                if (response.ok) {
+                    // refresh page
+                    displayBookings();
+                }
+                else {
+                    window.alert("Can't cancel booking 48 hours from start time");
+                }
+            })
+        }
+    }
+
     const renderAppointmentDetails = () => {
         switch (user) {
             case ('customer'):
-                return <p>Worker Assigned: {worker.firstName} {worker.lastName} </p>
+                let removeBookingBtn;
+                if (futureApp) {
+                    removeBookingBtn = <p><input className="removeBooking" type="button" value="Cancel Booking" onClick={handleCancel}/></p>
+                }
 
+                return (
+                    <React.Fragment>
+                        <p>Worker Assigned: {worker.firstName} {worker.lastName} </p>
+                        {removeBookingBtn}
+                    </React.Fragment>
+                )
             case ('worker'):
                 if (customer !== null)
                     return <p>Customer: {customer.firstName} {customer.lastName}</p>
