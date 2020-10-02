@@ -1,11 +1,14 @@
 import React from 'react';
 import '../css/banner.css';
+import SupportLinks from '../components/supportLinks.js';
 
-const Banner = () => {
+
+const Banner = ( {userDetails} ) => {
 
     return(
         <div id="bannerContainer">
-            <h1> AGME </h1>
+            <img src='logo.png'></img>
+            <SupportLinks userDetails={userDetails}/>
         </div>
     )
 }

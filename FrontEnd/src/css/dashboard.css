@@ -6,8 +6,6 @@
     text-align: center;
     height: 85vh;
     width: 15%;
-
-    border: 2px solid red;
 }
 
 .dashboardButton {
@@ -23,4 +21,8 @@
     font-size: 15px;
 
     cursor: pointer;
+}
+
+.card-header {
+    background-color: #CFF0FF !important;
 }

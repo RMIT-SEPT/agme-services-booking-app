@@ -70,16 +70,14 @@ const Appointment = ({details, userType, futureApp, displayBookings}) => {
 
     // The bottom of the appointment will say 'worker assigned' if the user variable is a customer. Vice versa as well.
     return(
-        <div id="appointmentContainer">
-            <div className="timeDiv">
+        <FadeIn>
+            <Paper id="appointmentContainer" >
+                <p>ID: {bookingId}</p>
                 <p>{moment(startTime).format("dddd, MMMM Do")}</p>
                 <p>{moment(startTime).format("LT")} - {moment(endTime).format("LT")}</p>
-            </div>
-            <div className="infoDiv">
-                <p>ID: {bookingId}</p>
                 {renderAppointmentDetails()}
-            </div>
-        </div>
+            </Paper>
+        </FadeIn>
     )
 }
 

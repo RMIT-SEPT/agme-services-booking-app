@@ -1,45 +1,52 @@
 #appointmentsContainer {
-    flex-direction: row;
-    margin: 20px 20px;
+    
+}
+
+#appointmentsContainerBody {
+    padding: 2%;
 }
 
 #appointmentsContainer h1 {
+    margin-top: 0px;
     padding-bottom: 5px;
 
     font-size: 30px;
     font-style: italic;
-    border-bottom: 2px solid blue;
 }
 
 #appointmentContainer {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
 
-    margin: 20px auto;
-    padding: 10px 5px;
-    border: 2px solid red;
+    background-color: #90caf9;
+
+    margin: 20px 3% 0px 3%;
+    padding: 5px 5px;
+    border-radius: 10px;
 }
 
 .timeDiv {
     width: 40%;
-
-    border-right: 5px solid blue;
+    border-right: 5px solid #121212;
 }
 
 .timeDiv p {
-    font-size: 20px;
+    font-size: 16px;
     text-align: center;
 }
 
 .infoDiv p {
-    font-size: 20px;
+    font-size: 16px;
     text-align: center;
-    margin: 5% 20px 5% 20px;
-}
+    margin-left: 20px;
 
 .removeBooking {
     border: 2px solid black;
     border-radius: 3px;
     background-color: red;
     cursor: pointer;
+
+.holdsAllAppointmentsDivAsWorkerAdmin {
+    display: grid;
+    grid-template-columns: 25% 25% 25% 25%;
 }
