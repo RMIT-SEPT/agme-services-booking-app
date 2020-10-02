@@ -3,9 +3,11 @@ package com.rmit.sept.lemonfruits.majorproject.controller;
 import com.rmit.sept.lemonfruits.majorproject.entity.*;
 import com.rmit.sept.lemonfruits.majorproject.model.BookingRequest;
 import com.rmit.sept.lemonfruits.majorproject.model.BusinessHoursRequest;
+import com.rmit.sept.lemonfruits.majorproject.model.WorkerChangeRequest;
 import com.rmit.sept.lemonfruits.majorproject.repository.BookingRepository;
 import com.rmit.sept.lemonfruits.majorproject.repository.BusinessHoursRepository;
 import com.rmit.sept.lemonfruits.majorproject.repository.WorkerRepository;
+import com.rmit.sept.lemonfruits.majorproject.repository.WorkingHoursRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -36,6 +38,8 @@ public class AdminController {
 
     private BusinessHoursRepository businessHoursRepository;
 
+    private WorkingHoursRepository workingHoursRepository;
+
     @GetMapping(value = "/profile", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<AdminEntity> getProfile(@AuthenticationPrincipal AdminEntity adminEntity) {
         return ok(adminEntity);
@@ -61,6 +65,57 @@ public class AdminController {
         workerRepository.save(workerEntity);
 
         return ok(workerEntity);
+    }
+
+
+    @PutMapping(value = "/workers/{workerId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public void editWorker(@AuthenticationPrincipal AdminEntity adminEntity, @PathVariable Long workerId, @RequestBody WorkerChangeRequest request) {
+        WorkerEntity workerEntity = workerRepository.getOne(workerId);
+
+        if (workerEntity == null)
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Worker not found");
+
+        if (request.getUsername() != null) {
+            if (workerRepository.getByUsername(request.getUsername()).isPresent()) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Username already in use");
+            } else {
+                workerEntity.setUsername(request.getUsername());
+            }
+        }
+
+        if (request.getRole() != null)
+            workerEntity.setRole(request.getRole());
+
+        if (request.getFirstName() != null)
+            workerEntity.setFirstName(request.getFirstName());
+
+        if (request.getLastName() != null)
+            workerEntity.setLastName(request.getLastName());
+
+        if (request.getPassword() != null) {
+            if (!passwordEncoder.matches(request.getPassword(), workerEntity.getPassword()))
+                workerEntity.setPassword(passwordEncoder.encode(request.getPassword()));
+        }
+
+        workerRepository.save(workerEntity);
+    }
+
+    @DeleteMapping(value = "/workers/{workerId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public void deleteWorker(@AuthenticationPrincipal AdminEntity adminEntity, @PathVariable Long workerId) {
+        WorkerEntity workerEntity = workerRepository.getOne(workerId);
+
+        if (workerEntity == null)
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Worker not found");
+
+        for (BookingEntity b : workerEntity.getBookings()) {
+            bookingRepository.delete(b);
+        }
+
+        for (WorkingHoursEntity w : workerEntity.getWorkingHours()) {
+            workingHoursRepository.delete(w);
+        }
+
+        workerRepository.delete(workerEntity);
     }
 
     @GetMapping(value = "/workers/{workerId}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -186,5 +241,10 @@ public class AdminController {
     @Autowired
     public void setBusinessHoursRepository(BusinessHoursRepository businessHoursRepository) {
         this.businessHoursRepository = businessHoursRepository;
+    }
+
+    @Autowired
+    public void setWorkingHoursRepository(WorkingHoursRepository workingHoursRepository) {
+        this.workingHoursRepository = workingHoursRepository;
     }
 }
