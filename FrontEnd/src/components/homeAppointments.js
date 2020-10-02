@@ -130,7 +130,7 @@ const HomeAppointments = () => {
     }, [idFilter, dateFilter, workerFilter, customerFilter])
 
     return(
-        <div id="appointmentsContainer"
+        <div id="appointmentsContainer">
             <Card.Header> Your Appointments 
                 <FilterAmount maxAmount={appointments.length} setShowAmount={setShowAmount}/>
             </Card.Header>

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
+import Card from 'react-bootstrap/Card';
 import '../../css/pages/availabilityPage.css'
 
 const AvailabilityPage = () => {
@@ -100,17 +101,20 @@ const AvailabilityPage = () => {
     }
 
     return(
-        <div id="availabilityContainer">
-            <Calendar 
-                localizer={localizer}
-                events={availability}
-                style={calendarStyle}
-                defaultView={'week'}
-                views={['week', 'day', 'agenda']}
-                selectable={true}
-                onSelectSlot={handleSelection}
-                onSelectEvent={handleDelete}
-            />
+        <div>
+            <Card.Header>Weekly Availability</Card.Header>
+            <div id="availabilityContainer">
+                <Calendar 
+                    localizer={localizer}
+                    events={availability}
+                    style={calendarStyle}
+                    defaultView={'week'}
+                    views={['week', 'day', 'agenda']}
+                    selectable={true}
+                    onSelectSlot={handleSelection}
+                    onSelectEvent={handleDelete}
+                />
+            </div>
         </div>
     )
 }

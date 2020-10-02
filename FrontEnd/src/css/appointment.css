@@ -39,14 +39,21 @@
     font-size: 16px;
     text-align: center;
     margin-left: 20px;
+}
 
 .removeBooking {
     border: 2px solid black;
     border-radius: 3px;
     background-color: red;
     cursor: pointer;
-
+}
+    
 .holdsAllAppointmentsDivAsWorkerAdmin {
+    display: grid;
+    grid-template-columns: 25% 25% 25% 25%;
+}
+
+.holdsAllAppointmentsDivAsCustomer {
     display: grid;
     grid-template-columns: 25% 25% 25% 25%;
 }

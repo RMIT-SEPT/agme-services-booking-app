@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
 import Modal from 'react-modal';
+import Card from 'react-bootstrap/Card';
 
 import '../../css/pages/workerList.css';
 
@@ -137,9 +138,9 @@ const WorkerList = () => {
 
     return(
         <div id="workerListContainer">
-            <h1> Workers 
+            <Card.Header> Workers 
                 {addWorkerModal()}
-            </h1>
+            </Card.Header>
             {Object.entries(workersData).map(([key, value]) => {
                 return <Worker key={key} worker={value} localizer={localizer}/>
             })}

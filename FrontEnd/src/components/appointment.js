@@ -1,5 +1,7 @@
 import React from 'react';
 import moment from 'moment';
+import FadeIn from 'react-fade-in';
+import Paper from '@material-ui/core/Paper';
 
 const Appointment = ({details, userType, futureApp, displayBookings}) => {
     const user = userType;

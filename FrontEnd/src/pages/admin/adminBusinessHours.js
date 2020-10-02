@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
+import Card from 'react-bootstrap/Card';
 
 const AdminBusinessHours = () => {
     const localizer = momentLocalizer(moment);
@@ -80,7 +81,9 @@ const AdminBusinessHours = () => {
     }
 
     return(
-        <div id="admin-business-hours">
+        <div>
+            <Card.Header>Business Hours</Card.Header>
+            <div id="admin-business-hours">
             <Calendar
                 localizer={localizer}
                 events={businessHours}
@@ -91,6 +94,7 @@ const AdminBusinessHours = () => {
                 onSelectSlot={handleSelectSlot}
                 onSelectEvent={handleSelectEvent}
             />
+            </div>
         </div>
     )
 }
