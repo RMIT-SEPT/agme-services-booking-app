@@ -19,6 +19,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.websocket.server.PathParam;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -219,6 +220,11 @@ public class AdminController {
 
         if (businessHoursEntity.get().getEndTime().isBefore(LocalDateTime.now()))
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Cannot delete past entry");
+
+        List<BookingEntity> overlappingEntities = bookingRepository.getOverlapingBookings(businessHoursEntity.get().getStartTime(), businessHoursEntity.get().getEndTime());
+
+        if (!overlappingEntities.isEmpty())
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Bookings exist in those hours: " + Arrays.toString(overlappingEntities.stream().mapToLong(BookingEntity::getBookingId).toArray()));
 
         businessHoursRepository.delete(businessHoursEntity.get());
     }
