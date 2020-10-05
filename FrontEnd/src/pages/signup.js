@@ -10,7 +10,6 @@ const Signup = () => {
     const [phone, setPhone] = useState('');
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [responseMsg, setResponseMsg] = useState('');
 
     const setFirstNameState = (newValue) => {
         setFirstName(newValue.target.value);
@@ -57,10 +56,10 @@ const Signup = () => {
             body: JSON.stringify(data)
         }).then(response => {
             if (response.ok) {
-                setResponseMsg(`Successfully created user '${username}'`);
+                alert(`Successfully created user '${username}'`);
             } else {
                 response.json().then(json => {
-                    setResponseMsg(`Failed to create user: ${json.message}`);
+                    alert(`Failed to create user: ${json.message}`);
                 })
             }
         });
@@ -68,8 +67,8 @@ const Signup = () => {
 
     return(
         <div id="signupContainer">
-            <h1 id="header">Sign Up</h1>
-            <div id="formArea">
+            <div id="signupFormArea">
+                <h1 id="header">Register for AGME</h1>
                 <form id="signupForm">
                     <input name="firstName" type="text" placeholder=" First Name" onChange={setFirstNameState}/>
                     <input name="lastName" type="text" placeholder=" Last Name" onChange={setLastNameState}/>
@@ -77,10 +76,11 @@ const Signup = () => {
                     <input name="phone" type="tel" placeholder=" Phone" pattern="[0-9]{4}-[0-9]{3}-[0-9]{3}" onChange={setPhoneState}/>
                     <input name="username" type="text" placeholder=" Username" onChange={setUsernameState}/>
                     <input name="password" type="password" placeholder=" Password" onChange={setPasswordState}/>
-                    <input className="submitBtn" type="button" value="Register" onClick={handleSubmit}/>
-                    <p id="responseMsg">{responseMsg}</p>
-                    <p>Already have an account? <Link to="/">Login here</Link></p>
+                    <input className="submitBtn" type="button" value="Signup" onClick={handleSubmit}/>
                 </form>
+                <div id="footer">
+                    <p>Already have an account? <Link to="/">Login here</Link></p>
+                </div>
             </div>
         </div>
     )
