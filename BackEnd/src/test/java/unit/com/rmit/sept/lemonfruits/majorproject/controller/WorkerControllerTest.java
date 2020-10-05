@@ -17,7 +17,6 @@ import org.springframework.web.server.ResponseStatusException;
 import unit.com.rmit.sept.lemonfruits.majorproject.UnitTest;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -69,7 +68,7 @@ public class WorkerControllerTest {
 
     @Test
     public void createWorkerAvailabilityTestInsideBusinessHours() {
-        when(workingHoursRepository.isThereOverlapingEntry(isNotNull(), isNotNull())).thenReturn(Collections.emptyList());
+        when(workingHoursRepository.isThereOverlapingEntry(isNotNull(), isNotNull(), isNotNull())).thenReturn(null);
 
         BusinessHoursEntity businessHoursEntity = BusinessHoursEntity.builder()
                 .startTime(LocalDateTime.of(2010, 10, 1, 0, 00))
@@ -89,7 +88,7 @@ public class WorkerControllerTest {
 
     @Test
     public void createWorkerAvailabilityTestIncludingInsideBusinessHours() {
-        when(workingHoursRepository.isThereOverlapingEntry(isNotNull(), isNotNull())).thenReturn(Collections.emptyList());
+        when(workingHoursRepository.isThereOverlapingEntry(isNotNull(), isNotNull(), isNotNull())).thenReturn(null);
 
         BusinessHoursEntity businessHoursEntity = BusinessHoursEntity.builder()
                 .startTime(LocalDateTime.of(2010, 10, 1, 1, 00))
@@ -107,7 +106,7 @@ public class WorkerControllerTest {
 
     @Test
     public void createWorkerAvailabilityTestOutsideBusinessHours() {
-        when(workingHoursRepository.isThereOverlapingEntry(isNotNull(), isNotNull())).thenReturn(Collections.emptyList());
+        when(workingHoursRepository.isThereOverlapingEntry(isNotNull(), isNotNull(), isNotNull())).thenReturn(null);
 
 
         HoursRequest hoursRequest = new HoursRequest();
@@ -121,7 +120,7 @@ public class WorkerControllerTest {
 
     @Test
     public void createOverlappingAvailabilityTest() {
-        when(workingHoursRepository.isThereOverlapingEntry(isNotNull(), isNotNull())).thenReturn(Collections.singletonList(new WorkingHoursEntity()));
+        when(workingHoursRepository.isThereOverlapingEntry(isNotNull(), isNotNull(), isNotNull())).thenReturn(new WorkingHoursEntity());
 
         HoursRequest hoursRequest = new HoursRequest();
         hoursRequest.setStartTime(LocalDateTime.of(2010, 10, 1, 1, 00));

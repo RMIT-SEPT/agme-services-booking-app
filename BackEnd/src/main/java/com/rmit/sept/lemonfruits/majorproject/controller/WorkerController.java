@@ -40,7 +40,7 @@ public class WorkerController {
 
     @PostMapping(value = "/availability")
     public void createAvailability(@AuthenticationPrincipal WorkerEntity workerEntity, @RequestBody HoursRequest hoursRequest) {
-        if (!workingHoursRepository.isThereOverlapingEntry(hoursRequest.getStartTime(), hoursRequest.getEndTime()).isEmpty())
+        if (workingHoursRepository.isThereOverlapingEntry(hoursRequest.getStartTime(), hoursRequest.getEndTime(), workerEntity) != null)
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Overlapping entry already made");
 
         if (hoursRequest.getEndTime().isBefore(hoursRequest.getStartTime()))

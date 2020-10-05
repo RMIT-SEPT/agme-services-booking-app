@@ -6,6 +6,7 @@ import com.rmit.sept.lemonfruits.majorproject.model.BusinessHoursRequest;
 import com.rmit.sept.lemonfruits.majorproject.repository.BookingRepository;
 import com.rmit.sept.lemonfruits.majorproject.repository.BusinessHoursRepository;
 import com.rmit.sept.lemonfruits.majorproject.repository.WorkerRepository;
+import com.rmit.sept.lemonfruits.majorproject.repository.WorkingHoursRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -35,6 +36,8 @@ public class AdminController {
     private PasswordEncoder passwordEncoder;
 
     private BusinessHoursRepository businessHoursRepository;
+
+    private WorkingHoursRepository workingHoursRepository;
 
     @GetMapping(value = "/profile", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<AdminEntity> getProfile(@AuthenticationPrincipal AdminEntity adminEntity) {
@@ -80,6 +83,13 @@ public class AdminController {
 
         WorkerEntity workerEntity = workerRepository.findById(bookingRequest.getWorkerId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Worker not found"));
+
+        WorkingHoursEntity workingHoursEntity = workingHoursRepository.isThereOverlapingEntry(bookingRequest.getStartTime(), bookingRequest.getEndTime(), workerEntity);
+        if (workingHoursEntity == null)
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Outside workers hours");
+
+        if (bookingRequest.getEndTime().isAfter(workingHoursEntity.getEndTime()))
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Outside workers hours");
 
         BookingEntity newEntry = BookingEntity
                 .builder()
@@ -186,5 +196,10 @@ public class AdminController {
     @Autowired
     public void setBusinessHoursRepository(BusinessHoursRepository businessHoursRepository) {
         this.businessHoursRepository = businessHoursRepository;
+    }
+
+    @Autowired
+    public void setWorkingHoursRepository(WorkingHoursRepository workingHoursRepository) {
+        this.workingHoursRepository = workingHoursRepository;
     }
 }
