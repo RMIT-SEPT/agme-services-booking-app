@@ -35,6 +35,9 @@ public class UserController {
             String username = data.getUsername();
             String role = userRepository.findByUsername(username).get().getAuthorities().iterator().next().getAuthority();
 
+            if (username == null | data.getPassword() == null)
+                throw new BadCredentialsException("Invalid username/password supplied");
+
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, data.getPassword()));
             String token = jwtTokenProvider.createToken(
                     username,
