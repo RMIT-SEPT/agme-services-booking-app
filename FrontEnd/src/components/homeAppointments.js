@@ -36,6 +36,7 @@ const HomeAppointments = () => {
             }).then(response => {
                 response.json().then(array => {
                     setAppointments(array);
+                    setFilteredAppointments(array);
                     setShowAmount(array.length);
                 })
             });
@@ -48,6 +49,7 @@ const HomeAppointments = () => {
             }).then(response => {
                 response.json().then(array => {
                     setAppointments(array);
+                    setFilteredAppointments(array);
                     setShowAmount(array.length);
                 })
             });
