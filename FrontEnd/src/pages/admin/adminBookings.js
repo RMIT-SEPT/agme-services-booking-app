@@ -3,12 +3,13 @@ import { Calendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import '../../css/pages/bookingPage.css';
+import { Card } from 'react-bootstrap';
 
 const AdminBookings = () => {
     const localizer = momentLocalizer(moment);
     const calendarStyle = {
         height: 515,
-        margin: '20px 10px'
+        margin: '20px 0px'
     }
 
     const [bookings, setBookings] = useState([]);
@@ -119,22 +120,26 @@ const AdminBookings = () => {
     }
 
     return (
-        <div id="admin-bookings">
-            <select onChange={(e) => handleBookingsChange(e.target.value)} id="adminWorkerSelection">
-                {Object.entries(workers).map(([key, value]) => {
-                    return <option value={value.id} label={value.username}/>
-                })}
-            </select>
-            <Calendar
-                localizer={localizer}
-                events={bookings}
-                style={calendarStyle}
-                defaultView={'week'}
-                views={['week', 'day', 'agenda']}
-                selectable={'ignoreEvents'}
-                onSelectSlot={handleSelectSlot}
-                onSelectEvent={handleDelete}
-            />
+        <div>
+            <Card.Header>Create Bookings</Card.Header>
+            <div id="admin-bookings">
+                <span id="workerTag" >Worker:</span>
+                <select onChange={(e) => handleBookingsChange(e.target.value)} id="adminWorkerSelection">
+                    {Object.entries(workers).map(([key, value]) => {
+                        return <option value={value.id} label={value.username}/>
+                    })}
+                </select>
+                <Calendar
+                    localizer={localizer}
+                    events={bookings}
+                    style={calendarStyle}
+                    defaultView={'week'}
+                    views={['week', 'day', 'agenda']}
+                    selectable={'ignoreEvents'}
+                    onSelectSlot={handleSelectSlot}
+                    onSelectEvent={handleDelete}
+                />
+            </div>
         </div>
     )
 }

@@ -1,7 +1,9 @@
 import React, { useEffect } from 'react';
 import { Calendar } from 'react-big-calendar';
 import moment from 'moment';
+import Paper from '@material-ui/core/Paper'
 import '../../css/pages/workerList.css';
+import PersonIcon from '@material-ui/icons/Person';
 
 const Worker = ({worker, localizer}) => {
     const id = worker.details.id;
@@ -16,8 +18,9 @@ const Worker = ({worker, localizer}) => {
 
     // Calendar attributes
     const calendarStyle = {
+        backgroundColor: "white",
         height: 300,
-        margin: '20px 10px'
+        margin: '10px 0px'
     }
 
     useEffect(() => {
@@ -51,9 +54,9 @@ const Worker = ({worker, localizer}) => {
     }
 
     return(
-        <div id="workerContainer">
+        <Paper id="workerContainer">
             <p className="workerDetails">
-                {firstName} {lastName} 
+                <PersonIcon style={{fontSize:"50px"}} className="personIcon"/>{firstName} {lastName} 
                 <input className="removeBtn" type="button" value="Remove" onClick={handleRemove}/>
                 <span className="idAndRole">ID: {id}</span>
             </p>
@@ -66,7 +69,7 @@ const Worker = ({worker, localizer}) => {
                 style={calendarStyle}
                 toolbar={false}
             />
-        </div>
+        </Paper>
     )
 }
 

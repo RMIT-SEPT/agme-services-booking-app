@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Card from 'react-bootstrap/Card';
 import '../css/profile.css';
 
 const Profile = () => {
@@ -94,13 +95,16 @@ const Profile = () => {
     }
 
     return (
-        <div className="profileContainer">
-            <div id="avatarContainer">
-                <img src={`${userDetails.id % 5}.png`} alt="Avatar"/>
-                <p>{userDetails.firstName} {userDetails.lastName}</p>
-            </div>
-            <div id="profileDetailsContainer">
-                {userType === 'customer' ? customerView() : workerView()}
+        <div>
+            <Card.Header>Profile</Card.Header>
+            <div className="profileContainer">
+                <div id="avatarContainer">
+                    <img src={`${userDetails.id % 5}.png`} alt="Avatar"/>
+                    <p>{userDetails.firstName} {userDetails.lastName}</p>
+                </div>
+                <div id="profileDetailsContainer">
+                    {userType === 'customer' ? customerView() : workerView()}
+                </div>
             </div>
         </div>
     )

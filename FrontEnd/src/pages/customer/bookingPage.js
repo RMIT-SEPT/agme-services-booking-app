@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
+import Card from 'react-bootstrap/Card';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import '../../css/pages/bookingPage.css';
 
@@ -68,16 +69,19 @@ const BookingPage = () => {
     }
     
     return(
-        <div id="bookings">
-            <Calendar
-                id="customer-calendar"
-                localizer={localizer}
-                events={bookings}
-                style={calendarStyle}
-                defaultView={'week'}
-                views={['week', 'day', 'agenda']}
-                onSelectEvent={handleAdd}
-            />
+        <div>
+            <Card.Header>Book Appointment</Card.Header>
+            <div id="bookings">
+                <Calendar
+                    id="customer-calendar"
+                    localizer={localizer}
+                    events={bookings}
+                    style={calendarStyle}
+                    defaultView={'week'}
+                    views={['week', 'day', 'agenda']}
+                    onSelectEvent={handleAdd}
+                />
+            </div>
         </div>
     )
 }
