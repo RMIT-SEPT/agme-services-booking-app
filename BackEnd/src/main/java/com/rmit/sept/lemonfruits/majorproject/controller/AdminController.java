@@ -137,6 +137,13 @@ public class AdminController {
         WorkerEntity workerEntity = workerRepository.findById(bookingRequest.getWorkerId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Worker not found"));
 
+        WorkingHoursEntity workingHoursEntity = workingHoursRepository.isThereOverlapingEntry(bookingRequest.getStartTime(), bookingRequest.getEndTime(), workerEntity);
+        if (workingHoursEntity == null)
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Outside workers hours");
+
+        if (bookingRequest.getEndTime().isAfter(workingHoursEntity.getEndTime()))
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Outside workers hours");
+
         BookingEntity newEntry = BookingEntity
                 .builder()
                 .workerEntity(workerEntity)
