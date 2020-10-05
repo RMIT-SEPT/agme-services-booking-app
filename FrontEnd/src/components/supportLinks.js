@@ -47,7 +47,7 @@ const SupportLinks = ({userDetails}) => {
             style={customStyles}
             >
                 <div id="contactUsContainer">
-                    <p className="modalText">Contact us at (+61)420 123 456. <br /> Support Email: s3719678@student.rmit.edu.au <br /> Service Enquiries: Anyone that's not me</p>
+                    <p className="modalText">Contact us at (+61)420 123 456. <br /> Support Email: s392783@student.rmit.edu.au <br /> Service Enquiries: Anyone that's not me</p>
                 </div>
             </Modal>
 
