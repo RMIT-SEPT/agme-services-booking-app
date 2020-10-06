@@ -12,11 +12,17 @@ const BookingPage = () => {
         margin: '20px 10px'
     }
 
-    // Get start and end times
-    //const startTimeFrame
-    //const endTimeFrame
-
     const [bookings, setBookings] = useState([]);
+
+    const customEventProp = () => {
+        return {
+            style: {
+                backgroundColor: '#227FE8',
+                fontSize: 'x-small',
+                color: 'white'
+            }
+        }
+    }
 
     useEffect(() => {
         const fetchData = async() => {
@@ -80,6 +86,7 @@ const BookingPage = () => {
                     defaultView={'week'}
                     views={['week', 'day', 'agenda']}
                     onSelectEvent={handleAdd}
+                    eventPropGetter={customEventProp}
                 />
             </div>
         </div>

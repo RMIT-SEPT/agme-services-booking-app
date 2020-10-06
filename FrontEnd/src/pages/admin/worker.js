@@ -23,6 +23,16 @@ const Worker = ({worker, localizer}) => {
         margin: '10px 0px'
     }
 
+    const customEventProp = () => {
+        return {
+            style: {
+                backgroundColor: '#227FE8',
+                fontSize: 'x-small',
+                color: 'white'
+            }
+        }
+    }
+
     useEffect(() => {
         // Availability is almost correct so modify it and change events to be new values.
         Object.entries(availability).map(([key, value]) => {
@@ -68,6 +78,7 @@ const Worker = ({worker, localizer}) => {
                 views={['week']}
                 style={calendarStyle}
                 toolbar={false}
+                eventPropGetter={customEventProp}
             />
         </Paper>
     )
