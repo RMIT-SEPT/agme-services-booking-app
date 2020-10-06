@@ -22,17 +22,7 @@ const WorkerList = () => {
 
     // Modal related variables / functions
     var subtitle;
-    const customStyles = {
-        content : {
-            top: '50%',
-            left: '15%',
-            right: 'auto',
-            bottom: 'auto',
-            textAlign: 'center',
-            transform: 'translate(-50%, -50%)',
-            color: 'black'
-        }
-    };
+
     const setModalStatus = (booleanVal) => {
         setModalIsOpen(booleanVal);
     }

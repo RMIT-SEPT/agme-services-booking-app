@@ -41,7 +41,7 @@ const Dashboard = ({userDetails}) => {
             case 'admin':
                 return (
                     <React.Fragment>
-                        <input className="dashboardButton" type="button" id="home" value="Workers" onClick={handleTabClick}/>
+                        <input className="dashboardButton" type="button" id="home" value="Employees" onClick={handleTabClick}/>
                         <input className="dashboardButton" type="button" id="businesshours" value="Business Hours" onClick={handleTabClick}/>
                         <input className="dashboardButton" type="button" id="history" value="Booking History" onClick={handleTabClick}/>
                         <input className="dashboardButton" type="button" id="createbookings" value="Create Bookings" onClick={handleTabClick}/>
@@ -55,7 +55,6 @@ const Dashboard = ({userDetails}) => {
 
     return(
         <Card id="dashboardContainer">
-            <Card.Header>Navigation</Card.Header>
             {renderButtons()}
         </Card>
     )

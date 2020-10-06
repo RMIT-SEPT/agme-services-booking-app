@@ -16,13 +16,28 @@
 
 #appointmentContainer {
     display: flex;
-    flex-direction: column;
-
-    background-color: #90caf9;
-
-    margin: 20px 3% 0px 3%;
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    background-color: #eaf6ff;
+    margin: 20px 2% 0px 2%;
     padding: 5px 5px;
     border-radius: 10px;
+}
+
+#date {
+    font-weight: 600;
+}
+
+#app-left {
+    float: left;
+    width: 67%;
+}
+
+#app-right {
+    float: right;
+    width: auto;
 }
 
 .timeDiv {
@@ -50,10 +65,10 @@
     
 .holdsAllAppointmentsDivAsWorkerAdmin {
     display: grid;
-    grid-template-columns: 25% 25% 25% 25%;
+    grid-template-columns: 33% auto auto;
 }
 
 .holdsAllAppointmentsDivAsCustomer {
     display: grid;
-    grid-template-columns: 25% 25% 25% 25%;
+    grid-template-columns: 33% auto auto;
 }
