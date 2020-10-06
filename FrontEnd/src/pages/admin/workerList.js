@@ -19,7 +19,6 @@ const WorkerList = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [role, setRole] = useState('');
-    const [addWorkerResponse, setAddWorkerResponse] = useState(null);
 
     // Modal related variables / functions
     var subtitle;
@@ -38,7 +37,6 @@ const WorkerList = () => {
         setModalIsOpen(booleanVal);
     }
     const closeModal = () => {
-        setAddWorkerResponse('');
         setModalIsOpen(false);
     }
 
@@ -99,9 +97,9 @@ const WorkerList = () => {
             body: JSON.stringify(newWorkerDetails)
         }).then(response => {
             if (response.ok) {
-                setAddWorkerResponse('Successfully added worker. Refresh to see changes.');
+                alert('Successfully added worker. Refresh to see changes.');
             } else {
-                setAddWorkerResponse('Failed to add worker. Please try again.')
+                alert('Failed to add worker. Please try again.')
             }
             console.log(response.status)
         })
@@ -111,27 +109,28 @@ const WorkerList = () => {
         return (
             <span>
                 <button className="addBtn" onClick={() => setModalStatus(true)}>Add Worker</button>
+                <div id="worker-modal">
                 <Modal
+                    className="modalClass"
+                    overlayClassName="myOverlayClass"
                     isOpen={modalIsOpen}
                     onRequestClose={closeModal}
-                    style={customStyles}
                     contentLabel="Example Modal"
                 >
-      
-                <h2 ref={_subtitle => (subtitle = _subtitle)}>Enter new worker details</h2>
                 <div id="newWorkerFormArea">
+                <h1>Enter new worker details</h1>
                     <form id="newWorkerForm">
                         <input name="firstName" type="text" placeholder=" First Name" onChange={(e) => setFirstName(e.target.value)}/>
                         <input name="lastName" type="text" placeholder=" Last Name" onChange={(e) => setLastName(e.target.value)}/>
                         <input name="username" type="text" placeholder=" Username" onChange={(e) => setUsername(e.target.value)}/>
                         <input name="password" type="password" placeholder=" Password" onChange={(e) => setPassword(e.target.value)}/>
                         <input name="role" type="text" placeholder=" Role" onChange={(e) => setRole(e.target.value)}/>
-                        <input id="submitNewWorkerBtn" type="button" value="Add New Worker" onClick={addWorkerAPI}/>
                     </form>
-                    <p>{addWorkerResponse}</p>
+                    <input id="submitNewWorkerBtn" type="button" value="Add Worker" onClick={addWorkerAPI}/>
+                    <button id="closeModalBtn" onClick={closeModal}>Cancel</button>
                 </div>
-                <button id="closeModalBtn" onClick={closeModal}>Close Form</button>
                 </Modal>
+                </div>
             </span>
         );
     }
