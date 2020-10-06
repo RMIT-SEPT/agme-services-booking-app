@@ -55,7 +55,7 @@ const Worker = ({worker, localizer}) => {
                 }
             }).then(response => {
                 if (response.ok) {
-                    window.alert(`Successfully removed worker ${fullName}.`);
+                    window.alert(`Successfully removed worker ${fullName}. Please refresh to see changes.`);
                 } else {
                     window.alert(`Failed to remove worker ${fullName}. Please try again.`);
                 }

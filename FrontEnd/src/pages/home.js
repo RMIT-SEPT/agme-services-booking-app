@@ -3,7 +3,6 @@ import '../css/home.css';
 
 import Banner from '../components/banner.js';
 import Dashboard from '../components/dashboard';
-import SupportLinks from '../components/supportLinks.js';
 import HomeAppointments from '../components/homeAppointments.js';
 import PastAppointments from '../components/pastAppointments.js';
 import BookingPage from './customer/bookingPage';
@@ -142,6 +141,8 @@ const Home = () => {
                         return <PastAppointments/>
                     case "/createbookings":
                         return <AdminBookings/>
+                    case "/futurebookings":
+                        return <HomeAppointments/>
                     default:
                         return;
                 }
