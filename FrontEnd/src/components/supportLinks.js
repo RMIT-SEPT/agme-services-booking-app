@@ -11,7 +11,7 @@ const SupportLinks = ({userDetails}) => {
 
     const customStyles = {
         content : {
-            top: '50%',
+            top: '40%',
             left: '50%',
             right: 'auto',
             bottom: 'auto',
@@ -37,7 +37,7 @@ const SupportLinks = ({userDetails}) => {
             style={customStyles}
             >
                 <div id="aboutUsContainer">
-                    <p className="modalText">Hi, welcome to AGME. <br/> Yes, we're a real service. We're the one stop shop for all your services. <br/> We hope you enjoy your experience with AGME. {"<"}3</p>
+                    <p className="modalText">Hello, and welcome to AGME! <br/> Founded in 56BC, we know what we're doing. Do yourself a favour and use, recommend and abuse this software. <br/> We hope you enjoy your experience with AGME. {"<"}3</p>
                 </div>
             </Modal>
 
@@ -50,11 +50,11 @@ const SupportLinks = ({userDetails}) => {
                     <p className="modalText">Contact us at (+61)420 123 456. <br /> Support Email: s392783@student.rmit.edu.au <br /> Service Enquiries: Anyone that's not me</p>
                 </div>
             </Modal>
-
-            <button className="buttonAsText" onClick={() => setAboutModalOpen(true)}>About Us</button>
-            <button className="buttonAsText" onClick={() => setContactModalOpen(true)}>Contact Us</button>
-            <button className="buttonAsText" onClick={handleSignOut}>Sign Out</button>
-            <span className="individualSupportItem">Welcome, {userName}!</span>
+            
+            <span className="individualSupportItem">WELCOME, {userName}!</span>
+            <button className="buttonAsText" onClick={() => setAboutModalOpen(true)}>ABOUT</button>
+            <button className="buttonAsText" onClick={() => setContactModalOpen(true)}>CONTACT</button>
+            <button className="buttonAsText" onClick={handleSignOut}>LOGOUT</button>
         </div>
     )
 }

@@ -56,11 +56,10 @@ const Worker = ({worker, localizer}) => {
     return(
         <Paper id="workerContainer">
             <p className="workerDetails">
-                <PersonIcon style={{fontSize:"50px"}} className="personIcon"/>{firstName} {lastName} 
+            <PersonIcon style={{fontSize:"40px"}} className="personIcon"/>
+                {firstName} {lastName} (ID: {id}, {username}, {role})
                 <input className="removeBtn" type="button" value="Remove" onClick={handleRemove}/>
-                <span className="idAndRole">ID: {id}</span>
             </p>
-            <p className="workerDetails">{username} <span className="idAndRole">{role}</span></p>
             <Calendar 
                 localizer={localizer}
                 events={allEvents}
