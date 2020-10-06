@@ -36,6 +36,7 @@ const HomeAppointments = () => {
             }).then(response => {
                 response.json().then(array => {
                     setAppointments(array);
+                    setFilteredAppointments(array);
                     setShowAmount(array.length);
                 })
             });
@@ -48,6 +49,20 @@ const HomeAppointments = () => {
             }).then(response => {
                 response.json().then(array => {
                     setAppointments(array);
+                    setFilteredAppointments(array);
+                    setShowAmount(array.length);
+                })
+            });
+        } else if (userType === 'admin') {
+            await fetch(process.env.REACT_APP_API_URL + `/api/v1/admin/bookings`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            }).then(response => {
+                response.json().then(array => {
+                    setAppointments(array);
+                    setFilteredAppointments(array);
                     setShowAmount(array.length);
                 })
             });

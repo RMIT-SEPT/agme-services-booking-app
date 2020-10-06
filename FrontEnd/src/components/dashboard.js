@@ -45,6 +45,7 @@ const Dashboard = ({userDetails}) => {
                         <input className="dashboardButton" type="button" id="businesshours" value="Business Hours" onClick={handleTabClick}/>
                         <input className="dashboardButton" type="button" id="history" value="Booking History" onClick={handleTabClick}/>
                         <input className="dashboardButton" type="button" id="createbookings" value="Create Bookings" onClick={handleTabClick}/>
+                        <input className="dashboardButton" type="button" id="futurebookings" value="Future Bookings" onClick={handleTabClick}/>
                     </React.Fragment>
                 );
 
