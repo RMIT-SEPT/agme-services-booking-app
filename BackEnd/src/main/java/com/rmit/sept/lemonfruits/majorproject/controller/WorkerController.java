@@ -83,6 +83,14 @@ public class WorkerController {
     public ResponseEntity<List<WorkingHoursEntity>> getAvailability(@AuthenticationPrincipal WorkerEntity workerEntity) {
         return ok(workingHoursRepository.findByWorkerEntityAndStartTimeAfter(workerEntity, LocalDateTime.now()));
     }
+    
+    @GetMapping(value = "/businesshours", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<BusinessHoursEntity>> getBusinessHours(@AuthenticationPrincipal WorkerEntity workerEntity) {
+        return ok(businessHoursRepository.findAll().stream()
+                .filter(b -> b.getEndTime().isAfter(LocalDateTime.now()))
+                .collect(Collectors.toList())
+        );
+    }
 
     @GetMapping(value = "/bookings", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<BookingEntity>> viewBookings(@AuthenticationPrincipal WorkerEntity workerEntity) {
