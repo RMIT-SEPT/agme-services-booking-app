@@ -16,6 +16,16 @@ const AdminBusinessHours = () => {
         displayEvents();
     }, []);
 
+    const customEventProp = () => {
+        return {
+            style: {
+                backgroundColor: '#227FE8',
+                fontSize: 'x-small',
+                color: 'white'
+            }
+        }
+    }
+
     const displayEvents = async() => {
         var allEvents = [];
         await fetch(process.env.REACT_APP_API_URL + `/api/v1/admin/businesshours`, {
@@ -93,6 +103,7 @@ const AdminBusinessHours = () => {
                 selectable={'ignoreEvents'}
                 onSelectSlot={handleSelectSlot}
                 onSelectEvent={handleSelectEvent}
+                eventPropGetter={customEventProp}
             />
             </div>
         </div>

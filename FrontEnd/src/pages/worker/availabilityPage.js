@@ -6,6 +6,8 @@ import '../../css/pages/availabilityPage.css'
 
 const AvailabilityPage = () => {
     const [availability, setAvailability] = useState([]);
+    const [businessHours, setBusinessHours] = useState(null);
+    const [hoursFetched, setHoursFetched] = useState(false);
 
     const localizer = momentLocalizer(moment);
     const calendarStyle = {
@@ -37,11 +39,61 @@ const AvailabilityPage = () => {
             })
         });
     }
-
+    
+    const fetchBusinessHours = async() => {
+        await fetch(process.env.REACT_APP_API_URL + `/api/v1/worker/businesshours`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+        }).then(response => {
+            if (response.ok) {
+                response.json().then(array => {
+                    setBusinessHours(array)
+                })
+            }
+        })
+    }
+    
     useEffect(() => {
         fetchAvailabilities();
+        fetchBusinessHours();
     }, [])
+    
+    useEffect(() => {
+        if (businessHours !== null) {
+            setHoursFetched(true);
+        }
+    }, [businessHours])
 
+    const customEventProp = () => {
+        return {
+            style: {
+                backgroundColor: '#227FE8',
+                fontSize: 'x-small',
+                color: 'white'
+            }
+        }
+    }
+
+    const customSlotProp = (date) => {
+        var inBusinessHours = false;
+        
+        businessHours.forEach((value)  => {
+            if ((moment(value.startTime).toDate() <= date) && (moment(value.endTime).toDate() >= date)) {
+                inBusinessHours = true;
+            }
+        })
+        
+        if (inBusinessHours) {
+            return {
+                style: {
+                    backgroundColor: '#ECF0F1'
+                }
+            }
+        }
+    }
+    
     // Returns a boolean, true if successful, false if failed.
     const addAvailabilityRequest = async(data, startTime, endTime) => {
         await fetch(process.env.REACT_APP_API_URL + `/api/v1/worker/availability`, {
@@ -113,6 +165,7 @@ const AvailabilityPage = () => {
         <div>
             <Card.Header>Weekly Availability</Card.Header>
             <div id="availabilityContainer">
+                {hoursFetched ? 
                 <Calendar 
                     localizer={localizer}
                     events={availability}
@@ -122,7 +175,9 @@ const AvailabilityPage = () => {
                     selectable={true}
                     onSelectSlot={handleSelection}
                     onSelectEvent={handleDelete}
-                />
+                    eventPropGetter={customEventProp}
+                    slotPropGetter={customSlotProp}
+                /> : null}
             </div>
         </div>
     )
