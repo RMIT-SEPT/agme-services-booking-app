@@ -12,7 +12,7 @@ public interface WorkingHoursRepository extends JpaRepository<WorkingHoursEntity
 
     List<WorkingHoursEntity> findByWorkerEntityAndStartTimeAfter(WorkerEntity workerEntity, LocalDateTime localDateTime);
 
-    @Query("select e from WorkingHoursEntity e where e.startTime <= ?2 and e.endTime >= ?1 and e.workerEntity = ?3")
+    @Query("select e from WorkingHoursEntity e where e.startTime < ?2 and e.endTime >= ?1 and e.workerEntity = ?3")
     WorkingHoursEntity isThereOverlapingEntry(LocalDateTime newEntryStart, LocalDateTime newEntryEnd, WorkerEntity workerEntity);
 
 }
