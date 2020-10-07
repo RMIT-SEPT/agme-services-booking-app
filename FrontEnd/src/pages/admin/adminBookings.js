@@ -82,7 +82,7 @@ const AdminBookings = () => {
         var availability = false;
         
         currentWorker.workHours.forEach((value)  => {
-            if ((moment(value.startTime).toDate() <= date) && (moment(value.endTime).toDate() >= date)) {
+            if ((moment(value.startTime).toDate() <= date) && (moment(value.endTime).toDate() > date)) {
                 availability = true;
             }
         })
