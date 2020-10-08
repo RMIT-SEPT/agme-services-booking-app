@@ -150,16 +150,13 @@ const AdminBookings = () => {
                 body: JSON.stringify(data)
             }).then(response => {
                 if (response.ok) {
-                    window.alert(`Successfully created new booking for ${currentWorker.username}.`);
+                    alert(`Successfully created new booking for ${currentWorker.username}.`);
                     handleBookingsChange(currentWorker.id);
                 } else {
                     response.json().then(json => {
-                        window.alert(`Failed to create booking for ${currentWorker.username}: ${json.message}`);
+                        alert(`Error: ${json.message}`);
                     })
                 }
-                else response.json().then(json => {
-                    alert(`Error: ${json.message}`);
-                })
             })
         }
     }
