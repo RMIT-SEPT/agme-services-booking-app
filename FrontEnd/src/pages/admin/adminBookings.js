@@ -15,7 +15,8 @@ const AdminBookings = () => {
     const [bookings, setBookings] = useState([]);
     const [workers, setWorkers] = useState([]);
     const [currentWorker, setCurrentWorker] = useState(null);
-
+    const [hoursFetched, setHoursFetched] = useState(false);
+    
     useEffect(() => {
         var allWorkers = []
         const fetchData = async() => {
@@ -28,19 +29,72 @@ const AdminBookings = () => {
                 response.json().then(async(json) => {
                     Object.entries(json).map(([key, value]) => {
                         allWorkers.push(value);
-                        setWorkers([...allWorkers])
                     })
+                    
+                    fetchWorkerHours();
+                })
+            })
+        }
 
-                    if (allWorkers.length > 0) {
-                        handleBookingsChange(allWorkers[0].id);
-                        setCurrentWorker(allWorkers[0])
+        const fetchWorkerHours = () => {
+            allWorkers.forEach(async(value) => {
+                await fetch(process.env.REACT_APP_API_URL + `/api/v1/admin/workers/${value.id}`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
                     }
+                }).then(response => {
+                    response.json().then(async(json) => {
+                        value.workHours = json;
+                        setWorkers([...allWorkers]);
+                    })
                 })
             })
         }
         
         fetchData();
     }, [])
+    
+    const customEventProp = () => {
+        return {
+            style: {
+                backgroundColor: '#227FE8',
+                fontSize: 'x-small',
+                color: 'white'
+            }
+        }
+    }
+
+    useEffect(() => {
+        if (currentWorker !== undefined && currentWorker !== null) {
+            setHoursFetched(true);
+        }
+    }, [currentWorker])
+
+    useEffect(() => {
+        if (workers.length > 0 && workers[0].workHours !== undefined) {
+            handleBookingsChange(workers[0].id);
+            setCurrentWorker(workers[0]);
+        }
+    }, [workers])
+
+    const customSlotProp = (date) => {
+        var availability = false;
+        
+        currentWorker.workHours.forEach((value)  => {
+            if ((moment(value.startTime).toDate() <= date) && (moment(value.endTime).toDate() > date)) {
+                availability = true;
+            }
+        })
+        
+        if (availability) {
+            return {
+                style: {
+                    backgroundColor: '#ECF0F1'
+                }
+            }
+        }
+    }
 
     const handleBookingsChange = async(e) => {
         var allBookings = [];
@@ -96,7 +150,12 @@ const AdminBookings = () => {
                 body: JSON.stringify(data)
             }).then(response => {
                 if (response.ok) {
+                    window.alert(`Successfully created new booking for ${currentWorker.username}.`);
                     handleBookingsChange(currentWorker.id);
+                } else {
+                    response.json().then(json => {
+                        window.alert(`Failed to create booking for ${currentWorker.username}: ${json.message}`);
+                    })
                 }
                 else response.json().then(json => {
                     alert(`Error: ${json.message}`);
@@ -127,12 +186,13 @@ const AdminBookings = () => {
             <Card.Header>Create Bookings</Card.Header>
             <div id="admin-bookings">
                 <span id="workerTag" >Worker</span>
+
                 <select onChange={(e) => handleBookingsChange(e.target.value)} id="adminWorkerSelection">
                     {Object.entries(workers).map(([key, value]) => {
                         return <option value={value.id} label={value.username}/>
                     })}
                 </select>
-                <Calendar
+                {hoursFetched ? <Calendar
                     localizer={localizer}
                     events={bookings}
                     style={calendarStyle}
@@ -141,7 +201,10 @@ const AdminBookings = () => {
                     selectable={'ignoreEvents'}
                     onSelectSlot={handleSelectSlot}
                     onSelectEvent={handleDelete}
-                />
+                    eventPropGetter={customEventProp}
+                    slotPropGetter={customSlotProp}
+                /> : null}
+                
             </div>
         </div>
     )

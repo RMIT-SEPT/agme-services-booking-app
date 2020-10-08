@@ -41,19 +41,20 @@
 }
 
 .timeDiv {
+    text-align: center;
     width: 40%;
-    border-right: 5px solid #121212;
 }
 
-.timeDiv p {
-    font-size: 16px;
+.infoDiv {
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
-.infoDiv p {
-    font-size: 16px;
-    text-align: center;
-    margin-left: 20px;
+.timeDiv p, .infoDiv p {
+    margin: 10px 0px;
 }
 
 .removeBooking {

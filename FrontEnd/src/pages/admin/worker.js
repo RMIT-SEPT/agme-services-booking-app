@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Calendar } from 'react-big-calendar';
 import moment from 'moment';
 import Paper from '@material-ui/core/Paper'
@@ -14,7 +14,7 @@ const Worker = ({worker, localizer}) => {
 
     const availability = worker.availability;
 
-    const allEvents = [];
+    const [allEvents, setAllEvents] = useState([]);
 
     // Calendar attributes
     const calendarStyle = {
@@ -23,17 +23,28 @@ const Worker = ({worker, localizer}) => {
         margin: '10px 0px'
     }
 
+    const customEventProp = () => {
+        return {
+            style: {
+                backgroundColor: '#227FE8',
+                fontSize: 'x-small',
+                color: 'white'
+            }
+        }
+    }
+
     useEffect(() => {
-        // Availability is almost correct so modify it and change events to be new values.
+        var events = [];
         Object.entries(availability).map(([key, value]) => {
             let newEvent = {
                 title: `ID: ${value.entryId}`,
                 start: new Date(moment(value.startTime).utc().format()),
                 end: new Date(moment(value.endTime).utc().format())
             }
-            allEvents.push(newEvent)
+            events.push(newEvent);
         })
-    })
+        setAllEvents(events);
+    }, [availability])
 
     const handleRemove = async() => {
         const fullName = `${firstName} ${lastName}`;
@@ -67,6 +78,7 @@ const Worker = ({worker, localizer}) => {
                 views={['week']}
                 style={calendarStyle}
                 toolbar={false}
+                eventPropGetter={customEventProp}
             />
         </Paper>
     )
