@@ -8,18 +8,13 @@
 }
 
 .workerDetails {
-    font-size: 20px;
-}
-
-.idAndRole {
-    font-size: 20px;
-    float: right;
+    font-size: 18px;
 }
 
 #workerContainer {
     padding: 15px;
     margin: 20px;
-    background-color: #90caf9;
+    background-color: #F9F5DE;
 }
 
 .personIcon {
@@ -28,68 +23,81 @@
 }
 
 .removeBtn {
-    border: 2px solid black;
-    border-radius: 3px;
-    background-color: red;
-    cursor: pointer;
+    float: right;
 
-    margin-left: 30px;
+    font-size: 16px;
+    border: 0px;
+    border-radius: 6px;
+    background-color: #D1603D;
+    cursor: pointer;
+    margin-left: 20px;
+    color: #F9F5DE;
 }
 
 .addBtn {
     font-size: 13px;
-    border: 2px solid black;
+    border: 0px;
     border-radius: 3px;
-    background-color: aqua;
-    cursor: pointer;
-
+    background-color: #53A548;
+    color: white;
     float: right;
     width: 100px;
     font-weight: bold;
 }
 
-#closeModalBtn {
-    position: absolute;
-    left: 50%;
-    -ms-transform: translate(-50%, -50%);
-    transform: translate(-50%, -50%);
-
-    border: 2px solid black;
-    border-radius: 3px;
-    background-color: red;
-    cursor: pointer;
-
-    font-weight: bold;
-    margin-top: 5px;
-}
-
 #newWorkerFormArea {
-    text-align: center;
+    align-self: center;
+    width: 100%;
+    padding: 7%;
 }
 
-#newWorkerFormArea p {
-    font-weight: bold;
+#newWorkerFormArea h1 {
     font-size: 20px;
 }
 
 #newWorkerForm input {
-    display: block;
-    margin-top: 10px;
-    margin-left: auto;
-    margin-right: auto;
-    width: 70%;
-
-    border: 2px solid blue;
-    border-radius: 3px;
+    margin-top: 12px;
+    width: 100%;
+    height: 40px;
+    border: 1px solid lightgray;
+    border-radius: 6px;
 }
 
 #submitNewWorkerBtn {
-    margin-top: 20% !important;
-    margin-bottom: 182px;
-    padding: 10px 20px;
-    
-    background-color: blue;
+    margin-top: 12px;
+    padding: 8px;
+    background-color: #242331;
+    border: 0px;
+    border-radius: 6px;
+    width: 100%;
+    font-weight: bold;
     color: white;
+}
 
-    cursor: pointer;
+#closeModalBtn {
+    padding: 2%;
+    margin-top: 12px;
+    border: 0px;
+    border-radius: 6px;
+    background-color: #F71735;
+    font-weight: bold;
+    width: 100%;
+    height: 100%;
+    color: white;
+}
+
+.myOverlayClass {
+    position: fixed;
+    top: 30%;
+    bottom: 30%;
+    left: 40%;
+    right: 40%;
+}
+
+.modalClass {
+    display: flex;
+    justify-content: center;
+    background-color: rgb(255, 255, 255);
+    border-radius: 12px;
+    border: 1px rgb(63, 63, 63) solid;
 }

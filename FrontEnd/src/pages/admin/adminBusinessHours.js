@@ -69,6 +69,9 @@ const AdminBusinessHours = () => {
                 if (response.ok) {
                     displayEvents();
                 }
+                else response.json().then(json => {
+                    alert(`Error: ${json.message}`);
+                })
             })
         }
     }
@@ -86,6 +89,9 @@ const AdminBusinessHours = () => {
                     // remove from calendar
                     setBusinessHours(businessHours.filter((item) => (item.resource.id != event.resource.id)));
                 }
+                else response.json().then(json => {
+                    alert(`Error: ${json.message}`);
+                })
             })
         }
     }
@@ -94,17 +100,16 @@ const AdminBusinessHours = () => {
         <div>
             <Card.Header>Business Hours</Card.Header>
             <div id="admin-business-hours">
-            <Calendar
-                localizer={localizer}
-                events={businessHours}
-                style={calendarStyle}
-                defaultView={'week'}
-                views={['week', 'day', 'agenda']}
-                selectable={'ignoreEvents'}
-                onSelectSlot={handleSelectSlot}
-                onSelectEvent={handleSelectEvent}
-                eventPropGetter={customEventProp}
-            />
+                <Calendar
+                    localizer={localizer}
+                    events={businessHours}
+                    style={calendarStyle}
+                    defaultView={'week'}
+                    views={['week', 'day', 'agenda']}
+                    selectable={'ignoreEvents'}
+                    onSelectSlot={handleSelectSlot}
+                    onSelectEvent={handleSelectEvent}
+                />
             </div>
         </div>
     )

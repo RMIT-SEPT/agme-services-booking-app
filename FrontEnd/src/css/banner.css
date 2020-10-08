@@ -5,11 +5,12 @@
     margin-right: auto;
     margin-bottom: 1%;
     width: 80%;
-    
+    padding-top: 3%;
+    padding-bottom: 2%;
     justify-content: space-between;
     align-items: center;
 }
 
 img {
-    
+    width: 30%;
 }

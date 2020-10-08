@@ -9,7 +9,7 @@ const AdminBookings = () => {
     const localizer = momentLocalizer(moment);
     const calendarStyle = {
         height: 515,
-        margin: '20px 0px'
+        margin: '20px 10px'
     }
 
     const [bookings, setBookings] = useState([]);
@@ -157,6 +157,9 @@ const AdminBookings = () => {
                         window.alert(`Failed to create booking for ${currentWorker.username}: ${json.message}`);
                     })
                 }
+                else response.json().then(json => {
+                    alert(`Error: ${json.message}`);
+                })
             })
         }
     }
@@ -182,8 +185,8 @@ const AdminBookings = () => {
         <div>
             <Card.Header>Create Bookings</Card.Header>
             <div id="admin-bookings">
-                <span id="workerTag" >Worker:</span>
-                
+                <span id="workerTag" >Worker</span>
+
                 <select onChange={(e) => handleBookingsChange(e.target.value)} id="adminWorkerSelection">
                     {Object.entries(workers).map(([key, value]) => {
                         return <option value={value.id} label={value.username}/>

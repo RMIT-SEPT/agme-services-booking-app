@@ -5,7 +5,6 @@ import '../css/profile.css';
 const Profile = () => {
     const userDetails = JSON.parse(localStorage.getItem('userDetails'));
     const userType = userDetails.userType;
-    const [editedDetails, setEditedDetails] = useState('');
     const [firstName, setFirstName] = useState(userDetails.firstName);
     const [lastName, setLastName] = useState(userDetails.lastName);
     const [username, setUsername] = useState(userDetails.username);
@@ -64,9 +63,9 @@ const Profile = () => {
             body: JSON.stringify(data)
         }).then(response => {
             if (response.ok) {
-                setEditedDetails('Successfully edited profile details. Please re-login to view your new details.');
+                alert('Successfully edited profile details. Please re-login to view your new details.');
             } else {
-                setEditedDetails('Failed to edit profile details.');
+                alert('Failed to edit profile details.');
             }
         });
     }
@@ -74,14 +73,13 @@ const Profile = () => {
     const customerView = () => {
         return (
             <React.Fragment>
-                <span>First Name: <input value={firstName} onChange={setFirstNameState}/> <br/></span> 
-                <span>Last Name: <input value={lastName} onChange={setLastNameState}/> <br/></span> 
-                <span>Username: <input value={username} onChange={setUsernameState}/> <br/></span> 
-                <span>Password: <input placeholder="Enter your new password in here" onChange={setPasswordState}/> <br/></span> 
-                <span>Phone: <input value={phoneNumber} onChange={setPhoneNumberState}/> <br/></span> 
-                <span>Address: <input value={address} onChange={setAddressState}/> <br/></span> 
-                <input id="submitBtn" type="button" value="Change Details" onClick={handleSubmit}/>
-                <p>{editedDetails}</p>
+                <span>First Name <input value={firstName} onChange={setFirstNameState}/> <br/></span> 
+                <span>Last Name <input value={lastName} onChange={setLastNameState}/> <br/></span> 
+                <span>Username <input value={username} onChange={setUsernameState}/> <br/></span> 
+                <span>Password <input placeholder="Enter new password" onChange={setPasswordState}/> <br/></span> 
+                <span>Phone <input value={phoneNumber} onChange={setPhoneNumberState}/> <br/></span> 
+                <span>Address <input value={address} onChange={setAddressState}/> <br/></span> 
+                <input id="submitBtn" type="button" value="Update Details" onClick={handleSubmit}/>
             </React.Fragment>
         )
     }
@@ -89,7 +87,7 @@ const Profile = () => {
     const workerView = () => {
         return (
             <React.Fragment>
-                <p>Username: {username}</p>
+                <p id="worker-username">Username: {username}</p>
             </React.Fragment>
         )
     }
