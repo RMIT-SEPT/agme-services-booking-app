@@ -74,10 +74,14 @@ const Appointment = ({details, userType, futureApp, displayBookings}) => {
     return(
         <FadeIn>
             <Paper id="appointmentContainer" >
-                <p>ID: {bookingId}</p>
-                <p>{moment(startTime).format("dddd, MMMM Do")}</p>
-                <p>{moment(startTime).format("LT")} - {moment(endTime).format("LT")}</p>
-                {renderAppointmentDetails()}
+                <div className="timeDiv">
+                    <p>ID: {bookingId}</p>
+                    <p>{moment(startTime).format("dddd, MMMM Do")}</p>
+                    <p>{moment(startTime).format("LT")} - {moment(endTime).format("LT")}</p>
+                </div>
+                <div className="infoDiv">
+                    {renderAppointmentDetails()}
+                </div>
             </Paper>
         </FadeIn>
     )
