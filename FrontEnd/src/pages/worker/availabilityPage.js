@@ -80,7 +80,7 @@ const AvailabilityPage = () => {
         var inBusinessHours = false;
         
         businessHours.forEach((value)  => {
-            if ((moment(value.startTime).toDate() <= date) && (moment(value.endTime).toDate() >= date)) {
+            if ((moment(value.startTime).toDate() <= date) && (moment(value.endTime).toDate() > date)) {
                 inBusinessHours = true;
             }
         })
