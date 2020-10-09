@@ -27,7 +27,7 @@ const Worker = ({worker, localizer}) => {
         return {
             style: {
                 backgroundColor: '#227FE8',
-                fontSize: 'x-small',
+                fontSize: 'small',
                 color: 'white'
             }
         }
