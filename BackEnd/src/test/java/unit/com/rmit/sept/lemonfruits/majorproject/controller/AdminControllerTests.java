@@ -1,5 +1,6 @@
 package unit.com.rmit.sept.lemonfruits.majorproject.controller;
 
+import com.rmit.sept.lemonfruits.majorproject.AbstractBaseTest;
 import com.rmit.sept.lemonfruits.majorproject.entity.*;
 import com.rmit.sept.lemonfruits.majorproject.model.BookingRequest;
 import com.rmit.sept.lemonfruits.majorproject.model.BusinessHoursRequest;
@@ -9,7 +10,6 @@ import com.rmit.sept.lemonfruits.majorproject.repository.BusinessHoursRepository
 import com.rmit.sept.lemonfruits.majorproject.repository.WorkerRepository;
 import com.rmit.sept.lemonfruits.majorproject.repository.WorkingHoursRepository;
 import com.rmit.sept.lemonfruits.majorproject.service.AdminService;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -27,7 +27,7 @@ import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.*;
 
 @UnitTest
-public class AdminControllerTests {
+public class AdminControllerTests extends AbstractBaseTest {
 
     @InjectMocks
     private AdminService adminService;
@@ -47,109 +47,10 @@ public class AdminControllerTests {
     @Mock
     private WorkingHoursRepository workingHoursRepository;
 
-    private AdminEntity testAdmin;
-
-    @BeforeAll
-    public void setUp() {
-        testAdmin = new AdminEntity();
-        testAdmin.setAdminId(1);
-        testAdmin.setFirstName("testFirst");
-        testAdmin.setLastName("testLast");
-        testAdmin.setUsername("testUser");
-        testAdmin.setPassword("testPass");
-
-        Set<BookingEntity> bookingEntitySet = new LinkedHashSet<>();
-        bookingEntitySet.add(
-                BookingEntity
-                        .builder()
-                        .startTime(LocalDateTime.now().plusDays(1))
-                        .endTime(LocalDateTime.now().plusDays(2))
-                        .build()
-        );
-        bookingEntitySet.add(
-                BookingEntity
-                        .builder()
-                        .startTime(LocalDateTime.now().plusDays(3))
-                        .endTime(LocalDateTime.now().plusDays(4))
-                        .build()
-        );
-        bookingEntitySet.add(
-                BookingEntity
-                        .builder()
-                        .startTime(LocalDateTime.now().minusDays(3))
-                        .endTime(LocalDateTime.now().minusDays(4))
-                        .build()
-        );
-    }
-
-    public WorkerEntity testWorkerEntity() {
-        WorkerEntity testWorker = new WorkerEntity();
-        testWorker.setId(1l);
-        testWorker.setUsername("testCustomer");
-        testWorker.setFirstName("testFirst");
-        testWorker.setLastName("testLast");
-        testWorker.setRole("tester");
-        testWorker.setWorkingHours(Collections.emptySet());
-        testWorker.setBookings(Collections.emptySet());
-
-        return testWorker;
-    }
-
-    public BookingRequest testBookingRequest() {
-        return BookingRequest.builder()
-                .startTime(LocalDateTime.now())
-                .endTime(LocalDateTime.now().plusHours(1))
-                .workerId(null).build();
-    }
-
-    public BusinessHoursRequest testBusinessHoursRequest() {
-        return BusinessHoursRequest.builder()
-                .startTime(LocalDateTime.now())
-                .endTime(LocalDateTime.now().plusHours(1))
-                .build();
-    }
-
-    public BookingEntity testBookingEntity() {
-        return BookingEntity.builder()
-                .customerEntity(null)
-                .startTime(LocalDateTime.now())
-                .endTime(LocalDateTime.now().plusHours(1))
-                .workerEntity(null)
-                .bookingId(1l).build();
-    }
-
-    public List<BusinessHoursEntity> testBusinessHours() {
-        ArrayList<BusinessHoursEntity> businessHoursEntitySet = new ArrayList<>();
-        businessHoursEntitySet.add(testUpcomingBusinessHours());
-        businessHoursEntitySet.add(
-                BusinessHoursEntity
-                        .builder()
-                        .startTime(LocalDateTime.now().plusDays(3))
-                        .endTime(LocalDateTime.now().plusDays(4))
-                        .build()
-        );
-        businessHoursEntitySet.add(testPastBusinessHours());
-        return businessHoursEntitySet;
-    }
-
-    public BusinessHoursEntity testUpcomingBusinessHours() {
-        return BusinessHoursEntity
-                .builder()
-                .startTime(LocalDateTime.now().plusDays(1))
-                .endTime(LocalDateTime.now().plusDays(2))
-                .build();
-    }
-
-    public BusinessHoursEntity testPastBusinessHours() {
-        return BusinessHoursEntity
-                .builder()
-                .startTime(LocalDateTime.now().minusDays(3))
-                .endTime(LocalDateTime.now().minusDays(4))
-                .build();
-    }
 
     @Test
     public void adminProfileTest() {
+        AdminEntity testAdmin = testAdminEntity();
 
         AdminEntity adminEntity = adminService.getProfile(testAdmin);
 
