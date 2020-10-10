@@ -1,24 +1,24 @@
-package unit.com.rmit.sept.lemonfruits.majorproject.controller;
+package unit.com.rmit.sept.lemonfruits.majorproject.service;
 
-import com.rmit.sept.lemonfruits.majorproject.controller.CustomerController;
+import com.rmit.sept.lemonfruits.majorproject.AbstractBaseTest;
 import com.rmit.sept.lemonfruits.majorproject.entity.BookingEntity;
 import com.rmit.sept.lemonfruits.majorproject.entity.CustomerEntity;
 import com.rmit.sept.lemonfruits.majorproject.model.ProfileChangeRequest;
 import com.rmit.sept.lemonfruits.majorproject.repository.BookingRepository;
 import com.rmit.sept.lemonfruits.majorproject.repository.CustomerRepository;
 import com.rmit.sept.lemonfruits.majorproject.repository.UserRepository;
-import org.junit.jupiter.api.BeforeAll;
+import com.rmit.sept.lemonfruits.majorproject.service.CustomerService;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.server.ResponseStatusException;
 import unit.com.rmit.sept.lemonfruits.majorproject.UnitTest;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -29,10 +29,10 @@ import static org.mockito.ArgumentMatchers.isNotNull;
 import static org.mockito.Mockito.*;
 
 @UnitTest
-public class CustomerControllerTest {
+public class CustomerServiceTest extends AbstractBaseTest {
 
     @InjectMocks
-    private CustomerController customerController;
+    private CustomerService customerService;
 
     @Mock
     private CustomerRepository customerRepository;
@@ -46,58 +46,25 @@ public class CustomerControllerTest {
     @Mock
     private PasswordEncoder passwordEncoder;
 
-    private CustomerEntity testCustomer;
-
-    @BeforeAll
-    public void setUp() {
-        testCustomer = new CustomerEntity();
-        testCustomer.setUsername("testCustomer");
-        testCustomer.setFirstName("testFirst");
-        testCustomer.setLastName("testLast");
-        testCustomer.setPhoneNumber("000");
-        testCustomer.setAddress("aaaa");
-
-        Set<BookingEntity> bookingEntitySet = new LinkedHashSet<>();
-        bookingEntitySet.add(
-                BookingEntity
-                        .builder()
-                        .startTime(LocalDateTime.now().plusDays(1))
-                        .endTime(LocalDateTime.now().plusDays(2))
-                        .build()
-        );
-        bookingEntitySet.add(
-                BookingEntity
-                        .builder()
-                        .startTime(LocalDateTime.now().plusDays(3))
-                        .endTime(LocalDateTime.now().plusDays(4))
-                        .build()
-        );
-        bookingEntitySet.add(
-                BookingEntity
-                        .builder()
-                        .startTime(LocalDateTime.now().minusDays(3))
-                        .endTime(LocalDateTime.now().minusDays(4))
-                        .build()
-        );
-
-        testCustomer.setBookings(bookingEntitySet);
-    }
-
 
     @Test
     public void getCurrentBookingsTest() {
-        ResponseEntity<List<BookingEntity>> response = customerController.viewBookings(testCustomer);
+        CustomerEntity testCustomer = testCustomer();
+        testCustomer.setBookings(testBookingList());
 
-        assertThat(response.getStatusCode(), is(HttpStatus.OK));
-        assertThat(response.getBody().size(), is(2));
+        List<BookingEntity> response = customerService.viewBookings(testCustomer);
+
+        assertThat(response.size(), is(2));
     }
 
     @Test
     public void getSomeCurrentBookingsTest() {
-        ResponseEntity<List<BookingEntity>> response = customerController.viewPastBookings(testCustomer);
+        CustomerEntity testCustomer = testCustomer();
+        testCustomer.setBookings(testBookingList());
 
-        assertThat(response.getStatusCode(), is(HttpStatus.OK));
-        assertThat(response.getBody().size(), is(1));
+        List<BookingEntity> response = customerService.viewPastBookings(testCustomer);
+
+        assertThat(response.size(), is(1));
     }
 
     @Test
@@ -120,18 +87,19 @@ public class CustomerControllerTest {
 
         when(bookingRepository.findByCustomerEntityIsNullAndStartTimeAfter(isNotNull())).thenReturn(bookingEntities);
 
-        ResponseEntity<List<BookingEntity>> availableBooking = customerController.viewAvailableBookings();
+        List<BookingEntity> availableBooking = customerService.viewAvailableBookings();
 
-        assertThat(availableBooking.getStatusCode(), is(HttpStatus.OK));
-        assertThat(availableBooking.getBody().size(), is(2));
+        assertThat(availableBooking.size(), is(2));
     }
 
     @Test
     public void changeProfile() {
+        CustomerEntity testCustomer = testCustomer();
+
         ProfileChangeRequest profileChangeRequest = new ProfileChangeRequest();
         profileChangeRequest.setFirstName("newTestFirst");
 
-        customerController.editProfile(testCustomer, profileChangeRequest);
+        customerService.editProfile(testCustomer, profileChangeRequest);
 
         assertThat(testCustomer.getFirstName(), is("newTestFirst"));
         assertThat(testCustomer.getLastName(), is("testLast"));
@@ -140,12 +108,14 @@ public class CustomerControllerTest {
 
     @Test
     public void changeProfileInvalidUsername() {
+        CustomerEntity testCustomer = testCustomer();
+
         ProfileChangeRequest profileChangeRequest = new ProfileChangeRequest();
         profileChangeRequest.setUsername("newUsername");
 
         when(userRepository.findByUsername(anyString())).thenReturn(Optional.of(testCustomer));
 
-        assertThrows(ResponseStatusException.class, () -> customerController.editProfile(testCustomer, profileChangeRequest));
+        assertThrows(ResponseStatusException.class, () -> customerService.editProfile(testCustomer, profileChangeRequest));
     }
 
     @Test
@@ -157,7 +127,7 @@ public class CustomerControllerTest {
         when(userRepository.findByUsername(anyString())).thenReturn(Optional.empty());
         when(passwordEncoder.encode(anyString())).thenReturn("ENCODED");
 
-        customerController.signUpCustomer(newCustomer);
+        customerService.signUpCustomer(newCustomer);
 
         verify(customerRepository, atLeastOnce()).save(any());
         verify(passwordEncoder, atLeastOnce()).encode(anyString());
@@ -171,8 +141,8 @@ public class CustomerControllerTest {
         newCustomer.setUsername("newTestCustomer");
         newCustomer.setPassword("testPassword");
 
-        when(userRepository.findByUsername(anyString())).thenReturn(Optional.of(testCustomer));
+        when(userRepository.findByUsername(anyString())).thenReturn(Optional.of(testCustomer()));
 
-        assertThrows(ResponseStatusException.class, () -> customerController.signUpCustomer(newCustomer));
+        assertThrows(ResponseStatusException.class, () -> customerService.signUpCustomer(newCustomer));
     }
 }

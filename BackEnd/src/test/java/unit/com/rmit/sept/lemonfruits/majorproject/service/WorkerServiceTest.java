@@ -1,7 +1,6 @@
-package unit.com.rmit.sept.lemonfruits.majorproject.controller;
+package unit.com.rmit.sept.lemonfruits.majorproject.service;
 
-import com.rmit.sept.lemonfruits.majorproject.controller.WorkerController;
-import com.rmit.sept.lemonfruits.majorproject.entity.BookingEntity;
+import com.rmit.sept.lemonfruits.majorproject.AbstractBaseTest;
 import com.rmit.sept.lemonfruits.majorproject.entity.BusinessHoursEntity;
 import com.rmit.sept.lemonfruits.majorproject.entity.WorkerEntity;
 import com.rmit.sept.lemonfruits.majorproject.entity.WorkingHoursEntity;
@@ -9,7 +8,7 @@ import com.rmit.sept.lemonfruits.majorproject.model.HoursRequest;
 import com.rmit.sept.lemonfruits.majorproject.repository.BookingRepository;
 import com.rmit.sept.lemonfruits.majorproject.repository.BusinessHoursRepository;
 import com.rmit.sept.lemonfruits.majorproject.repository.WorkingHoursRepository;
-import org.junit.jupiter.api.BeforeAll;
+import com.rmit.sept.lemonfruits.majorproject.service.WorkerService;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -17,19 +16,17 @@ import org.springframework.web.server.ResponseStatusException;
 import unit.com.rmit.sept.lemonfruits.majorproject.UnitTest;
 
 import java.time.LocalDateTime;
-import java.util.LinkedHashSet;
 import java.util.Optional;
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.isNotNull;
 import static org.mockito.Mockito.*;
 
 @UnitTest
-public class WorkerControllerTest {
+public class WorkerServiceTest extends AbstractBaseTest {
 
     @InjectMocks
-    private WorkerController workerController;
+    private WorkerService workerService;
 
     @Mock
     private WorkingHoursRepository workingHoursRepository;
@@ -39,31 +36,6 @@ public class WorkerControllerTest {
 
     @Mock
     private BusinessHoursRepository businessHoursRepository;
-
-    private WorkerEntity testWorker;
-
-    @BeforeAll
-    public void setUp() {
-        testWorker = new WorkerEntity();
-        testWorker.setId(1l);
-        testWorker.setUsername("testCustomer");
-        testWorker.setFirstName("testFirst");
-        testWorker.setLastName("testLast");
-        testWorker.setRole("tester");
-
-        Set<BookingEntity> bookingEntitySet = new LinkedHashSet<>();
-
-        Set<WorkingHoursEntity> workingHours = new LinkedHashSet<>();
-        workingHours.add(
-                WorkingHoursEntity.builder()
-                .startTime(LocalDateTime.of(2010,  10, 1, 1, 00))
-                .endTime(LocalDateTime.of(2010,  10, 1, 2, 00))
-                .build()
-        );
-
-        testWorker.setBookings(bookingEntitySet);
-        testWorker.setWorkingHours(workingHours);
-    }
 
 
     @Test
@@ -81,7 +53,7 @@ public class WorkerControllerTest {
         hoursRequest.setStartTime(LocalDateTime.of(2010, 10, 1, 1, 00));
         hoursRequest.setEndTime(LocalDateTime.of(2010, 10, 1, 2, 00));
 
-        workerController.createAvailability(testWorker, hoursRequest);
+        workerService.createAvailability(testWorkerEntity(), hoursRequest);
 
         verify(workingHoursRepository, atLeastOnce()).save(any());
     }
@@ -99,7 +71,7 @@ public class WorkerControllerTest {
         hoursRequest.setStartTime(LocalDateTime.of(2010, 10, 1, 1, 00));
         hoursRequest.setEndTime(LocalDateTime.of(2010, 10, 1, 2, 00));
 
-        workerController.createAvailability(testWorker, hoursRequest);
+        workerService.createAvailability(testWorkerEntity(), hoursRequest);
 
         verify(workingHoursRepository, atLeastOnce()).save(any());
     }
@@ -108,12 +80,11 @@ public class WorkerControllerTest {
     public void createWorkerAvailabilityTestOutsideBusinessHours() {
         when(workingHoursRepository.isThereOverlapingEntry(isNotNull(), isNotNull(), isNotNull())).thenReturn(null);
 
-
         HoursRequest hoursRequest = new HoursRequest();
         hoursRequest.setStartTime(LocalDateTime.of(2010, 10, 1, 1, 00));
         hoursRequest.setEndTime(LocalDateTime.of(2010, 10, 1, 2, 00));
 
-        assertThrows(ResponseStatusException.class, () -> workerController.createAvailability(testWorker, hoursRequest));
+        assertThrows(ResponseStatusException.class, () -> workerService.createAvailability(testWorkerEntity(), hoursRequest));
 
         verify(workingHoursRepository, never()).save(any());
     }
@@ -126,30 +97,32 @@ public class WorkerControllerTest {
         hoursRequest.setStartTime(LocalDateTime.of(2010, 10, 1, 1, 00));
         hoursRequest.setEndTime(LocalDateTime.of(2010, 10, 1, 2, 00));
 
-        assertThrows(ResponseStatusException.class, () -> workerController.createAvailability(testWorker, hoursRequest));
+        assertThrows(ResponseStatusException.class, () -> workerService.createAvailability(testWorkerEntity(), hoursRequest));
     }
 
     @Test
     public void createInvalidAvailabilityTest() {
         HoursRequest hoursRequest = new HoursRequest();
-        hoursRequest.setStartTime(LocalDateTime.of(2010,  10, 1, 2, 00));
-        hoursRequest.setEndTime(LocalDateTime.of(2010,  10, 1, 1, 00));
+        hoursRequest.setStartTime(LocalDateTime.of(2010, 10, 1, 2, 00));
+        hoursRequest.setEndTime(LocalDateTime.of(2010, 10, 1, 1, 00));
 
-        assertThrows(ResponseStatusException.class, () -> workerController.createAvailability(testWorker, hoursRequest));
+        assertThrows(ResponseStatusException.class, () -> workerService.createAvailability(testWorkerEntity(), hoursRequest));
     }
 
     @Test
     public void removeAvailabilityTest() {
+        WorkerEntity testWorker = testWorkerEntity();
+
         WorkingHoursEntity workingHoursEntity =
                 WorkingHoursEntity.builder()
-                .workerEntity(testWorker)
-                .endTime(LocalDateTime.now().plusDays(2))
-                .startTime(LocalDateTime.now().plusDays(1))
-                .build();
+                        .workerEntity(testWorker)
+                        .endTime(LocalDateTime.now().plusDays(2))
+                        .startTime(LocalDateTime.now().plusDays(1))
+                        .build();
 
         when(workingHoursRepository.findById(isNotNull())).thenReturn(Optional.of(workingHoursEntity));
 
-        workerController.removeAvailability(testWorker, 1l);
+        workerService.removeAvailability(testWorker, 1l);
 
         verify(workingHoursRepository, atLeastOnce()).delete(notNull());
     }
@@ -158,7 +131,7 @@ public class WorkerControllerTest {
     public void removeMissingAvailabilityTest() {
         when(workingHoursRepository.findById(isNotNull())).thenReturn(Optional.empty());
 
-        assertThrows(ResponseStatusException.class, () -> workerController.removeAvailability(testWorker, 1l));
+        assertThrows(ResponseStatusException.class, () -> workerService.removeAvailability(testWorkerEntity(), 1l));
 
         verify(workingHoursRepository, never()).delete(notNull());
     }
@@ -177,7 +150,7 @@ public class WorkerControllerTest {
 
         when(workingHoursRepository.findById(isNotNull())).thenReturn(Optional.of(workingHoursEntity));
 
-        assertThrows(ResponseStatusException.class, () -> workerController.removeAvailability(testWorker, 1l));
+        assertThrows(ResponseStatusException.class, () -> workerService.removeAvailability(testWorkerEntity(), 1l));
 
         verify(workingHoursRepository, never()).delete(notNull());
     }
