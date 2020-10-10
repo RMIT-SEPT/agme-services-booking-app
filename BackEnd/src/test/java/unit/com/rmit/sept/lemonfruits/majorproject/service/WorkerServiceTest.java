@@ -1,4 +1,4 @@
-package unit.com.rmit.sept.lemonfruits.majorproject.controller;
+package unit.com.rmit.sept.lemonfruits.majorproject.service;
 
 import com.rmit.sept.lemonfruits.majorproject.AbstractBaseTest;
 import com.rmit.sept.lemonfruits.majorproject.entity.BusinessHoursEntity;
@@ -23,7 +23,7 @@ import static org.mockito.ArgumentMatchers.isNotNull;
 import static org.mockito.Mockito.*;
 
 @UnitTest
-public class WorkerControllerTest extends AbstractBaseTest {
+public class WorkerServiceTest extends AbstractBaseTest {
 
     @InjectMocks
     private WorkerService workerService;

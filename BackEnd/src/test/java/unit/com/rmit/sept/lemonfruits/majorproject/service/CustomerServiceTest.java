@@ -1,4 +1,4 @@
-package unit.com.rmit.sept.lemonfruits.majorproject.controller;
+package unit.com.rmit.sept.lemonfruits.majorproject.service;
 
 import com.rmit.sept.lemonfruits.majorproject.AbstractBaseTest;
 import com.rmit.sept.lemonfruits.majorproject.entity.BookingEntity;
@@ -29,7 +29,7 @@ import static org.mockito.ArgumentMatchers.isNotNull;
 import static org.mockito.Mockito.*;
 
 @UnitTest
-public class CustomerControllerTest extends AbstractBaseTest {
+public class CustomerServiceTest extends AbstractBaseTest {
 
     @InjectMocks
     private CustomerService customerService;

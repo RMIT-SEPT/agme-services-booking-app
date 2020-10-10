@@ -1,4 +1,4 @@
-package unit.com.rmit.sept.lemonfruits.majorproject.controller;
+package unit.com.rmit.sept.lemonfruits.majorproject.service;
 
 import com.rmit.sept.lemonfruits.majorproject.AbstractBaseTest;
 import com.rmit.sept.lemonfruits.majorproject.entity.*;
@@ -27,7 +27,7 @@ import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.*;
 
 @UnitTest
-public class AdminControllerTests extends AbstractBaseTest {
+public class AdminServiceTests extends AbstractBaseTest {
 
     @InjectMocks
     private AdminService adminService;
