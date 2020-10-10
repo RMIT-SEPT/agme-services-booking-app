@@ -73,13 +73,13 @@ const Profile = () => {
     const customerView = () => {
         return (
             <React.Fragment>
-                <span>First Name <input value={firstName} onChange={setFirstNameState}/> <br/></span> 
-                <span>Last Name <input value={lastName} onChange={setLastNameState}/> <br/></span> 
-                <span>Username <input value={username} onChange={setUsernameState}/> <br/></span> 
-                <span>Password <input placeholder="Enter new password" onChange={setPasswordState}/> <br/></span> 
-                <span>Phone <input value={phoneNumber} onChange={setPhoneNumberState}/> <br/></span> 
-                <span>Address <input value={address} onChange={setAddressState}/> <br/></span> 
-                <input id="submitBtn" type="button" value="Update Details" onClick={handleSubmit}/>
+                <span>First Name <input id="firstNameInput" value={firstName} onChange={setFirstNameState}/> <br/></span> 
+                <span>Last Name <input id="lastNameInput" value={lastName} onChange={setLastNameState}/> <br/></span> 
+                <span>Username <input id="usernameInput" value={username} onChange={setUsernameState}/> <br/></span> 
+                <span>Password <input id="passwordInput" placeholder="Enter new password" onChange={setPasswordState}/> <br/></span> 
+                <span>Phone <input id="phoneInput" value={phoneNumber} onChange={setPhoneNumberState}/> <br/></span> 
+                <span>Address <input id="addressInput" value={address} onChange={setAddressState}/> <br/></span> 
+                <input id="updateProfileBtn" type="button" value="Update Details" onClick={handleSubmit}/>
             </React.Fragment>
         )
     }

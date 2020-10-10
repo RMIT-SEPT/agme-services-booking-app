@@ -52,9 +52,9 @@ const SupportLinks = ({userDetails}) => {
             </Modal>
             
             <span className="individualSupportItem">WELCOME, {userName}!</span>
-            <button className="buttonAsText" onClick={() => setAboutModalOpen(true)}>ABOUT</button>
-            <button className="buttonAsText" onClick={() => setContactModalOpen(true)}>CONTACT</button>
-            <button className="buttonAsText" onClick={handleSignOut}>LOGOUT</button>
+            <button id="aboutBtn" className="buttonAsText" onClick={() => setAboutModalOpen(true)}>ABOUT</button>
+            <button id="contactBtn" className="buttonAsText" onClick={() => setContactModalOpen(true)}>CONTACT</button>
+            <button id="logoutBtn" className="buttonAsText" onClick={handleSignOut}>LOGOUT</button>
         </div>
     )
 }
