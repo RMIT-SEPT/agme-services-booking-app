@@ -1,18 +1,16 @@
 package unit.com.rmit.sept.lemonfruits.majorproject.controller;
 
-import com.rmit.sept.lemonfruits.majorproject.controller.CustomerController;
 import com.rmit.sept.lemonfruits.majorproject.entity.BookingEntity;
 import com.rmit.sept.lemonfruits.majorproject.entity.CustomerEntity;
 import com.rmit.sept.lemonfruits.majorproject.model.ProfileChangeRequest;
 import com.rmit.sept.lemonfruits.majorproject.repository.BookingRepository;
 import com.rmit.sept.lemonfruits.majorproject.repository.CustomerRepository;
 import com.rmit.sept.lemonfruits.majorproject.repository.UserRepository;
+import com.rmit.sept.lemonfruits.majorproject.service.CustomerService;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.server.ResponseStatusException;
 import unit.com.rmit.sept.lemonfruits.majorproject.UnitTest;
@@ -32,7 +30,7 @@ import static org.mockito.Mockito.*;
 public class CustomerControllerTest {
 
     @InjectMocks
-    private CustomerController customerController;
+    private CustomerService customerService;
 
     @Mock
     private CustomerRepository customerRepository;
@@ -86,18 +84,16 @@ public class CustomerControllerTest {
 
     @Test
     public void getCurrentBookingsTest() {
-        ResponseEntity<List<BookingEntity>> response = customerController.viewBookings(testCustomer);
+        List<BookingEntity> response = customerService.viewBookings(testCustomer);
 
-        assertThat(response.getStatusCode(), is(HttpStatus.OK));
-        assertThat(response.getBody().size(), is(2));
+        assertThat(response.size(), is(2));
     }
 
     @Test
     public void getSomeCurrentBookingsTest() {
-        ResponseEntity<List<BookingEntity>> response = customerController.viewPastBookings(testCustomer);
+        List<BookingEntity> response = customerService.viewPastBookings(testCustomer);
 
-        assertThat(response.getStatusCode(), is(HttpStatus.OK));
-        assertThat(response.getBody().size(), is(1));
+        assertThat(response.size(), is(1));
     }
 
     @Test
@@ -120,10 +116,9 @@ public class CustomerControllerTest {
 
         when(bookingRepository.findByCustomerEntityIsNullAndStartTimeAfter(isNotNull())).thenReturn(bookingEntities);
 
-        ResponseEntity<List<BookingEntity>> availableBooking = customerController.viewAvailableBookings();
+        List<BookingEntity> availableBooking = customerService.viewAvailableBookings();
 
-        assertThat(availableBooking.getStatusCode(), is(HttpStatus.OK));
-        assertThat(availableBooking.getBody().size(), is(2));
+        assertThat(availableBooking.size(), is(2));
     }
 
     @Test
@@ -131,7 +126,7 @@ public class CustomerControllerTest {
         ProfileChangeRequest profileChangeRequest = new ProfileChangeRequest();
         profileChangeRequest.setFirstName("newTestFirst");
 
-        customerController.editProfile(testCustomer, profileChangeRequest);
+        customerService.editProfile(testCustomer, profileChangeRequest);
 
         assertThat(testCustomer.getFirstName(), is("newTestFirst"));
         assertThat(testCustomer.getLastName(), is("testLast"));
@@ -145,7 +140,7 @@ public class CustomerControllerTest {
 
         when(userRepository.findByUsername(anyString())).thenReturn(Optional.of(testCustomer));
 
-        assertThrows(ResponseStatusException.class, () -> customerController.editProfile(testCustomer, profileChangeRequest));
+        assertThrows(ResponseStatusException.class, () -> customerService.editProfile(testCustomer, profileChangeRequest));
     }
 
     @Test
@@ -157,7 +152,7 @@ public class CustomerControllerTest {
         when(userRepository.findByUsername(anyString())).thenReturn(Optional.empty());
         when(passwordEncoder.encode(anyString())).thenReturn("ENCODED");
 
-        customerController.signUpCustomer(newCustomer);
+        customerService.signUpCustomer(newCustomer);
 
         verify(customerRepository, atLeastOnce()).save(any());
         verify(passwordEncoder, atLeastOnce()).encode(anyString());
@@ -173,6 +168,6 @@ public class CustomerControllerTest {
 
         when(userRepository.findByUsername(anyString())).thenReturn(Optional.of(testCustomer));
 
-        assertThrows(ResponseStatusException.class, () -> customerController.signUpCustomer(newCustomer));
+        assertThrows(ResponseStatusException.class, () -> customerService.signUpCustomer(newCustomer));
     }
 }
