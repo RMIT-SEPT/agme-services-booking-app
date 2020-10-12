@@ -69,8 +69,8 @@ const AvailabilityPage = () => {
     const customEventProp = () => {
         return {
             style: {
-                backgroundColor: '#227FE8',
-                fontSize: 'x-small',
+                backgroundColor: '#01295f',
+                fontSize: 'small',
                 color: 'white'
             }
         }
@@ -78,17 +78,44 @@ const AvailabilityPage = () => {
 
     const customSlotProp = (date) => {
         var inBusinessHours = false;
+        var top = false;
+        var bottom = false;
         
         businessHours.forEach((value)  => {
-            if ((moment(value.startTime).toDate() <= date) && (moment(value.endTime).toDate() > date)) {
+            if ((moment(value.startTime).toDate() <= date) && (moment(value.endTime).toDate() >= date)) {
                 inBusinessHours = true;
+
+                if (moment(value.startTime).toDate().getTime() == date.getTime()) {
+                    top = true;
+                }
+
+                if (moment(value.endTime).toDate().getTime() == date.getTime()) {
+                    bottom = true;
+                }
             }
         })
         
-        if (inBusinessHours) {
+        if (inBusinessHours && top) {
             return {
                 style: {
-                    backgroundColor: '#ECF0F1'
+                    borderTop: '2px solid #4A6670',
+                    borderLeft: '2px solid #4A6670',
+                    borderRight: '2px solid #4A6670',
+                    borderRadius: '3px'
+                }
+            }
+        } else if (inBusinessHours && bottom) {
+            return {
+                style: {
+                    borderTop: '2px solid #4A6670',
+                    borderRadius: '-3px'
+                }
+            }
+        } else if (inBusinessHours) {
+            return {
+                style: {
+                    borderLeft: '2px solid #4A6670',
+                    borderRight: '2px solid #4A6670',
                 }
             }
         }
