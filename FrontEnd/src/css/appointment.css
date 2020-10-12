@@ -58,18 +58,21 @@
 }
 
 .removeBooking {
-    border: 2px solid black;
-    border-radius: 3px;
-    background-color: red;
+    font-weight: 600;
+    font-size: 15px;
+    border: 0px solid black;
+    border-radius: 6px;
+    background-color: rgb(190, 72, 72);
+    color: white;
     cursor: pointer;
 }
     
 .holdsAllAppointmentsDivAsWorkerAdmin {
     display: grid;
-    grid-template-columns: 33% auto auto;
+    grid-template-columns: 33% 34% 33%;
 }
 
 .holdsAllAppointmentsDivAsCustomer {
     display: grid;
-    grid-template-columns: 33% auto auto;
+    grid-template-columns: 33% 34% 33%;
 }
