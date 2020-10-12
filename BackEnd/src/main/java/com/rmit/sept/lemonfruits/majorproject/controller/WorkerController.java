@@ -51,12 +51,7 @@ public class WorkerController {
 
     @GetMapping(value = "/bookings", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<BookingEntity>> viewBookings(@AuthenticationPrincipal WorkerEntity workerEntity) {
-        return ok(
-                workerEntity
-                        .getBookings()
-                        .stream()
-                        .filter(b -> b.getEndTime().isAfter(LocalDateTime.now()))
-                        .collect(Collectors.toList()));
+        return ok(workerService.viewBookings(workerEntity));
     }
 
     @GetMapping("/bookings/history")

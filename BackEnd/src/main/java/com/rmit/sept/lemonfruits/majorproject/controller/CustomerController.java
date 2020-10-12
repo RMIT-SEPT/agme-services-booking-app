@@ -34,7 +34,7 @@ public class CustomerController {
 
     @DeleteMapping(value = "/booking/{bookingId}")
     public void deleteBooking(@AuthenticationPrincipal CustomerEntity customerEntity, @PathVariable Long bookingId) {
-        deleteBooking(customerEntity, bookingId);
+        customerService.deleteBooking(customerEntity, bookingId);
     }
 
     @GetMapping(value = "/view", produces = MediaType.APPLICATION_JSON_VALUE)
