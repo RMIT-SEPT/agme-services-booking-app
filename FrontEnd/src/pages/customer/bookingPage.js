@@ -13,6 +13,7 @@ const BookingPage = () => {
     }
 
     const [bookings, setBookings] = useState([]);
+    const [workers, setWorkers] = useState([]);
 
     const customEventProp = () => {
         return {
@@ -27,6 +28,7 @@ const BookingPage = () => {
     useEffect(() => {
         const fetchData = async() => {
             var allEvents = [];
+            var allWorkers = [];
             await fetch(process.env.REACT_APP_API_URL + `/api/v1/customer/availabilities`, {
                 method: 'GET',
                 headers: {
@@ -35,17 +37,24 @@ const BookingPage = () => {
             }).then(response => {
                 response.json().then(json => {
                     json.map((value) => {
+                        const worker = value.workerEntity;
                         const event = {
-                            title: `${value.workerEntity.role}: ${value.workerEntity.firstName}`,
+                            title: `${worker.role}: ${worker.firstName}`,
                             start: moment(value.startTime).toDate(),
                             end: moment(value.endTime).toDate(),
                             resource: {
-                                bookingId: value.bookingId
+                                bookingId: value.bookingId,
+                                workerId: value.workerEntity.id
                             }
                         }
                         allEvents.push(event)
-                        setBookings([...allEvents])
+                        
+                        if (!(allWorkers.find((tempWorker) => tempWorker.id === worker.id))) {
+                            allWorkers.push(value.workerEntity)
+                        }
                     });
+                    setBookings([...allEvents])
+                    setWorkers([...allWorkers])
                 })
             })
         }
