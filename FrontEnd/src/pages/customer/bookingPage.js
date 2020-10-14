@@ -13,6 +13,7 @@ const BookingPage = () => {
     }
 
     const [bookings, setBookings] = useState([]);
+    const [filteredBookings, setFilteredBookings] = useState([]);
     const [workers, setWorkers] = useState([]);
 
     const customEventProp = () => {
@@ -39,12 +40,11 @@ const BookingPage = () => {
                     json.map((value) => {
                         const worker = value.workerEntity;
                         const event = {
-                            title: `${worker.role}: ${worker.firstName}`,
                             start: moment(value.startTime).toDate(),
                             end: moment(value.endTime).toDate(),
                             resource: {
                                 bookingId: value.bookingId,
-                                workerId: value.workerEntity.id
+                                workerId: worker.id
                             }
                         }
                         allEvents.push(event)
@@ -55,6 +55,12 @@ const BookingPage = () => {
                     });
                     setBookings([...allEvents])
                     setWorkers([...allWorkers])
+                    console.log(allWorkers)
+
+                    if (allWorkers.length > 0) {
+                        // set initial worker and bookings
+                        setFilteredBookings(allEvents.filter((event) => event.resource.workerId === allWorkers[0].id))
+                    }
                 })
             })
         }
@@ -79,18 +85,30 @@ const BookingPage = () => {
             if (response.ok) {
                 // remove from calendar availabilities
                 setBookings(bookings.filter((booking) => (booking.resource.bookingId != resource.bookingId)));
+                setFilteredBookings(filteredBookings.filter((booking) => (booking.resource.bookingId != resource.bookingId)))
             }
         })
+    }
+
+    const handleBookingsChange = (workerId) => {
+        setFilteredBookings(bookings.filter((booking) => booking.resource.workerId == workerId));
     }
     
     return(
         <div>
             <Card.Header>Book Appointment</Card.Header>
             <div id="bookings">
+                <span id="workerTag" >Worker</span>
+
+                <select onChange={(e) => handleBookingsChange(e.target.value)} id="custWorkerSelection">
+                    {Object.entries(workers).map(([key, value]) => {
+                        return <option value={value.id} label={`${value.firstName} ${value.lastName} - ${value.role}`}/>
+                    })}
+                </select>
                 <Calendar
                     id="customer-calendar"
                     localizer={localizer}
-                    events={bookings}
+                    events={filteredBookings}
                     style={calendarStyle}
                     defaultView={'week'}
                     views={['week', 'day', 'agenda']}
