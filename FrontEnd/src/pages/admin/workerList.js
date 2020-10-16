@@ -3,6 +3,7 @@ import { momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
 import Modal from 'react-modal';
 import Card from 'react-bootstrap/Card';
+import SearchField from "material-ui-search-bar";
 
 import '../../css/pages/workerList.css';
 
@@ -20,9 +21,11 @@ const WorkerList = () => {
     const [password, setPassword] = useState('');
     const [role, setRole] = useState('');
 
-    // Modal related variables / functions
-    var subtitle;
+    // Related to search box
+    const [filter, setFilter] = useState(null);
+    const [filteredWorkers, setFilteredWorkers] = useState(workersData);
 
+    // Modal related variables / functions
     const setModalStatus = (booleanVal) => {
         setModalIsOpen(booleanVal);
     }
@@ -60,6 +63,7 @@ const WorkerList = () => {
                                 individualWorkerDetails['availability'] = array;
                                 allWorkers.push(individualWorkerDetails);
                                 setWorkersData([...allWorkers]);
+                                setFilteredWorkers([...allWorkers]);
                             })
                         })
                     })
@@ -125,12 +129,66 @@ const WorkerList = () => {
         );
     }
 
+    const handleFilter = (filterVal) => {
+        if (filterVal === null) {
+            setFilteredWorkers(workersData);
+            return;
+        }
+
+        let tempWorkers = [];
+        Object.entries(workersData).map(([key, value]) => {
+            let idFilterMatches = false;
+            let usernameFilterMatches = false;
+            let firstNameFilterMatches = false;
+            let lastNameFilterMatches = false;
+            let roleFilterMatches = false;
+
+            // id
+            if (String(workersData[key]['id']).includes(filterVal)) {
+                idFilterMatches = true;
+            }
+
+            // username
+            if (String(workersData[key]['details']['username']).includes(filterVal)) {
+                usernameFilterMatches = true;
+            }
+
+            // first name
+            if (String(workersData[key]['details']['firstName']).includes(filterVal)) {
+                firstNameFilterMatches = true;
+            }
+
+            // last name
+            if (String(workersData[key]['details']['lastName']).includes(filterVal)) {
+                lastNameFilterMatches = true;
+            }
+
+            // role
+            if (String(workersData[key]['details']['role']).includes(filterVal)) {
+                roleFilterMatches = true;
+            }
+
+            if (idFilterMatches || usernameFilterMatches || firstNameFilterMatches || lastNameFilterMatches || roleFilterMatches) {
+                tempWorkers.push(workersData[key]);
+            }
+        })
+        setFilteredWorkers(tempWorkers);
+    }
+
     return(
         <div id="workerListContainer">
             <Card.Header> Workers 
                 {addWorkerModal()}
             </Card.Header>
-            {Object.entries(workersData).map(([key, value]) => {
+            <div id="filterWorkerSearchContainer">
+                <SearchField
+                    placeholder="Worker Details"
+                    style={{backgroundColor: "#F7F7F7"}}
+                    onChange={value => value === '' ? handleFilter(null) : handleFilter(value)}
+                    onCancelSearch={() => handleFilter(null)}
+                />
+            </div>
+            {Object.entries(filteredWorkers).map(([key, value]) => {
                 return <Worker key={key} worker={value} localizer={localizer}/>
             })}
         </div>
