@@ -98,13 +98,12 @@ const BookingPage = () => {
         <div>
             <Card.Header>Book Appointment</Card.Header>
             <div id="bookings">
-                <span id="workerTag" >Worker</span>
-
-                <select onChange={(e) => handleBookingsChange(e.target.value)} id="custWorkerSelection">
+                {workers.length > 0 ? <div><span id="workerTag">Worker</span><select onChange={(e) => handleBookingsChange(e.target.value)} id="custWorkerSelection">
                     {Object.entries(workers).map(([key, value]) => {
                         return <option value={value.id} label={`${value.firstName} ${value.lastName} - ${value.role}`}/>
                     })}
-                </select>
+                </select></div> : <span>&ensp;No bookings available</span>}
+                
                 <Calendar
                     id="customer-calendar"
                     localizer={localizer}
