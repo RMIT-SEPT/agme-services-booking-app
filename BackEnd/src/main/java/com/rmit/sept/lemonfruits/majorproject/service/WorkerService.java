@@ -67,6 +67,12 @@ public class WorkerService {
         if (workingHoursEntity.get().getEndTime().isBefore(LocalDateTime.now()))
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Cannot delete past entry");
 
+        if (!bookingRepository.getOverlapingBookingsWithWorker(
+                workingHoursEntity.get().getStartTime(),
+                workingHoursEntity.get().getEndTime(),
+                workerEntity).isEmpty())
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Bookings exist during these hours");
+
         workingHoursRepository.delete(workingHoursEntity.get());
     }
 

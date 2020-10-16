@@ -130,6 +130,13 @@ public class AdminService {
         if (bookingRequest.getEndTime().isAfter(workingHoursEntity.getEndTime()))
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Outside workers hours");
 
+        if (!bookingRepository.getOverlapingBookingsWithWorker(
+                bookingRequest.getStartTime(),
+                bookingRequest.getEndTime(),
+                workerEntity
+        ).isEmpty())
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Worker is not available");
+
         BookingEntity newEntry = BookingEntity
                 .builder()
                 .workerEntity(workerEntity)
@@ -148,6 +155,13 @@ public class AdminService {
 
         if (bookingEntity == null)
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Could not find booking");
+
+        if (!bookingRepository.getOverlapingBookingsWithWorker(
+                bookingEntity.getStartTime(),
+                bookingEntity.getEndTime(),
+                workerEntity
+        ).isEmpty())
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Worker is not available");
 
         bookingEntity.setWorkerEntity(workerEntity);
         bookingRepository.save(bookingEntity);
@@ -186,6 +200,9 @@ public class AdminService {
 
         if (businessHoursRequest.getEndTime().isBefore(businessHoursRequest.getStartTime()))
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "End time must be after start time");
+
+        if (businessHoursRequest.getEndTime().isBefore(LocalDateTime.now()) | businessHoursRequest.getStartTime().isBefore(LocalDateTime.now()))
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Only future opening hours can be set");
 
         BusinessHoursEntity newEntry = BusinessHoursEntity
                 .builder()
