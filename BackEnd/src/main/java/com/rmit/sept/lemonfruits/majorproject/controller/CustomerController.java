@@ -62,6 +62,11 @@ public class CustomerController {
         customerService.signUpCustomer(userEntity);
     }
 
+    @DeleteMapping(value = "/profile/delete")
+    public void deleteAccount(@AuthenticationPrincipal CustomerEntity customerEntity) {
+        customerService.deleteAccount(customerEntity);
+    }
+
     @Autowired
     public void setCustomerService(CustomerService customerService) {
         this.customerService = customerService;

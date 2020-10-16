@@ -132,4 +132,10 @@ public class CustomerService {
     public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
     }
+
+    public void deleteAccount(CustomerEntity customer) {
+        customer.getBookings().forEach(b -> b.setCustomerEntity(null));
+        customerRepository.delete(customer);
+    }
+
 }
