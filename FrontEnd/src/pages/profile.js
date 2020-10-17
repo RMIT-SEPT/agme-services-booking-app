@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import Card from 'react-bootstrap/Card';
 import '../css/profile.css';
 
@@ -11,6 +12,7 @@ const Profile = () => {
     const [password, setPassword] = useState(null);
     const [phoneNumber, setPhoneNumber] = useState(userDetails.phoneNumber);
     const [address, setAddress] = useState(userDetails.address);
+    const history = useHistory();
 
     const setFirstNameState = (newValue) => {
         setFirstName(newValue.target.value);
@@ -70,6 +72,28 @@ const Profile = () => {
         });
     }
 
+    const deleteAccount = async () => {
+        if (window.confirm("Are you sure you want to delete your account?")) {
+            // POST request to backend with the data JSON
+            await fetch(process.env.REACT_APP_API_URL + `/api/v1/customer/profile/delete/`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}` 
+                },
+            }).then(response => {
+                if (response.ok) {
+                    localStorage.clear();
+                    window.alert("Account deleted. Redirecting to login page.");
+                    history.push("/");
+                } else {
+                    alert('Failed to delete account');
+                }
+            });
+        }
+    }
+
     const customerView = () => {
         return (
             <React.Fragment>
@@ -79,7 +103,10 @@ const Profile = () => {
                 <span>Password <input id="passwordInput" placeholder="Enter new password" onChange={setPasswordState}/> <br/></span> 
                 <span>Phone <input id="phoneInput" value={phoneNumber} onChange={setPhoneNumberState}/> <br/></span> 
                 <span>Address <input id="addressInput" value={address} onChange={setAddressState}/> <br/></span> 
+                <div id="profileButtons">
                 <input id="updateProfileBtn" type="button" value="Update Details" onClick={handleSubmit}/>
+                <input id="deleteProfileBtn" type="button" value="Delete Account" onClick={deleteAccount}/>
+                </div>
             </React.Fragment>
         )
     }

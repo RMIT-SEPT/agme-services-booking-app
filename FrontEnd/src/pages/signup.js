@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import { useHistory } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import '../css/signup.css';
 
@@ -10,6 +11,7 @@ const Signup = () => {
     const [phone, setPhone] = useState('');
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const history = useHistory();
 
     const setFirstNameState = (newValue) => {
         setFirstName(newValue.target.value);
@@ -56,7 +58,8 @@ const Signup = () => {
             body: JSON.stringify(data)
         }).then(response => {
             if (response.ok) {
-                alert(`Successfully created user '${username}'`);
+                window.alert(`Successfully created user '${username}'`);
+                history.push("/");
             } else {
                 response.json().then(json => {
                     alert(`Failed to create user: ${json.message}`);
