@@ -92,6 +92,7 @@ const WorkerList = () => {
         }).then(response => {
             if (response.ok) {
                 alert('Successfully added worker. Refresh to see changes.');
+                setModalIsOpen(false);
             } else {
                 alert('Failed to add worker. Please try again.')
             }
@@ -120,8 +121,11 @@ const WorkerList = () => {
                         <input name="password" type="password" placeholder=" Password" onChange={(e) => setPassword(e.target.value)}/>
                         <input name="role" type="text" placeholder=" Role" onChange={(e) => setRole(e.target.value)}/>
                     </form>
+                    <div id="new-worker-buttons">
                     <input id="submitNewWorkerBtn" type="button" value="Add Worker" onClick={addWorkerAPI}/>
+                    <div id="new-worker-spacer"></div>
                     <button id="closeModalBtn" onClick={closeModal}>Cancel</button>
+                    </div>
                 </div>
                 </Modal>
                 </div>

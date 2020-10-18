@@ -6,6 +6,7 @@ import '../css/profile.css';
 const Profile = () => {
     const userDetails = JSON.parse(localStorage.getItem('userDetails'));
     const userType = userDetails.userType;
+    const userRole = userDetails.role;
     const [firstName, setFirstName] = useState(userDetails.firstName);
     const [lastName, setLastName] = useState(userDetails.lastName);
     const [username, setUsername] = useState(userDetails.username);
@@ -105,6 +106,7 @@ const Profile = () => {
                 <span>Address <input id="addressInput" value={address} onChange={setAddressState}/> <br/></span> 
                 <div id="profileButtons">
                 <input id="updateProfileBtn" type="button" value="Update Details" onClick={handleSubmit}/>
+                <div id="profileSpacer"></div>
                 <input id="deleteProfileBtn" type="button" value="Delete Account" onClick={deleteAccount}/>
                 </div>
             </React.Fragment>
@@ -114,7 +116,8 @@ const Profile = () => {
     const workerView = () => {
         return (
             <React.Fragment>
-                <p id="worker-username">Username: {username}</p>
+                <span>Username <input id="username" value={username}/> <br/></span>
+                <span>Role <input id="role" value={userRole}/> <br/></span>
             </React.Fragment>
         )
     }

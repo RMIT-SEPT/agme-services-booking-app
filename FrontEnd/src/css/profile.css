@@ -42,7 +42,12 @@
 }
 
 #profileButtons {
-    
+    display: flex;
+    justify-content: center;
+}
+
+#profileSpacer {
+    width: 5%;
 }
 
 #updateProfileBtn {
@@ -53,7 +58,7 @@
 }
 
 #deleteProfileBtn {
-    background-color: rgb(190, 72, 72);
+    background-color: #DF2935;
     color: white;
     font-weight: bold;
     font-size: 16px;

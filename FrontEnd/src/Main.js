@@ -1,6 +1,5 @@
 import React from 'react';
 import { Switch, Route } from 'react-router-dom';
-
 import Login from './pages/login';
 import Signup from './pages/signup';
 import Home from './pages/home';
@@ -20,7 +19,6 @@ const Main = () =>  {
             <Route exact path='/businesshours' component={Home}></Route>
             <Route exact path='/createbookings' component={Home}></Route>
             <Route exact path='/futurebookings' component={Home}></Route>
-
         </Switch>
     );
 }
