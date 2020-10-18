@@ -1,16 +1,19 @@
 import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
+import Card from 'react-bootstrap/Card';
 import '../css/profile.css';
 
 const Profile = () => {
     const userDetails = JSON.parse(localStorage.getItem('userDetails'));
     const userType = userDetails.userType;
-    const [editedDetails, setEditedDetails] = useState('');
+    const userRole = userDetails.role;
     const [firstName, setFirstName] = useState(userDetails.firstName);
     const [lastName, setLastName] = useState(userDetails.lastName);
     const [username, setUsername] = useState(userDetails.username);
     const [password, setPassword] = useState(null);
     const [phoneNumber, setPhoneNumber] = useState(userDetails.phoneNumber);
     const [address, setAddress] = useState(userDetails.address);
+    const history = useHistory();
 
     const setFirstNameState = (newValue) => {
         setFirstName(newValue.target.value);
@@ -63,24 +66,49 @@ const Profile = () => {
             body: JSON.stringify(data)
         }).then(response => {
             if (response.ok) {
-                setEditedDetails('Successfully edited profile details. Please re-login to view your new details.');
+                alert('Successfully edited profile details. Please re-login to view your new details.');
             } else {
-                setEditedDetails('Failed to edit profile details.');
+                alert('Failed to edit profile details.');
             }
         });
+    }
+
+    const deleteAccount = async () => {
+        if (window.confirm("Are you sure you want to delete your account?")) {
+            // POST request to backend with the data JSON
+            await fetch(process.env.REACT_APP_API_URL + `/api/v1/customer/profile/delete/`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}` 
+                },
+            }).then(response => {
+                if (response.ok) {
+                    localStorage.clear();
+                    window.alert("Account deleted. Redirecting to login page.");
+                    history.push("/");
+                } else {
+                    alert('Failed to delete account');
+                }
+            });
+        }
     }
 
     const customerView = () => {
         return (
             <React.Fragment>
-                <span>First Name: <input value={firstName} onChange={setFirstNameState}/> <br/></span> 
-                <span>Last Name: <input value={lastName} onChange={setLastNameState}/> <br/></span> 
-                <span>Username: <input value={username} onChange={setUsernameState}/> <br/></span> 
-                <span>Password: <input placeholder="Enter your new password in here" onChange={setPasswordState}/> <br/></span> 
-                <span>Phone: <input value={phoneNumber} onChange={setPhoneNumberState}/> <br/></span> 
-                <span>Address: <input value={address} onChange={setAddressState}/> <br/></span> 
-                <input id="submitBtn" type="button" value="Change Details" onClick={handleSubmit}/>
-                <p>{editedDetails}</p>
+                <span>First Name <input id="firstNameInput" value={firstName} onChange={setFirstNameState}/> <br/></span> 
+                <span>Last Name <input id="lastNameInput" value={lastName} onChange={setLastNameState}/> <br/></span> 
+                <span>Username <input id="usernameInput" value={username} onChange={setUsernameState}/> <br/></span> 
+                <span>Password <input id="passwordInput" placeholder="Enter new password" onChange={setPasswordState}/> <br/></span> 
+                <span>Phone <input id="phoneInput" value={phoneNumber} onChange={setPhoneNumberState}/> <br/></span> 
+                <span>Address <input id="addressInput" value={address} onChange={setAddressState}/> <br/></span> 
+                <div id="profileButtons">
+                <input id="updateProfileBtn" type="button" value="Update Details" onClick={handleSubmit}/>
+                <div id="profileSpacer"></div>
+                <input id="deleteProfileBtn" type="button" value="Delete Account" onClick={deleteAccount}/>
+                </div>
             </React.Fragment>
         )
     }
@@ -88,19 +116,23 @@ const Profile = () => {
     const workerView = () => {
         return (
             <React.Fragment>
-                <p>Username: {username}</p>
+                <span>Username <input id="username" value={username}/> <br/></span>
+                <span>Role <input id="role" value={userRole}/> <br/></span>
             </React.Fragment>
         )
     }
 
     return (
-        <div className="profileContainer">
-            <div id="avatarContainer">
-                <img src={`${userDetails.id % 5}.png`} alt="Avatar"/>
-                <p>{userDetails.firstName} {userDetails.lastName}</p>
-            </div>
-            <div id="profileDetailsContainer">
-                {userType === 'customer' ? customerView() : workerView()}
+        <div>
+            <Card.Header>Profile</Card.Header>
+            <div className="profileContainer">
+                <div id="avatarContainer">
+                    <img src={`${userDetails.id % 5}.png`} alt="Avatar"/>
+                    <p>{userDetails.firstName} {userDetails.lastName}</p>
+                </div>
+                <div id="profileDetailsContainer">
+                    {userType === 'customer' ? customerView() : workerView()}
+                </div>
             </div>
         </div>
     )

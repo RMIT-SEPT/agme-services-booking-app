@@ -1,6 +1,25 @@
 #bookings, #admin-bookings, #admin-business-hours {
+    /*
     display: flex;
     justify-content: center;
     align-items: center;
     padding-top: 50px;
+    */
+    height: auto;
+    margin: 20px 10px;
+}
+
+#adminWorkerSelection {
+    margin: 0 auto;
+}
+
+#workerTag {
+    color: #D1603D;
+    font-weight: bold;
+    margin-right: 10px;
+    padding-left: 10px;
+}
+
+.rbc-day-slot .rbc-events-container {
+    margin-right: 0px;
 }

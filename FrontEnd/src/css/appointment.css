@@ -1,38 +1,78 @@
 #appointmentsContainer {
-    flex-direction: row;
-    margin: 20px 20px;
+    
+}
+
+#appointmentsContainerBody {
+    padding: 2%;
 }
 
 #appointmentsContainer h1 {
+    margin-top: 0px;
     padding-bottom: 5px;
 
     font-size: 30px;
     font-style: italic;
-    border-bottom: 2px solid blue;
 }
 
 #appointmentContainer {
     display: flex;
     flex-direction: row;
+    justify-content: center;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    background-color: #eaf6ff;
+    margin: 20px 2% 0px 2%;
+    padding: 5px 5px;
+    border-radius: 10px;
+}
 
-    margin: 20px auto;
-    padding: 10px 5px;
-    border: 2px solid red;
+#date {
+    font-weight: 600;
+}
+
+#app-left {
+    float: left;
+    width: 67%;
+}
+
+#app-right {
+    float: right;
+    width: auto;
 }
 
 .timeDiv {
+    text-align: center;
     width: 40%;
-
-    border-right: 5px solid blue;
 }
 
-.timeDiv p {
-    font-size: 20px;
+.infoDiv {
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
-.infoDiv p {
-    font-size: 20px;
-    text-align: center;
-    margin: 5% 20px 5% 20px;
+.timeDiv p, .infoDiv p {
+    margin: 10px 0px;
+}
+
+.removeBooking {
+    font-weight: 600;
+    font-size: 15px;
+    border: 0px solid black;
+    border-radius: 6px;
+    background-color: rgb(190, 72, 72);
+    color: white;
+    cursor: pointer;
+}
+    
+.holdsAllAppointmentsDivAsWorkerAdmin {
+    display: grid;
+    grid-template-columns: 33% 34% 33%;
+}
+
+.holdsAllAppointmentsDivAsCustomer {
+    display: grid;
+    grid-template-columns: 33% 34% 33%;
 }

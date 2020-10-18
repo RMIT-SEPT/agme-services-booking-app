@@ -40,7 +40,7 @@ insert into workers (role, id) values ('Marketing', 10);
 insert into bookings (booking_id, end_time, start_time, user_id, worker_id) values (280, '2020-08-03 09:00:00', '2020-08-03 07:30:00', 3, 8);
 insert into bookings (booking_id, end_time, start_time, user_id, worker_id) values (665, '2020-08-04 10:15:00', '2020-08-04 09:15:00', 4, 8);
 insert into bookings (booking_id, end_time, start_time, user_id, worker_id) values (56, '2020-08-07 15:45:00', '2020-08-07 14:30:00', 5, 8);
-insert into bookings (booking_id, end_time, start_time, user_id, worker_id) values (100, '2020-09-16 15:45:00', '2020-09-16 14:30:00', null, 8);
+insert into bookings (booking_id, end_time, start_time, user_id, worker_id) values (100, '2020-10-01 12:45:00', '2020-10-01 11:30:00', 5, 8);
 
 -- Fill out availability for the two other workers (9, 10)
 
@@ -52,4 +52,4 @@ insert into working_hours (entry_id, end_time, start_time, worker_id) values (52
 
 -- Add business hours
 
-insert into business_hours (bh_entry_id, end_time, start_time) values (50, '2020-09-21 17:00:00', '2020-09-21 09:00:00');
+insert into business_hours (bh_entry_id, end_time, start_time) values (50, '2020-10-08 17:00:00', '2020-10-08 09:00:00');

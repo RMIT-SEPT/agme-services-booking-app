@@ -2,6 +2,8 @@ import React from 'react';
 
 import '../css/dashboard.css';
 import { useHistory } from 'react-router-dom';
+import Card from 'react-bootstrap/Card';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Dashboard = ({userDetails}) => {
     const userType = userDetails.userType;
@@ -39,10 +41,11 @@ const Dashboard = ({userDetails}) => {
             case 'admin':
                 return (
                     <React.Fragment>
-                        <input className="dashboardButton" type="button" id="home" value="Workers" onClick={handleTabClick}/>
+                        <input className="dashboardButton" type="button" id="home" value="Employees" onClick={handleTabClick}/>
                         <input className="dashboardButton" type="button" id="businesshours" value="Business Hours" onClick={handleTabClick}/>
                         <input className="dashboardButton" type="button" id="history" value="Booking History" onClick={handleTabClick}/>
                         <input className="dashboardButton" type="button" id="createbookings" value="Create Bookings" onClick={handleTabClick}/>
+                        <input className="dashboardButton" type="button" id="futurebookings" value="Future Bookings" onClick={handleTabClick}/>
                     </React.Fragment>
                 );
 
@@ -52,10 +55,9 @@ const Dashboard = ({userDetails}) => {
     }
 
     return(
-        <div id="dashboardContainer">
-            <h1> Dashboard </h1>
+        <Card id="dashboardContainer">
             {renderButtons()}
-        </div>
+        </Card>
     )
 }
 

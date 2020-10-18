@@ -4,7 +4,7 @@ kind: Service
 metadata:
   name: sept-backend  
 spec:
-  selector:  # backend application pod lables should match these
+  selector:
     app: sept
     tier: backend
   ports:
@@ -37,9 +37,11 @@ spec:
     spec:                 
       containers: 
       - name: sept-backend 
-        image: SEPT_BACKEND_DOCKER_IMAGE_NAME  # docker image of backend application
+        image: sept/backend
         imagePullPolicy: Never
         env:   
+          - name: JAVA_OPTS
+            value: -Dspring.profiles.active=deploy -Dspring.datasource.url=jdbc:postgresql://postgres:5432/sept-main
           - name: DB_HOST   
             valueFrom: 
               configMapKeyRef:

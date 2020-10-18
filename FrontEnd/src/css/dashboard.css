@@ -3,24 +3,31 @@
     flex-direction: column;
 
     margin-left: 10%;
+    margin-right: 1%;
     text-align: center;
-    height: 85vh;
+    height: 100%;
     width: 15%;
-
-    border: 2px solid red;
 }
 
 .dashboardButton {
-    margin: 15px auto;
+    margin-top: 4%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 4%;
+
     height: 40px;
-    width: 60%;
+    width: 85%;
 
+    font-weight: bold;
     color: white;
-    background-color: blue;
-    border: 1px solid blue;
-    border-radius: 4px;
-    
-    font-size: 15px;
+    background-color: #01295f;
+    border-radius: 6px;
+    border: 0px;
+    font-size: 90%;
+}
 
-    cursor: pointer;
+.card-header {
+    font-weight: bold;
+    color: #0c1e36;
+    background-color: #eeeeee !important;
 }

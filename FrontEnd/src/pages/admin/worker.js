@@ -1,7 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Calendar } from 'react-big-calendar';
 import moment from 'moment';
+import Paper from '@material-ui/core/Paper'
 import '../../css/pages/workerList.css';
+import PersonIcon from '@material-ui/icons/Person';
 
 const Worker = ({worker, localizer}) => {
     const id = worker.details.id;
@@ -12,25 +14,37 @@ const Worker = ({worker, localizer}) => {
 
     const availability = worker.availability;
 
-    const allEvents = [];
+    const [allEvents, setAllEvents] = useState([]);
 
     // Calendar attributes
     const calendarStyle = {
+        backgroundColor: "white",
         height: 300,
-        margin: '20px 10px'
+        margin: '10px 0px'
+    }
+
+    const customEventProp = () => {
+        return {
+            style: {
+                backgroundColor: '#227FE8',
+                fontSize: 'small',
+                color: 'white'
+            }
+        }
     }
 
     useEffect(() => {
-        // Availability is almost correct so modify it and change events to be new values.
+        var events = [];
         Object.entries(availability).map(([key, value]) => {
             let newEvent = {
                 title: `ID: ${value.entryId}`,
                 start: new Date(moment(value.startTime).utc().format()),
                 end: new Date(moment(value.endTime).utc().format())
             }
-            allEvents.push(newEvent)
+            events.push(newEvent);
         })
-    })
+        setAllEvents(events);
+    }, [availability])
 
     const handleRemove = async() => {
         const fullName = `${firstName} ${lastName}`;
@@ -42,7 +56,7 @@ const Worker = ({worker, localizer}) => {
                 }
             }).then(response => {
                 if (response.ok) {
-                    window.alert(`Successfully removed worker ${fullName}.`);
+                    window.alert(`Successfully removed worker ${fullName}. Please refresh to see changes.`);
                 } else {
                     window.alert(`Failed to remove worker ${fullName}. Please try again.`);
                 }
@@ -51,13 +65,12 @@ const Worker = ({worker, localizer}) => {
     }
 
     return(
-        <div id="workerContainer">
+        <Paper id="workerContainer">
             <p className="workerDetails">
-                {firstName} {lastName} 
+            <PersonIcon style={{fontSize:"40px"}} className="personIcon"/>
+                {firstName} {lastName} (ID: {id}, {username}, {role})
                 <input className="removeBtn" type="button" value="Remove" onClick={handleRemove}/>
-                <span className="idAndRole">ID: {id}</span>
             </p>
-            <p className="workerDetails">{username} <span className="idAndRole">{role}</span></p>
             <Calendar 
                 localizer={localizer}
                 events={allEvents}
@@ -65,8 +78,9 @@ const Worker = ({worker, localizer}) => {
                 views={['week']}
                 style={calendarStyle}
                 toolbar={false}
+                eventPropGetter={customEventProp}
             />
-        </div>
+        </Paper>
     )
 }
 

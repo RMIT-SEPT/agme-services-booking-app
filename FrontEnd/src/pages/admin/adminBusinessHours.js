@@ -1,15 +1,30 @@
 import React, { useState, useEffect } from 'react';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
+import Card from 'react-bootstrap/Card';
 
 const AdminBusinessHours = () => {
     const localizer = momentLocalizer(moment);
+    const calendarStyle = {
+        height: 533,
+        margin: '20px 10px'
+    }
 
     const [businessHours, setBusinessHours] = useState([]);
 
     useEffect(() => {
         displayEvents();
     }, []);
+
+    const customEventProp = () => {
+        return {
+            style: {
+                backgroundColor: '#227FE8',
+                fontSize: 'small',
+                color: 'white'
+            }
+        }
+    }
 
     const displayEvents = async() => {
         var allEvents = [];
@@ -54,6 +69,9 @@ const AdminBusinessHours = () => {
                 if (response.ok) {
                     displayEvents();
                 }
+                else response.json().then(json => {
+                    alert(`Error: ${json.message}`);
+                })
             })
         }
     }
@@ -71,22 +89,28 @@ const AdminBusinessHours = () => {
                     // remove from calendar
                     setBusinessHours(businessHours.filter((item) => (item.resource.id != event.resource.id)));
                 }
+                else response.json().then(json => {
+                    alert(`Error: ${json.message}`);
+                })
             })
         }
     }
 
     return(
-        <div id="admin-business-hours">
-            <Calendar
-                localizer={localizer}
-                events={businessHours}
-                style={{ height: 545, width: 800}}
-                defaultView={'week'}
-                views={['week', 'day', 'agenda']}
-                selectable={'ignoreEvents'}
-                onSelectSlot={handleSelectSlot}
-                onSelectEvent={handleSelectEvent}
-            />
+        <div>
+            <Card.Header>Business Hours</Card.Header>
+            <div id="admin-business-hours">
+                <Calendar
+                    localizer={localizer}
+                    events={businessHours}
+                    style={calendarStyle}
+                    defaultView={'week'}
+                    views={['week', 'day', 'agenda']}
+                    selectable={'ignoreEvents'}
+                    onSelectSlot={handleSelectSlot}
+                    onSelectEvent={handleSelectEvent}
+                />
+            </div>
         </div>
     )
 }

@@ -3,6 +3,7 @@ package com.rmit.sept.lemonfruits.majorproject.repository;
 import com.rmit.sept.lemonfruits.majorproject.entity.BookingEntity;
 import com.rmit.sept.lemonfruits.majorproject.entity.WorkerEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -16,6 +17,12 @@ public interface BookingRepository extends JpaRepository<BookingEntity, Long> {
     List<BookingEntity> findByWorkerEntityAndStartTimeAfter(WorkerEntity workerEntity, LocalDateTime time);
 
     List<BookingEntity> findByWorkerEntity(WorkerEntity workerEntity);
+
+    @Query("select e from BookingEntity e where e.startTime <= ?2 and e.endTime >= ?1")
+    List<BookingEntity> getOverlapingBookings(LocalDateTime newEntryStart, LocalDateTime newEntryEnd);
+
+    @Query("select e from BookingEntity e where e.startTime < ?2 and e.endTime > ?1 and e.workerEntity = ?3")
+    List<BookingEntity> getOverlapingBookingsWithWorker(LocalDateTime newEntryStart, LocalDateTime newEntryEnd, WorkerEntity workerEntity);
 
 
 }

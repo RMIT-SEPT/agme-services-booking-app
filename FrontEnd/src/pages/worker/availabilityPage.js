@@ -1,46 +1,128 @@
 import React, { useState, useEffect } from 'react';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
+import Card from 'react-bootstrap/Card';
 import '../../css/pages/availabilityPage.css'
 
 const AvailabilityPage = () => {
     const [availability, setAvailability] = useState([]);
+    const [businessHours, setBusinessHours] = useState(null);
+    const [hoursFetched, setHoursFetched] = useState(false);
 
     const localizer = momentLocalizer(moment);
     const calendarStyle = {
-        height: 752,
+        height: 552,
         margin: '20px 10px'
     }
 
-    useEffect(() => {
-        const fetchData = async() => {
-            await fetch(process.env.REACT_APP_API_URL + `/api/v1/worker/availability`, {
-                method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
-                }
-            }).then(response => {
-                response.json().then(array => {
-                    let availabilityEvents = [];
-                    // Loop through array, where each element is a day of availability for the week.
-                    // Key is the index, value is the object itself (contains detail for the day).
-                    Object.entries(array).map(([key, value]) => {
-                        const dayAvailable = {
-                            title: `ID: ${value.entryId}`,
-                            start: new Date(value.startTime),
-                            end: new Date(value.endTime)
-                        }
-                        availabilityEvents.push(dayAvailable);
-                    });
+    const fetchAvailabilities = async() => {
+        await fetch(process.env.REACT_APP_API_URL + `/api/v1/worker/availability`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+        }).then(response => {
+            response.json().then(array => {
+                let availabilityEvents = [];
+                // Loop through array, where each element is a day of availability for the week.
+                // Key is the index, value is the object itself (contains detail for the day).
+                Object.entries(array).map(([key, value]) => {
+                    const dayAvailable = {
+                        title: `ID: ${value.entryId}`,
+                        start: new Date(value.startTime),
+                        end: new Date(value.endTime)
+                    }
+                    availabilityEvents.push(dayAvailable);
+                });
 
-                    setAvailability(availabilityEvents);
-                })
+                setAvailability(availabilityEvents);
             })
-        }
-        fetchData();
+        });
+    }
+    
+    const fetchBusinessHours = async() => {
+        await fetch(process.env.REACT_APP_API_URL + `/api/v1/worker/businesshours`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+        }).then(response => {
+            if (response.ok) {
+                response.json().then(array => {
+                    setBusinessHours(array)
+                })
+            }
+        })
+    }
+    
+    useEffect(() => {
+        fetchAvailabilities();
+        fetchBusinessHours();
     }, [])
+    
+    useEffect(() => {
+        if (businessHours !== null) {
+            setHoursFetched(true);
+        }
+    }, [businessHours])
 
-    const addAvailabilityRequest = async(data) => {
+    const customEventProp = () => {
+        return {
+            style: {
+                backgroundColor: '#01295f',
+                fontSize: 'small',
+                color: 'white'
+            }
+        }
+    }
+
+    const customSlotProp = (date) => {
+        var inBusinessHours = false;
+        var top = false;
+        var bottom = false;
+        
+        businessHours.forEach((value)  => {
+            if ((moment(value.startTime).toDate() <= date) && (moment(value.endTime).toDate() >= date)) {
+                inBusinessHours = true;
+
+                if (moment(value.startTime).toDate().getTime() == date.getTime()) {
+                    top = true;
+                }
+
+                if (moment(value.endTime).toDate().getTime() == date.getTime()) {
+                    bottom = true;
+                }
+            }
+        })
+        
+        if (inBusinessHours && top) {
+            return {
+                style: {
+                    borderTop: '2px solid #4A6670',
+                    borderLeft: '2px solid #4A6670',
+                    borderRight: '2px solid #4A6670',
+                    borderRadius: '3px'
+                }
+            }
+        } else if (inBusinessHours && bottom) {
+            return {
+                style: {
+                    borderTop: '2px solid #4A6670',
+                    borderRadius: '-3px'
+                }
+            }
+        } else if (inBusinessHours) {
+            return {
+                style: {
+                    borderLeft: '2px solid #4A6670',
+                    borderRight: '2px solid #4A6670',
+                }
+            }
+        }
+    }
+    
+    // Returns a boolean, true if successful, false if failed.
+    const addAvailabilityRequest = async(data, startTime, endTime) => {
         await fetch(process.env.REACT_APP_API_URL + `/api/v1/worker/availability`, {
             method: 'POST',
             headers: {
@@ -49,8 +131,16 @@ const AvailabilityPage = () => {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
             },
             body: JSON.stringify(data)
-        }).then(() => {
-            return;
+        }).then(response => {
+            if (response.ok) {
+                setAvailability([...availability, {start: startTime, end: endTime}]);
+                fetchAvailabilities();
+            } else {
+                response.json().then(json => {
+                    window.alert(`Failed to set availability: ${json.message}`);
+                    return false;
+                })
+            }
         })
     }
 
@@ -77,9 +167,8 @@ const AvailabilityPage = () => {
         const startTimeReadable = moment(event.start).format('LT');
         const endTimeReadable = moment(event.end).format('LT');
         if (window.confirm(`Set as AVAILABLE on ${dateReadable} between ${startTimeReadable} and ${endTimeReadable}?`)) {
-            // Make a post request, adding this availability and add this to availability state.
-            addAvailabilityRequest(newEvent)
-            setAvailability([...availability, {start: event.start, end: event.end}]);
+            // Make a post request, and if request is OK, set the availabilities (the events on the calendar).
+            addAvailabilityRequest(newEvent, event.start, event.end)
         }
     }
 
@@ -100,17 +189,23 @@ const AvailabilityPage = () => {
     }
 
     return(
-        <div id="availabilityContainer">
-            <Calendar 
-                localizer={localizer}
-                events={availability}
-                style={calendarStyle}
-                defaultView={'week'}
-                views={['week', 'day', 'agenda']}
-                selectable={true}
-                onSelectSlot={handleSelection}
-                onSelectEvent={handleDelete}
-            />
+        <div>
+            <Card.Header>Weekly Availability</Card.Header>
+            <div id="availabilityContainer">
+                {hoursFetched ? 
+                <Calendar 
+                    localizer={localizer}
+                    events={availability}
+                    style={calendarStyle}
+                    defaultView={'week'}
+                    views={['week', 'day', 'agenda']}
+                    selectable={true}
+                    onSelectSlot={handleSelection}
+                    onSelectEvent={handleDelete}
+                    eventPropGetter={customEventProp}
+                    slotPropGetter={customSlotProp}
+                /> : null}
+            </div>
         </div>
     )
 }

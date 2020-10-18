@@ -1,6 +1,8 @@
 .profileContainer {
     display: flex;
     flex-direction: row;
+    align-items: center;
+    height: auto;
 }
 
 #avatarContainer {
@@ -9,33 +11,55 @@
 }
 
 #avatarContainer p {
-    font-size: 40px;
+    font-size: 24px;
+    font-weight: bold;
 }
 
 #avatarContainer img {
     display: block;
     margin: auto auto 30px auto;
-
-    border: 5px solid red;
+    border: 5px solid #01295f;
     border-radius: 100%;
+    width: 60%;
 }
 
 #profileDetailsContainer {
-    margin: 5% 1%;
-
+    margin: 3% 1%;
     width: 50%;
-}
-
-#profileDetailsContainer p {
-    font-size: 25px;
-    font-weight: bold;
+    height: auto;
 }
 
 #profileDetailsContainer span {
-    font-size: 30px;
+    font-size: 16px;
 }
 
 #profileDetailsContainer input {
-    margin: 15px 0px;
+    margin: 10px 0px;
     width: 100%;
+    border: 1px lightgray solid;
+    border-radius: 6px;
+    padding: 1%;
+}
+
+#profileButtons {
+    display: flex;
+    justify-content: center;
+}
+
+#profileSpacer {
+    width: 5%;
+}
+
+#updateProfileBtn {
+    background-color: #01295f;
+    color: white;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+#deleteProfileBtn {
+    background-color: #DF2935;
+    color: white;
+    font-weight: bold;
+    font-size: 16px;
 }

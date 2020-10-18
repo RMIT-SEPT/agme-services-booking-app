@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
 import Modal from 'react-modal';
+import Card from 'react-bootstrap/Card';
+import SearchField from "material-ui-search-bar";
 
 import '../../css/pages/workerList.css';
 
@@ -18,26 +20,16 @@ const WorkerList = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [role, setRole] = useState('');
-    const [addWorkerResponse, setAddWorkerResponse] = useState(null);
+
+    // Related to search box
+    const [filter, setFilter] = useState(null);
+    const [filteredWorkers, setFilteredWorkers] = useState(workersData);
 
     // Modal related variables / functions
-    var subtitle;
-    const customStyles = {
-        content : {
-            top: '50%',
-            left: '15%',
-            right: 'auto',
-            bottom: 'auto',
-            textAlign: 'center',
-            transform: 'translate(-50%, -50%)',
-            color: 'black'
-        }
-    };
     const setModalStatus = (booleanVal) => {
         setModalIsOpen(booleanVal);
     }
     const closeModal = () => {
-        setAddWorkerResponse('');
         setModalIsOpen(false);
     }
 
@@ -71,6 +63,7 @@ const WorkerList = () => {
                                 individualWorkerDetails['availability'] = array;
                                 allWorkers.push(individualWorkerDetails);
                                 setWorkersData([...allWorkers]);
+                                setFilteredWorkers([...allWorkers]);
                             })
                         })
                     })
@@ -98,11 +91,11 @@ const WorkerList = () => {
             body: JSON.stringify(newWorkerDetails)
         }).then(response => {
             if (response.ok) {
-                setAddWorkerResponse('Successfully added worker. Refresh to see changes.');
+                alert('Successfully added worker. Refresh to see changes.');
+                setModalIsOpen(false);
             } else {
-                setAddWorkerResponse('Failed to add worker. Please try again.')
+                alert('Failed to add worker. Please try again.')
             }
-            console.log(response.status)
         })
     }
 
@@ -110,37 +103,95 @@ const WorkerList = () => {
         return (
             <span>
                 <button className="addBtn" onClick={() => setModalStatus(true)}>Add Worker</button>
+                <div id="worker-modal">
                 <Modal
+                    className="modalClass"
+                    overlayClassName="myOverlayClass"
                     isOpen={modalIsOpen}
                     onRequestClose={closeModal}
-                    style={customStyles}
                     contentLabel="Example Modal"
                 >
-      
-                <h2 ref={_subtitle => (subtitle = _subtitle)}>Enter new worker details</h2>
                 <div id="newWorkerFormArea">
+                <h1>Enter new worker details</h1>
                     <form id="newWorkerForm">
                         <input name="firstName" type="text" placeholder=" First Name" onChange={(e) => setFirstName(e.target.value)}/>
                         <input name="lastName" type="text" placeholder=" Last Name" onChange={(e) => setLastName(e.target.value)}/>
                         <input name="username" type="text" placeholder=" Username" onChange={(e) => setUsername(e.target.value)}/>
                         <input name="password" type="password" placeholder=" Password" onChange={(e) => setPassword(e.target.value)}/>
                         <input name="role" type="text" placeholder=" Role" onChange={(e) => setRole(e.target.value)}/>
-                        <input id="submitNewWorkerBtn" type="button" value="Add New Worker" onClick={addWorkerAPI}/>
                     </form>
-                    <p>{addWorkerResponse}</p>
+                    <div id="new-worker-buttons">
+                    <input id="submitNewWorkerBtn" type="button" value="Add Worker" onClick={addWorkerAPI}/>
+                    <div id="new-worker-spacer"></div>
+                    <button id="closeModalBtn" onClick={closeModal}>Cancel</button>
+                    </div>
                 </div>
-                <button id="closeModalBtn" onClick={closeModal}>Close Form</button>
                 </Modal>
+                </div>
             </span>
         );
     }
 
+    const handleFilter = (filterVal) => {
+        if (filterVal === null) {
+            setFilteredWorkers(workersData);
+            return;
+        }
+
+        let tempWorkers = [];
+        Object.entries(workersData).map(([key, value]) => {
+            let idFilterMatches = false;
+            let usernameFilterMatches = false;
+            let firstNameFilterMatches = false;
+            let lastNameFilterMatches = false;
+            let roleFilterMatches = false;
+
+            // id
+            if (String(workersData[key]['id']).includes(filterVal)) {
+                idFilterMatches = true;
+            }
+
+            // username
+            if (String(workersData[key]['details']['username']).includes(filterVal)) {
+                usernameFilterMatches = true;
+            }
+
+            // first name
+            if (String(workersData[key]['details']['firstName']).includes(filterVal)) {
+                firstNameFilterMatches = true;
+            }
+
+            // last name
+            if (String(workersData[key]['details']['lastName']).includes(filterVal)) {
+                lastNameFilterMatches = true;
+            }
+
+            // role
+            if (String(workersData[key]['details']['role']).includes(filterVal)) {
+                roleFilterMatches = true;
+            }
+
+            if (idFilterMatches || usernameFilterMatches || firstNameFilterMatches || lastNameFilterMatches || roleFilterMatches) {
+                tempWorkers.push(workersData[key]);
+            }
+        })
+        setFilteredWorkers(tempWorkers);
+    }
+
     return(
         <div id="workerListContainer">
-            <h1> Workers 
+            <Card.Header> Workers 
                 {addWorkerModal()}
-            </h1>
-            {Object.entries(workersData).map(([key, value]) => {
+            </Card.Header>
+            <div id="filterWorkerSearchContainer">
+                <SearchField
+                    placeholder="Worker Details"
+                    style={{backgroundColor: "#F7F7F7"}}
+                    onChange={value => value === '' ? handleFilter(null) : handleFilter(value)}
+                    onCancelSearch={() => handleFilter(null)}
+                />
+            </div>
+            {Object.entries(filteredWorkers).map(([key, value]) => {
                 return <Worker key={key} worker={value} localizer={localizer}/>
             })}
         </div>

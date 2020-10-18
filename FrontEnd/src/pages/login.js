@@ -9,7 +9,6 @@ const Login = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [authenticated, setAuthenticated] = useState(localStorage.getItem('token') === null ? false : true);
-    const [responseMsg, setResponseMsg] = useState('');
 
     const setUsernameState = (newValue) => {
         setUsername(newValue.target.value);
@@ -40,7 +39,6 @@ const Login = () => {
                 response.json().then(json => {
                     const expiryTime = new Date();
                     expiryTime.setMinutes(expiryTime.getMinutes() + 20)
-
                     localStorage.setItem('token', json.token);
                     localStorage.setItem('token-expiry', expiryTime);
                     localStorage.setItem('role', json.role);
@@ -48,7 +46,7 @@ const Login = () => {
                 })
             } else {
                 response.json().then(json => {
-                    setResponseMsg(`Invalid Username/Password Supplied.`)
+                    alert("Error: Invalid details provided");
                 })
             }
         });
@@ -57,16 +55,19 @@ const Login = () => {
     return (
         <div id="loginContainer">
             { authenticated ? history.push("/home") : null}
-
-            <h1 id="header">Login</h1>
-            <div id="formArea">
+            <div id="logoArea">
+                <img src='logo.png'></img>
+            </div>
+            <div id="loginFormArea">
+            <h1 id="header">Sign into your account</h1>
                 <form id="loginForm">
                     <input className="loginInputField" name="username" type="text" placeholder=" Username" onChange={setUsernameState}/>
                     <input className="loginInputField" name="password" type="password" placeholder=" Password" onChange={setPasswordState}/>
                     <input className="submitBtn" type="button" value="Login" onClick={handleSubmit}/>
-                    <p id="loginResponseMsg">{responseMsg}</p>
-                    <p>Don't have an account? <Link to="/signup">Register here</Link></p>
                 </form>
+                <div id="footer">
+                    <p>Don't have an account? <Link to="/signup">Register here</Link></p>
+                </div>
             </div>
         </div>
     )

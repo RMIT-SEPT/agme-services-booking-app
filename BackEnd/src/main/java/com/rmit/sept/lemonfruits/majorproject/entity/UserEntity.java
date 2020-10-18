@@ -10,6 +10,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.Collection;
 
@@ -29,17 +30,17 @@ public abstract class UserEntity implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
+    @NotBlank(message = "Username cannot be null")
     private String username;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @NotNull
     private String password;
 
-    @NotNull
+    @NotBlank(message = "First name cannot be null")
     private String firstName;
 
-    @NotNull
+    @NotBlank(message = "Last name cannot be null")
     private String lastName;
 
     @JsonIgnore
