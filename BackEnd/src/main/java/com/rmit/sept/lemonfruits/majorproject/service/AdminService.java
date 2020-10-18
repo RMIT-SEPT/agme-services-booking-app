@@ -125,10 +125,13 @@ public class AdminService {
 
         WorkingHoursEntity workingHoursEntity = workingHoursRepository.isThereOverlapingEntry(bookingRequest.getStartTime(), bookingRequest.getEndTime(), workerEntity);
         if (workingHoursEntity == null)
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Outside workers hours");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Outside workers hours1");
 
         if (bookingRequest.getEndTime().isAfter(workingHoursEntity.getEndTime()))
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Outside workers hours");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Outside workers hours2");
+
+        if (bookingRequest.getStartTime().isBefore(workingHoursEntity.getStartTime()))
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Outside workers hours3");
 
         if (!bookingRepository.getOverlapingBookingsWithWorker(
                 bookingRequest.getStartTime(),

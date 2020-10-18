@@ -96,7 +96,6 @@ const WorkerList = () => {
             } else {
                 alert('Failed to add worker. Please try again.')
             }
-            console.log(response.status)
         })
     }
 
