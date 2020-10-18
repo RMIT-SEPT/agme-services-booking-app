@@ -41,8 +41,8 @@ public abstract class AbstractBaseTest {
 
     protected BusinessHoursRequest testBusinessHoursRequest() {
         return BusinessHoursRequest.builder()
-                .startTime(LocalDateTime.now())
-                .endTime(LocalDateTime.now().plusHours(1))
+                .startTime(LocalDateTime.now().plusHours(1))
+                .endTime(LocalDateTime.now().plusHours(2))
                 .build();
     }
 
