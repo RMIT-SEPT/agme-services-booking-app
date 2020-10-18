@@ -44,7 +44,7 @@ const Signup = () => {
             firstName: firstName,
             lastName: lastName,
             address: address,
-            phone: phone,
+            phoneNumber: phone,
             username: username,
             password: password
         };
@@ -76,7 +76,7 @@ const Signup = () => {
                     <input name="firstName" type="text" placeholder=" First Name" onChange={setFirstNameState}/>
                     <input name="lastName" type="text" placeholder=" Last Name" onChange={setLastNameState}/>
                     <input name="address" type="text" placeholder=" Address" onChange={setAddressState}/>
-                    <input name="phone" type="tel" placeholder=" Phone" pattern="[0-9]{4}-[0-9]{3}-[0-9]{3}" onChange={setPhoneState}/>
+                    <input name="phone" type="tel" placeholder=" Phone" onChange={setPhoneState}/>
                     <input name="username" type="text" placeholder=" Username" onChange={setUsernameState}/>
                     <input name="password" type="password" placeholder=" Password" onChange={setPasswordState}/>
                     <input className="submitBtn" type="button" value="Signup" onClick={handleSubmit}/>

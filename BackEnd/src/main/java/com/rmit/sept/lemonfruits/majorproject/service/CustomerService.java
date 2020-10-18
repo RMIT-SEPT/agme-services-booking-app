@@ -134,7 +134,10 @@ public class CustomerService {
     }
 
     public void deleteAccount(CustomerEntity customer) {
-        customer.getBookings().forEach(b -> b.setCustomerEntity(null));
+        customer.getBookings().forEach(b -> {
+            b.setCustomerEntity(null);
+            bookingRepository.save(b);
+        });
         customerRepository.delete(customer);
     }
 
