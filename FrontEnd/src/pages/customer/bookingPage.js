@@ -55,7 +55,6 @@ const BookingPage = () => {
                     });
                     setBookings([...allEvents])
                     setWorkers([...allWorkers])
-                    console.log(allWorkers)
 
                     if (allWorkers.length > 0) {
                         // set initial worker and bookings

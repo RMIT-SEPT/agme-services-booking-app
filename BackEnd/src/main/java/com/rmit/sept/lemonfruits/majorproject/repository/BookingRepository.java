@@ -21,7 +21,7 @@ public interface BookingRepository extends JpaRepository<BookingEntity, Long> {
     @Query("select e from BookingEntity e where e.startTime <= ?2 and e.endTime >= ?1")
     List<BookingEntity> getOverlapingBookings(LocalDateTime newEntryStart, LocalDateTime newEntryEnd);
 
-    @Query("select e from BookingEntity e where e.startTime <= ?2 and e.endTime >= ?1 and e.workerEntity = ?3")
+    @Query("select e from BookingEntity e where e.startTime < ?2 and e.endTime > ?1 and e.workerEntity = ?3")
     List<BookingEntity> getOverlapingBookingsWithWorker(LocalDateTime newEntryStart, LocalDateTime newEntryEnd, WorkerEntity workerEntity);
 
 
